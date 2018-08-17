@@ -1,8 +1,23 @@
-#import pygi
+from kivy.app import App
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
 
-class Interface:
-    print
-    #def __init__(self):
-     #   pygi.require_version("Gtk", "3.0")
-       # windows = pygi.Gtk_Windows("Teste")
-       # windows.show()
+
+class LoginScreen(GridLayout):
+
+    def __init__(self, **kwargs):
+        super(LoginScreen, self).__init__(**kwargs)
+        self.cols = 2
+        self.add_widget(Label(text='User Name'))
+        self.username = TextInput(multiline=False)
+        self.add_widget(self.username)
+        self.add_widget(Label(text='password'))
+        self.password = TextInput(password=True, multiline=False)
+        self.add_widget(self.password)
+
+
+class Interface(App):
+
+    def build(self):
+        return LoginScreen()

@@ -1,0 +1,14 @@
+{
+  "name": "gibatable",
+  "version": "1.0.0",
+  "description": "first try",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Menino 1 e 2",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^2.0.8"
+  }
+}

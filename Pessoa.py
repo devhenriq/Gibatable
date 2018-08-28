@@ -1,3 +1,5 @@
+import Banco
+
 class Pessoa:
 
     def __init__(self, cargo, quant, salario, categoria):
@@ -14,7 +16,7 @@ class Pessoa:
 
     def calculoPessoal(self):
 
-        if self.categoria != "labore":
+        if self.categoria != "diretor":
             self.provFerias = (self.salario/12)*0.333333
             self.provdecimo = self.salario/12
             self.fgts = (self.salario + self.provFerias + self.provdecimo) * 0.08
@@ -25,5 +27,16 @@ class Pessoa:
             self.inss = self.salario * 0.15
             self.total = (self.salario + self.inss) * self.quant
 
+        self.insereBanco()
+
     def insereBanco(self):
-        print
+        conn = Banco.connect()
+        cur = conn.cursor()
+
+        cur.execute("""
+        INSERT INTO pessoa (cargo, quant, salario, ferias, decimo, fgts, inss, total, categoria) 
+        VALUES (?,?,?,?,?,?,?,?,?)
+        """, (self.cargo, self.quant, self.salario, self.ferias, self.decimo, self.fgts, self.inss, self.total, self.categoria))
+
+        cur.commit()
+        conn.close()

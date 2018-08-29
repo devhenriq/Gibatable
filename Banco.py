@@ -2,12 +2,12 @@ import sqlite3
 from sqlite3 import Error
 
 
-def connect(self):
+def connect():
     try:
         conn = sqlite3.connect("./banco/tables.db")
         return conn
     except Error as e:
-        print e
+        print(e)
 
 #class BD:
 

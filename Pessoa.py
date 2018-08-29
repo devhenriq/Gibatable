@@ -1,4 +1,4 @@
-import Banco
+from Banco import Banco
 import sqlite3
 class Pessoa:
 
@@ -7,10 +7,10 @@ class Pessoa:
         self.quant = quant
         self.salario = salario
         self.categoria = categoria
-        self.provferias = None
-        self.provdecimo = None
-        self.fgts = None
-        self.inss = None
+        self.provferias = 0
+        self.provdecimo = 0
+        self.fgts = 0
+        self.inss = 0
         self.total = None
         self.calculoPessoal()
 
@@ -31,19 +31,7 @@ class Pessoa:
 
     def insereBanco(self):
 
-        print("insere")
-        conn = Banco.connect()
-        cur = conn.cursor()
-
+        list = [self.cargo, self.quant, self.salario, self.provferias, self.provdecimo, self.fgts, self.inss, self.total, self.categoria]
         str = 'pessoa (cargo, quant, salario, ferias, decimo, fgts, inss, total, categoria)'
-        # cur.execute("\
-        # INSERT INTO " + str + "\
-        # VALUES (?,?,?,?,?,?,?,?,?)\
-        # ", (self.cargo, self.quant, self.salario, self.provferias, self.provdecimo, self.fgts, self.inss, self.total, self.categoria))
 
-        cur.execute("""SELECT * FROM pessoa""")
-
-        print(cur.fetchall())
-
-        conn.commit()
-        conn.close()
+        Banco.insert(Banco, str, list)

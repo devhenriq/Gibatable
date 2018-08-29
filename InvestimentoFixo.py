@@ -11,13 +11,7 @@ class InvestimentoFixo:
         self.insereBanco()
 
     def insereBanco(self):
-        conn = Banco.connect()
-        cur = conn.cursor()
+        list = [self.descricao, self.quant, self.valorUnit, self.valorTotal, self.categoria]
+        str = 'investimentofixo (descricao, quant, valorunitario, total, categoria)'
 
-        cur.execute("""
-                INSERT INTO investimentofixo (descricao, quant, valorunitario, total, categoria) 
-                VALUES (?,?,?,?,?)
-                """, (self.descricao, self.quant, self.valorUnit, self.valorTotal, self.categoria))
-
-        cur.commit()
-        conn.close()
+        Banco.insert(Banco, str, list)

@@ -1,15 +1,17 @@
 from kivy.app import App
-from kivy.uix.gridlayout import GridLayout
+#rom kivy.uix.gridlayout import GridLayout
+from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
-
+from kivy.core.window import Window
 
 from os import listdir
 kv_path = './Interface/kv/'
 for kv in listdir(kv_path):
     Builder.load_file(kv_path+kv)
 
+Window.fullscreen = False
 
 # class LoginScreen(GridLayout):
 #
@@ -23,14 +25,9 @@ for kv in listdir(kv_path):
 #         #self.password = TextInput(password=True, multiline=False)
 #         #self.add_widget(self.password)
 
-# class StartScreen():
-#
-#     def __init__(self, **kwargs):
-#         super(StartScreen, self).__init__(**kwargs)
-#         self.FloatLayout(size=(1500, 1500))
-#         self.add_widget(Label(text='Gibatable'))
 
-class StartScreen(GridLayout):
+class StartScreen(Widget):
+
     display = ObjectProperty()
 
     def add_one(self):

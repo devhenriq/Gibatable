@@ -15,3 +15,7 @@ class InvestimentoFixo:
         str = 'investimentofixo (descricao, quant, valorunitario, total, categoria)'
 
         Banco.insert(Banco, str, list)
+
+    def relatorio(self):
+        str = 'investimentofixo'
+        Banco.relatorio(str)

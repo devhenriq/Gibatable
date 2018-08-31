@@ -1,14 +1,20 @@
 <StartScreen>:
-    display: display
-    rows: 1
-    BoxLayout:
-        orientation: "vertical"
-        SendButton:
-            on_release: root.add_one()
-        StartButton:
-            on_release: root.subtract_one()
 
+    display: display
+    size_hint: 0.1, 0.1
     Label:
         id: display
-        font_size: dp(50)
         text: 'GIBATABLE'
+        font_size: 0.6*self.height
+        pos:600,600
+        pos_hint: {'top':7,'right':5.5}
+        size_hint: 1, 1
+
+
+
+
+    SendButton:
+        on_release: root.add_one()
+    StartButton:
+        on_release: root.subtract_one()
+

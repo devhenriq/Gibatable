@@ -1,10 +1,11 @@
 from kivy.app import App
-#rom kivy.uix.gridlayout import GridLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 from kivy.core.window import Window
+from kivy.config import Config
 
 from os import listdir
 kv_path = './Interface/kv/'
@@ -12,6 +13,8 @@ for kv in listdir(kv_path):
     Builder.load_file(kv_path+kv)
 
 Window.fullscreen = False
+Config.set('graphics', 'resizable', 1)
+Config.write()
 
 # class LoginScreen(GridLayout):
 #
@@ -24,11 +27,12 @@ Window.fullscreen = False
 #         #self.add_widget(Label(text='password'))
 #         #self.password = TextInput(password=True, multiline=False)
 #         #self.add_widget(self.password)
+#class MenuScreen(FloatLayout):
 
 
-class StartScreen(Widget):
+class StartScreen(FloatLayout):
 
-    display = ObjectProperty()
+    #display = ObjectProperty()
 
     def add_one(self):
         #value = int(self.display.text)

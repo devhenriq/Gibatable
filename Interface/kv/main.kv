@@ -6,15 +6,34 @@
         id: display
         text: 'GIBATABLE'
         font_size: 0.6*self.height
-        pos:600,600
         pos_hint: {'top':7,'right':5.5}
         size_hint: 1, 1
 
-
-
-
-    SendButton:
-        on_release: root.add_one()
     StartButton:
-        on_release: root.subtract_one()
+        on_release: root.manager.current = "menu"
 
+
+<MenuScreen>:
+    display:display
+    size_hint: 0.1,0.1
+
+    Label:
+        id: display
+        text: 'MENUS'
+        font_size: 0.6*self.height
+        pos_hint: {'top':7,'right':5.5}
+        size_hint: 1, 1
+
+<Manager>:
+    id: screen_manager
+
+    start: start
+    menu: menu
+        StartScreen:
+            id: start
+            name: "Inicial"
+            manager: screen_manager
+        MenuScreen:
+            id: menu
+            name: "Menus"
+            manager: screen_manager

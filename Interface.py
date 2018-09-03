@@ -6,50 +6,55 @@ from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 from kivy.core.window import Window
 from kivy.config import Config
+from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
+from kivy.properties import StringProperty, ListProperty
 
 from os import listdir
-kv_path = './Interface/kv/'
-for kv in listdir(kv_path):
-    Builder.load_file(kv_path+kv)
 
 Window.fullscreen = False
 Config.set('graphics', 'resizable', 1)
 Config.write()
 
-# class LoginScreen(GridLayout):
-#
-#     def __init__(self, **kwargs):
-#         #super(LoginScreen, self).__init__(**kwargs)
-#         self.cols = 3
-#         self.add_widget(Label(text='Gibatable'))
-#         #self.username = TextInput(multiline=False)
-#         #self.add_widget(self.username)
-#         #self.add_widget(Label(text='password'))
-#         #self.password = TextInput(password=True, multiline=False)
-#         #self.add_widget(self.password)
-#class MenuScreen(FloatLayout):
+# Manager
+class Manager(ScreenManager):
+    pass
+
+# Telas
+class MenuScreen(Screen):
+    pass
 
 
-class StartScreen(FloatLayout):
+class StartScreen(Screen):
+    pass
 
-    #display = ObjectProperty()
 
-    def add_one(self):
-        #value = int(self.display.text)
-        self.display.text = "EI"
+class Cadastro(Screen):
+    pass
 
-    def subtract_one(self):
-        #value = int(self.display.text)
-        self.display.text = "HO"
 
+class Relatorio(Screen):
+    pass
+
+
+class Alterar(Screen):
+    pass
+
+# Functions
 class StartButton(Button):
     pass
 
+
 class SendButton(Button):
     pass
+
+
+kv_path = './Interface/kv/'
+for kv in listdir(kv_path):
+    Builder.load_file(kv_path+kv)
+start = Builder.load_file('./Interface/kv/main.kv')
 
 class Interface(App):
 
     def build(self):
         self.title = "GIBATABLE"
-        return StartScreen()
+        return start

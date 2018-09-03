@@ -1,39 +1,98 @@
-<StartScreen>:
+Manager:
+    StartScreen:
+    MenuScreen:
+    Cadastro:
+    Relatorio:
+    Alterar:
 
-    display: display
+<StartScreen>:
     size_hint: 0.1, 0.1
+    name: "start"
     Label:
-        id: display
         text: 'GIBATABLE'
         font_size: 0.6*self.height
         pos_hint: {'top':7,'right':5.5}
-        size_hint: 1, 1
 
     StartButton:
-        on_release: root.manager.current = "menu"
+        pos_hint: {'top':6,'right':6}
+        size_hint: 2, .8
+        on_release: app.root.current = "menu"
 
 
 <MenuScreen>:
-    display:display
     size_hint: 0.1,0.1
-
+    name: "menu"
     Label:
-        id: display
-        text: 'MENUS'
+        text: 'MENU'
         font_size: 0.6*self.height
-        pos_hint: {'top':7,'right':5.5}
+        pos_hint: {'top':9,'right':5.5}
         size_hint: 1, 1
 
-<Manager>:
-    id: screen_manager
+    Button:
+        font_size: 0.4*self.height
+        text:'Cadastros'
+        pos_hint: {'top':8, 'right': 4}
+        on_release: app.root.current = "cadastro"
+        size_hint: 2, .8
 
-    start: start
-    menu: menu
-        StartScreen:
-            id: start
-            name: "Inicial"
-            manager: screen_manager
-        MenuScreen:
-            id: menu
-            name: "Menus"
-            manager: screen_manager
+    Button:
+        font_size: 0.4*self.height
+        text:'Relatorios'
+        pos_hint: {'top':8, 'right': 9}
+        on_release: app.root.current = "relatorio"
+        size_hint: 2, .8
+
+    Button:
+        font_size: 0.4*self.height
+        text:'Alterar'
+        pos_hint: {'top':7, 'right': 6.5}
+        on_release: app.root.current = "alterar"
+        size_hint: 2, .8
+
+    Button:
+        font_size: 0.4*self.height
+        pos_hint: {'top':1, 'right': 10}
+        text:'Voltar'
+        on_release: app.root.current = "start"
+
+
+<Cadastro>:
+    size_hint: 0.1,0.1
+    name: "cadastro"
+    Label:
+        text: 'Cadastros'
+        font_size: 0.6*self.height
+        pos_hint: {'top':9,'right':5.5}
+        size_hint: 1, 1
+    Button:
+        font_size: 0.4*self.height
+        pos_hint: {'top':1, 'right': 10}
+        text:'Voltar'
+        on_release: app.root.current = "menu"
+
+<Relatorio>:
+    size_hint: 0.1,0.1
+    name: "relatorio"
+    Label:
+        text: 'Relatorios'
+        font_size: 0.6*self.height
+        pos_hint: {'top':9,'right':5.5}
+        size_hint: 1, 1
+    Button:
+        font_size: 0.4*self.height
+        pos_hint: {'top':1, 'right': 10}
+        text:'Voltar'
+        on_release: app.root.current = "menu"
+<Alterar>:
+    size_hint: 0.1,0.1
+    name: "alterar"
+    Label:
+        text: 'Selecione de qual sessao quer alterar os dados:'
+        font_size: 0.6*self.height
+        pos_hint: {'top':9,'right':5.5}
+        size_hint: 1, 1
+    Button:
+        font_size: 0.4*self.height
+        pos_hint: {'top':1, 'right': 10}
+        text:'Voltar'
+        on_release: app.root.current = "menu"

@@ -11,6 +11,7 @@ from kivy.properties import StringProperty, ListProperty
 from kivy.uix.textinput import TextInput
 
 from os import listdir
+from Pessoa import Pessoa
 
 Window.fullscreen = False
 Config.set('graphics', 'resizable', 1)
@@ -34,8 +35,11 @@ class Cadastro(Screen):
 
 
 class Pessoa(Screen):
-    pass
-
+    # = ObjectProperty()
+    #print(text.text)
+    def envia(self):
+        cargo = ObjectProperty()
+        print(cargo.text)
 
 class Relatorio(Screen):
     pass
@@ -49,9 +53,9 @@ class StartButton(Button):
     pass
 
 
+
 class SendButton(Button):
     pass
-
 
 class Voltar(Button):
     pass

@@ -4,6 +4,8 @@ Manager:
     Cadastro:
     Relatorio:
     Alterar:
+    Pessoa:
+
 
 <StartScreen>:
     size_hint: 0.1, 0.1
@@ -38,51 +40,20 @@ Manager:
     Button:
         font_size: 0.4*self.height
         text:'Relatorios'
-        pos_hint: {'top':8, 'right': 9}
+        pos_hint: {'top':8, 'right': 8}
         on_release: app.root.current = "relatorio"
         size_hint: 2, .8
 
     Button:
         font_size: 0.4*self.height
         text:'Alterar'
-        pos_hint: {'top':7, 'right': 6.5}
+        pos_hint: {'top':7, 'right': 6}
         on_release: app.root.current = "alterar"
         size_hint: 2, .8
 
-    Button:
-        font_size: 0.4*self.height
-        pos_hint: {'top':1, 'right': 10}
-        text:'Voltar'
+    Voltar:
         on_release: app.root.current = "start"
 
-
-<Cadastro>:
-    size_hint: 0.1,0.1
-    name: "cadastro"
-    Label:
-        text: 'Cadastros'
-        font_size: 0.6*self.height
-        pos_hint: {'top':9,'right':5.5}
-        size_hint: 1, 1
-    Button:
-        font_size: 0.4*self.height
-        pos_hint: {'top':1, 'right': 10}
-        text:'Voltar'
-        on_release: app.root.current = "menu"
-
-<Relatorio>:
-    size_hint: 0.1,0.1
-    name: "relatorio"
-    Label:
-        text: 'Relatorios'
-        font_size: 0.6*self.height
-        pos_hint: {'top':9,'right':5.5}
-        size_hint: 1, 1
-    Button:
-        font_size: 0.4*self.height
-        pos_hint: {'top':1, 'right': 10}
-        text:'Voltar'
-        on_release: app.root.current = "menu"
 <Alterar>:
     size_hint: 0.1,0.1
     name: "alterar"
@@ -91,8 +62,5 @@ Manager:
         font_size: 0.6*self.height
         pos_hint: {'top':9,'right':5.5}
         size_hint: 1, 1
-    Button:
-        font_size: 0.4*self.height
-        pos_hint: {'top':1, 'right': 10}
-        text:'Voltar'
+    Voltar:
         on_release: app.root.current = "menu"

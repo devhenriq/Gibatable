@@ -26,7 +26,6 @@ class Pessoa:
         else:
             self.inss = self.salario * 0.15
             self.total = (self.salario + self.inss) * self.quant
-        print('uhul')
         self.insereBanco()
 
     def insereBanco(self):
@@ -35,3 +34,6 @@ class Pessoa:
         str = 'pessoa (cargo, quant, salario, ferias, decimo, fgts, inss, total, categoria)'
 
         Banco.insert(Banco, str, list)
+
+    def relatorio(self):
+        Banco.relatorio(Banco, 'pessoa')

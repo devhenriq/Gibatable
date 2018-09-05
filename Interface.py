@@ -9,9 +9,13 @@ from kivy.config import Config
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.properties import StringProperty, ListProperty
 from kivy.uix.textinput import TextInput
-
+from kivy.uix.dropdown import DropDown
 from os import listdir
 from Pessoa import Pessoa
+from InvestimentoFixo import InvestimentoFixo
+from MateriaPrima import MateriaPrima
+from Estimativa import Estimativa
+
 
 Window.fullscreen = False
 Config.set('graphics', 'resizable', 1)
@@ -33,14 +37,30 @@ class StartScreen(Screen):
 class Cadastro(Screen):
     pass
 
-
-class Pessoa(Screen):
-    # = ObjectProperty()
-    #print(text.text)
+# Cadastro
+class PessoaScreen(Screen):
     def envia(self):
-        cargo = ObjectProperty()
-        print(cargo.text)
+        p = Pessoa(self.cargo.text, int(self.quant.text), float(self.salario.text), self.categoria.text)
+        p.relatorio()
 
+
+class Investimento(Screen):
+    def envia(self):
+        i = InvestimentoFixo(self.descr.text, int(self.quant.text), float(self.vunit.text), self.categoria.text)
+        i.relatorio()
+
+class MateriaPrimaScreen(Screen):
+    def envia(self):
+        m = MateriaPrima(self.nome.text, self.materia.text, self.medida.text, float(self.preco.text), int(self.quant.text))
+        m.relatorio()
+
+
+class EstimativaScreen(Screen):
+    def envia(self):
+        e = Estimativa(self.descr.text, int(self.quant.text), float(self.lucro.text), int(self.quant.text))
+        e.relatorio()
+
+#Relatorio
 class Relatorio(Screen):
     pass
 
@@ -61,9 +81,22 @@ class Voltar(Button):
     pass
 
 
+
 kv_path = './Interface/kv/'
 for kv in listdir(kv_path):
-    Builder.load_file(kv_path+kv)
+    if kv.find('.kv') is not -1:
+        Builder.load_file(kv_path + kv)
+
+kv_path = './Interface/kv/Cadastro/'
+for kv in listdir(kv_path):
+    if kv.find('.kv') is not -1:
+        Builder.load_file(kv_path + kv)
+
+kv_path = './Interface/kv/Relatorios/'
+for kv in listdir(kv_path):
+    if kv.find('.kv') is not -1:
+        Builder.load_file(kv_path + kv)
+
 start = Builder.load_file('./Interface/kv/main.kv')
 
 class Interface(App):

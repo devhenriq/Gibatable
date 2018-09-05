@@ -1,4 +1,4 @@
-import Banco
+from Banco import Banco
 
 class InvestimentoFixo:
 
@@ -11,11 +11,11 @@ class InvestimentoFixo:
         self.insereBanco()
 
     def insereBanco(self):
-        list = [self.descricao, self.quant, self.valorUnit, self.valorTotal, self.categoria]
+        list = [self.descr, self.quant, self.valorUnit, self.valorTotal, self.categoria]
         str = 'investimentofixo (descricao, quant, valorunitario, total, categoria)'
 
         Banco.insert(Banco, str, list)
 
     def relatorio(self):
         str = 'investimentofixo'
-        Banco.relatorio(str)
+        Banco.relatorio(Banco, str)

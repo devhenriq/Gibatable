@@ -35,16 +35,22 @@ class Banco:
 
         query = "DELETE FROM " + table + "WHERE "
 
-    def relatorio(self, table):
+        conn.commit()
+        conn.close()
+
+    def relatorio(self, table, cond = None):
         conn = self.connect(self)
         cur = conn.cursor()
 
-        query = "SELECT * FROM " + table
+        cond = " " + cond
+        query = "SELECT * FROM " + table + cond
 
         cur.execute(query)
-
+        print(cur.fetchall())
+        return cur.fetchall()
         conn.commit()
         conn.close()
+
 
     def operation(self, query, list = None):
         conn = self.connect(self)

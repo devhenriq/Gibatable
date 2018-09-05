@@ -1,3 +1,5 @@
+from Banco import Banco
+
 class Estimativa:
 
     def __init__(self, descricao, quant, lucro, mes):
@@ -6,6 +8,13 @@ class Estimativa:
         self.lucro = lucro
         self.lucrott = quant * lucro
         self.mes = mes
+        self.insereBanco()
 
     def insereBanco(self):
-        print
+        list = [self.descricao, self.quant, self.lucro, self.mes, self.lucrott]
+        str = ['estimativa(descricao, quant, lucrounitario, mes, lucrototal)']
+
+        Banco.insert(Banco, str, list)
+
+    def relatorio(self):
+        Banco.relatorio(Banco, 'estimativa')

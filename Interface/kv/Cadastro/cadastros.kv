@@ -24,6 +24,18 @@
         pos_hint: {'top':6, 'right': 5}
         on_release: app.root.current = "matprima"
         size_hint: 2, .8
+    Button:
+        font_size: 0.4*self.height
+        text:'Estimativa de Vendas'
+        pos_hint: {'top':6, 'right': 7}
+        on_release: app.root.current = "estimativa"
+        size_hint: 2, .8
+    Button:
+        font_size: 0.4*self.height
+        text:'Custos Fixos Mensais'
+        pos_hint: {'top':5, 'right': 7}
+        on_release: app.root.current = "cfixo"
+        size_hint: 2, .8
     Voltar:
         on_release: app.root.current = "menu"
 

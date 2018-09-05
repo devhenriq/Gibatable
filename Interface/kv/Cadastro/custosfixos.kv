@@ -1,0 +1,119 @@
+<CustosFixosScreen>
+    id: cfixo
+    name: "cfixo"
+    size_hint: 0.1,0.1
+    limp: limp
+    cont: cont
+    mat: mat
+    agua: agua
+    aluguel: aluguel
+    man: man
+    outros: outros
+
+    Label:
+        text: 'Custos Fixos Mensais'
+        font_size: 0.6*self.height
+        pos_hint: {'top':9,'right':5.5}
+        size_hint: 1, 1
+
+    Label:
+        text: 'Limpeza:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 8, 'right': 1.8}
+        size_hint: 1,1
+
+    TextInput:
+        name: "limp"
+        id: limp
+        font_size: 0.6*self.height
+        pos_hint: {'top': 7.7, 'right': 3.7}
+        size_hint: 2,.45
+        multiline: False
+
+    Label:
+        text: 'Honorarios do contador(Serv. terc. de contabilidade):'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 7, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "cont"
+        id: cont
+        font_size: 0.6*self.height
+        pos_hint: {'top': 6.7, 'right': 3.7}
+        size_hint: 2,.45
+        multiline: False
+
+    Label:
+        text: 'Material de expediente:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 6, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "mat"
+        id: mat
+        font_size: 0.6*self.height
+        pos_hint: {'top': 5.7, 'right': 3.7}
+        size_hint: 2,.45
+        multiline: False
+
+    Label:
+        text: 'Agua e luz:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 5, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "agua"
+        id: agua
+        font_size: 0.6*self.height
+        pos_hint: {'top': 4.7, 'right': 2.7}
+        size_hint: .5,.45
+        multiline: False
+
+    Label:
+        text: 'Aluguel:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 4, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "aluguel"
+        id: aluguel
+        font_size: 0.6*self.height
+        pos_hint: {'top': 3.7, 'right': 2.7}
+        size_hint: .5,.45
+        multiline: False
+
+    Label:
+        text: 'Manutencao:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 3, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "man"
+        id: man
+        font_size: 0.6*self.height
+        pos_hint: {'top': 2.7, 'right': 2.7}
+        size_hint: .5,.45
+        multiline: False
+    Label:
+        text: 'Outros:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 2, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "outros"
+        id: outros
+        font_size: 0.6*self.height
+        pos_hint: {'top': 1.7, 'right': 2.7}
+        size_hint: .5,.45
+        multiline: False
+
+    SendButton:
+        on_release: cfixo.envia()
+    Voltar:
+        on_release: app.root.current = "cadastro"

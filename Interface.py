@@ -15,7 +15,7 @@ from Pessoa import Pessoa
 from InvestimentoFixo import InvestimentoFixo
 from MateriaPrima import MateriaPrima
 from Estimativa import Estimativa
-
+from CustosFixos import CustosFixos
 
 Window.fullscreen = False
 Config.set('graphics', 'resizable', 1)
@@ -59,6 +59,12 @@ class EstimativaScreen(Screen):
     def envia(self):
         e = Estimativa(self.descr.text, int(self.quant.text), float(self.lucro.text), int(self.quant.text))
         e.relatorio()
+
+
+class CustosFixosScreen(Screen):
+    def envia(self):
+        c = CustosFixos(float(self.limp.text), float(self.cont.text), float(self.mat.text), float(self.agua.text), float(self.aluguel.text), float(self.man.text), float(self.outros.text))
+        c.relatorio()
 
 #Relatorio
 class Relatorio(Screen):

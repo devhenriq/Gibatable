@@ -1,5 +1,5 @@
 from Banco import Banco
-import sqlite3
+
 class Pessoa:
 
     def __init__(self, cargo, quant, salario, categoria):
@@ -35,5 +35,6 @@ class Pessoa:
 
         Banco.insert(Banco, str, list)
 
-    def relatorio(self):
-        Banco.relatorio(Banco, 'pessoa')
+    def relatorio(self, col = None, cond = None):
+        ret = Banco.relatorio(Banco, 'pessoa', col, cond)
+        return ret

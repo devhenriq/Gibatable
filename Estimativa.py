@@ -16,5 +16,6 @@ class Estimativa:
 
         Banco.insert(Banco, str, list)
 
-    def relatorio(self):
-        Banco.relatorio(Banco, 'estimativa')
+    def relatorio(self, col = None, cond = None):
+        ret = Banco.relatorio(Banco, 'estimativa', col, cond)
+        return ret

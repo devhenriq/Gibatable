@@ -25,7 +25,7 @@ class Banco:
             else:
                 query = query + "?)"
         cur.execute(query, (list))
-
+        print(query)
         conn.commit()
         conn.close()
 
@@ -38,19 +38,23 @@ class Banco:
         conn.commit()
         conn.close()
 
-    def relatorio(self, table, cond = None):
+    def relatorio(self, table, col = None, cond = None):
         conn = self.connect(self)
         cur = conn.cursor()
 
-        cond = " " + cond
-        query = "SELECT * FROM " + table + cond
+        if col is None:
+            col = "*"
+        if cond is None:
+            cond = ""
+        query = "SELECT " + col + " FROM " + table + cond
 
         cur.execute(query)
-        print(cur.fetchall())
-        return cur.fetchall()
+        print(query)
+        ret = cur.fetchall()
+        print(ret)
         conn.commit()
         conn.close()
-
+        return ret
 
     def operation(self, query, list = None):
         conn = self.connect(self)

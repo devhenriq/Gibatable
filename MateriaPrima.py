@@ -16,5 +16,6 @@ class MateriaPrima:
 
         Banco.insert(Banco, str, list)
 
-    def relatorio(self):
-        Banco.relatorio(Banco, 'materiaprima')
+    def relatorio(self, col = None, cond = None):
+        ret = Banco.relatorio(Banco, 'materiaprima', col, cond)
+        return ret

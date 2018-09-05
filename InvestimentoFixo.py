@@ -16,6 +16,6 @@ class InvestimentoFixo:
 
         Banco.insert(Banco, str, list)
 
-    def relatorio(self):
-        str = 'investimentofixo'
-        Banco.relatorio(Banco, str)
+    def relatorio(self, col = None, cond = None):
+        ret = Banco.relatorio(Banco, 'investimentofixo', col, cond)
+        return ret

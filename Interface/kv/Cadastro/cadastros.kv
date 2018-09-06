@@ -34,13 +34,19 @@
         font_size: 0.4*self.height
         text:'Custos Fixos Mensais'
         pos_hint: {'top':5, 'right': 7}
-        on_release: app.root.current = "cfixo"
+        on_release: app.root.current = "custofixo"
         size_hint: 2, .8
     Button:
         font_size: 0.4*self.height
         text:'Tributos'
         pos_hint: {'top':5, 'right': 5}
         on_release: app.root.current = "tributo"
+        size_hint: 2, .8
+    Button:
+        font_size: 0.4*self.height
+        text:'Custo com Vendas'
+        pos_hint: {'top':4, 'right': 5}
+        on_release: app.root.current = "custovendas"
         size_hint: 2, .8
     Voltar:
         on_release: app.root.current = "menu"

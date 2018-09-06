@@ -11,6 +11,7 @@ from MateriaPrima import MateriaPrima
 from Estimativa import Estimativa
 from CustosFixos import CustosFixos
 from Tributos import Tributos
+from CustoVendas import CustoVendas
 
 Window.fullscreen = False
 Config.set('graphics', 'resizable', 1)
@@ -98,6 +99,14 @@ class TributosScreen(Screen):
         self.ipi.text = ""
         self.iss.text = ""
         self.irpj.text = ""
+
+
+class CustoVendasScreen(Screen):
+    def envia(self):
+        cv = CustoVendas(self.descricao.text, float(self.porc.text))
+        cv.relatorio()
+        self.descricao.text = ""
+        self.porc.text = ""
 
 #Relatorio
 class RelatorioScreen(Screen):

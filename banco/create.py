@@ -37,13 +37,12 @@ try:
     );""")
 
     table.append("""CREATE TABLE IF NOT EXISTS estimativa (
-        id INTEGER AUTOINCREMENT,
         descricao TEXT NOT NULL,
         quant INTEGER NOT NULL,
         lucrounitario FLOAT NOT NULL,
         mes INTEGER NOT NULL,
         lucrototal FLOAT NOT NULL,
-        PRIMARY KEY(id, descricao, quant, mes)
+        PRIMARY KEY(descricao, quant, mes)
     );""")
 
     table.append("""CREATE TABLE IF NOT EXISTS estoque (
@@ -89,9 +88,7 @@ try:
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         descricao TEXT NOT NULL,
         porcentagem FLOAT NOT NULL,
-        indice FLOAT NOT NULL,
-        totalporc FLOAT NOT NULL,
-        totalind FLOAT NOT NULL
+        indice FLOAT NOT NULL
     );""")
 
     table.append("""CREATE TABLE IF NOT EXISTS investimentoinicial (
@@ -149,8 +146,8 @@ except Error:
 def create_table(cursor, table):
     try:
         cursor.execute(table)
-    except Error:
-        print(Error)
+    except Error as er:
+        print('erro: ', er)
 
 conn = sqlite3.connect('tables.db')
 

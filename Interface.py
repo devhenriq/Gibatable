@@ -1,15 +1,9 @@
 from kivy.app import App
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.lang import Builder
-from kivy.properties import ObjectProperty
 from kivy.core.window import Window
 from kivy.config import Config
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.properties import StringProperty, ListProperty
-from kivy.uix.textinput import TextInput
-from kivy.uix.dropdown import DropDown
 from os import listdir
 from Pessoa import Pessoa
 from InvestimentoFixo import InvestimentoFixo

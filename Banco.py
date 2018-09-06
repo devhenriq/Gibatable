@@ -29,11 +29,14 @@ class Banco:
         conn.commit()
         conn.close()
 
-    def delete(self, table, list):
+    def delete(self, table, cond = None):
         conn = self.connect(self)
         cur = conn.cursor()
 
-        query = "DELETE FROM " + table + "WHERE "
+        if cond is None:
+            cond = ""
+        query = "DELETE FROM " + table + cond
+        cur.execute(query)
 
         conn.commit()
         conn.close()

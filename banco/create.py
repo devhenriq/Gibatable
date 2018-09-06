@@ -79,7 +79,14 @@ table.append("""CREATE TABLE IF NOT EXISTS investimentoinicial (
     divulgacao FLOAT NOT NULL,
     outros FLOAT NOT NULL,
     caixa FLOAT NOT NULL,
-    total FLOAT NOT NULL
+    total FLOAT NOT NULL,
+    movs FLOAT NOT NULL,
+    maqs FLOAT NOT NULL,
+    comps FLOAT NOT NULL,
+    veic FLOAT NOT NULL,
+    predios FLOAT NOT NULL,
+    terrenos FLOAT NOT NULL,
+    
 );""")
 
 table.append("""CREATE TABLE IF NOT EXISTS custofinanceiro (

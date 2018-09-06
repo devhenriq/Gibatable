@@ -15,7 +15,6 @@ class CustosFixos:
         self.manutencao = manutencao
         self.deprec = 0
         self.outros = outros
-        self.total = self.adm + self.dir + self.limpeza + self.cont + self.mat + self.agua + self.aluguel + self.manutencao + self.deprec + self.outros
         self.calcula()
 
     def calcula(self):
@@ -44,7 +43,11 @@ class CustosFixos:
         self.deprec = self.deprec + total
         print(self.deprec)
 
+        Banco.delete(Banco, 'custosfixos')
+        self.total = self.adm + self.dir + self.limpeza + self.cont + self.mat + self.agua + self.aluguel + self.manutencao + self.deprec + self.outros
         self.insereBanco()
+
+
     def insereBanco(self):
         list = [self.adm, self.dir, self.limpeza, self.cont, self.mat, self.agua, self.aluguel, self.manutencao, self.deprec, self.outros, self.total]
         str = 'custosfixos (maodeobra, prolabore, limpeza, contador, material, agua, aluguel, manutencao, deprec, outros, total)'

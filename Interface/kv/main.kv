@@ -1,14 +1,15 @@
 Manager:
     StartScreen:
     MenuScreen:
-    Cadastro:
-    Relatorio:
-    Alterar:
+    CadastroScreen:
+    RelatorioScreen:
+    AlterarScreen:
     PessoaScreen:
-    Investimento:
+    InvestimentoScreen:
     MateriaPrimaScreen:
     EstimativaScreen:
     CustosFixosScreen:
+    TributosScreen:
 
 <StartScreen>:
     size_hint: 0.1, 0.1
@@ -57,7 +58,7 @@ Manager:
     Voltar:
         on_release: app.root.current = "start"
 
-<Alterar>:
+<AlterarScreen>:
     size_hint: 0.1,0.1
     name: "alterar"
     Label:

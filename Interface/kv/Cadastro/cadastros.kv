@@ -1,4 +1,4 @@
-<Cadastro>:
+<CadastroScreen>:
     size_hint: 0.1,0.1
     name: "cadastro"
     Label:
@@ -35,6 +35,12 @@
         text:'Custos Fixos Mensais'
         pos_hint: {'top':5, 'right': 7}
         on_release: app.root.current = "cfixo"
+        size_hint: 2, .8
+    Button:
+        font_size: 0.4*self.height
+        text:'Tributos'
+        pos_hint: {'top':5, 'right': 5}
+        on_release: app.root.current = "tributos"
         size_hint: 2, .8
     Voltar:
         on_release: app.root.current = "menu"

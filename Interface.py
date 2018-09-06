@@ -10,6 +10,7 @@ from InvestimentoFixo import InvestimentoFixo
 from MateriaPrima import MateriaPrima
 from Estimativa import Estimativa
 from CustosFixos import CustosFixos
+from Tributos import Tributos
 
 Window.fullscreen = False
 Config.set('graphics', 'resizable', 1)
@@ -28,7 +29,7 @@ class StartScreen(Screen):
     pass
 
 
-class Cadastro(Screen):
+class CadastroScreen(Screen):
     pass
 
 # Cadastro
@@ -36,36 +37,61 @@ class PessoaScreen(Screen):
     def envia(self):
         p = Pessoa(self.cargo.text, int(self.quant.text), float(self.salario.text), self.categoria.text)
         p.relatorio()
+        self.cargo.text = ""
+        self.quant.text = ""
+        self.salario.text = ""
+        self.categoria.text = "-"
 
-
-class Investimento(Screen):
+class InvestimentoScreen(Screen):
     def envia(self):
         i = InvestimentoFixo(self.descr.text, int(self.quant.text), float(self.vunit.text), self.categoria.text)
         i.relatorio()
+        self.descr.text = ""
+        self.quant.text = ""
+        self.vunit.text = ""
+        self.categoria.text = "-"
+
 
 class MateriaPrimaScreen(Screen):
     def envia(self):
         m = MateriaPrima(self.nome.text, self.materia.text, self.medida.text, float(self.preco.text), int(self.quant.text))
         m.relatorio()
-
+        self.nome.text = ""
+        self.materia.text = ""
+        self.medida.text = ""
+        self.preco.text = ""
+        self.quant.text = ""
 
 class EstimativaScreen(Screen):
     def envia(self):
-        e = Estimativa(self.descr.text, int(self.quant.text), float(self.lucro.text), int(self.quant.text))
+        e = Estimativa(self.descr.text, int(self.quant.text), float(self.lucro.text), self.mes.text)
         e.relatorio()
-
+        self.descr.text = ""
+        self.quant.text = ""
+        self.lucro.text = ""
+        self.mes.text = "-"
 
 class CustosFixosScreen(Screen):
     def envia(self):
         c = CustosFixos(float(self.limp.text), float(self.cont.text), float(self.mat.text), float(self.agua.text), float(self.aluguel.text), float(self.man.text), float(self.outros.text))
         c.relatorio()
+        self.limp.text = ""
+        self.cont.text = ""
+        self.mat.text = ""
+        self.agua.text = ""
+        self.aluguel.text = ""
+        self.man.text = ""
+        self.outros.text = ""
 
+class TributosScreen(Screen):
+    def envia(self):
+        t = Tributos()
 #Relatorio
-class Relatorio(Screen):
+class RelatorioScreen(Screen):
     pass
 
 
-class Alterar(Screen):
+class AlterarScreen(Screen):
     pass
 
 # Functions

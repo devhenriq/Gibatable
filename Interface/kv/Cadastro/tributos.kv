@@ -1,12 +1,14 @@
-
-<InvestimentoScreen>:
-    id: investimento
-    name: "investimento"
+<TributosScreen>:
+    id: tributo
+    name: "tributo"
     size_hint: 0.1,0.1
     simples: simples
-    quant: quant
-    vunit: vunit
-    categoria: categoria
+    icms: icms
+    pis: pis
+    cofins: cofins
+    ipi: ipi
+    iss: iss
+    irpj: irpj
 
     Label:
         text: 'Tributos'
@@ -16,54 +18,116 @@
 
 
     Label:
-        text: 'Descricao:'
+        text: 'TRIBUTO'
         font_size: 0.4*self.height
         pos_hint: {'top': 8, 'right': 1.8}
         size_hint: 1,1
 
-    TextInput:
-        name: "descr"
-        id: descr
+    Label:
+        name: "ALIQUOTA"
         font_size: 0.6*self.height
-        pos_hint: {'top': 7.7, 'right': 3.7}
+        pos_hint: {'top': 9, 'right': 3.7}
         size_hint: 2,.45
-        multiline: False
 
     Label:
-        text: 'Quantidade:'
+        text: 'Simples:'
         font_size: 0.4*self.height
         pos_hint: {'top': 7, 'right': 2}
         size_hint: 1,1
 
     TextInput:
-        name: "quantidade"
-        id: quant
+        name: "simples"
+        id: simples
         font_size: 0.6*self.height
         pos_hint: {'top': 6.7, 'right': 2.7}
         size_hint: .5,.45
         multiline: False
 
     Label:
-        text: 'Valor Unitario:'
+        text: 'ICMS:'
         font_size: 0.4*self.height
         pos_hint: {'top': 6, 'right': 2}
         size_hint: 1,1
 
     TextInput:
-        name: "vunit"
-        id: vunit
+        name: "icms"
+        id: icms
         font_size: 0.6*self.height
         pos_hint: {'top': 5.7, 'right': 2.7}
         size_hint: .5,.45
         multiline: False
 
     Label:
-        text: 'Categoria:'
+        text: 'PIS:'
         font_size: 0.4*self.height
         pos_hint: {'top': 5, 'right': 2}
         size_hint: 1,1
 
+    TextInput:
+        name: "pis"
+        id: pis
+        font_size: 0.6*self.height
+        pos_hint: {'top': 4.7, 'right': 2.7}
+        size_hint: .5,.45
+        multiline: False
+
+    Label:
+        text: 'COFINS:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 4, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "cofins"
+        id: cofins
+        font_size: 0.6*self.height
+        pos_hint: {'top': 3.7, 'right': 2.7}
+        size_hint: .5,.45
+        multiline: False
+
+    Label:
+        text: 'IPI:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 3, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "ipi"
+        id: ipi
+        font_size: 0.6*self.height
+        pos_hint: {'top': 2.7, 'right': 2.7}
+        size_hint: .5,.45
+        multiline: False
+
+    Label:
+        text: 'ISS:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 2, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "iss"
+        id: iss
+        font_size: 0.6*self.height
+        pos_hint: {'top': 1.7, 'right': 2.7}
+        size_hint: .5,.45
+        multiline: False
+
+    Label:
+        text: 'IRPJ/CSLL:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 1, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "irpj"
+        id: irpj
+        font_size: 0.6*self.height
+        pos_hint: {'top': 0.7, 'right': 2.7}
+        size_hint: .5,.45
+        multiline: False
+
     SendButton:
-        on_release: investimento.envia()
+        on_release: tributo.envia()
     Voltar:
         on_release: app.root.current = "cadastro"

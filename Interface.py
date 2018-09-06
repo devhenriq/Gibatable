@@ -42,6 +42,7 @@ class PessoaScreen(Screen):
         self.salario.text = ""
         self.categoria.text = "-"
 
+
 class InvestimentoScreen(Screen):
     def envia(self):
         i = InvestimentoFixo(self.descr.text, int(self.quant.text), float(self.vunit.text), self.categoria.text)
@@ -62,6 +63,7 @@ class MateriaPrimaScreen(Screen):
         self.preco.text = ""
         self.quant.text = ""
 
+
 class EstimativaScreen(Screen):
     def envia(self):
         e = Estimativa(self.descr.text, int(self.quant.text), float(self.lucro.text), self.mes.text)
@@ -70,6 +72,7 @@ class EstimativaScreen(Screen):
         self.quant.text = ""
         self.lucro.text = ""
         self.mes.text = "-"
+
 
 class CustosFixosScreen(Screen):
     def envia(self):
@@ -83,9 +86,19 @@ class CustosFixosScreen(Screen):
         self.man.text = ""
         self.outros.text = ""
 
+
 class TributosScreen(Screen):
     def envia(self):
-        t = Tributos()
+        t = Tributos(float(self.simples.text), float(self.icms.text), float(self.pis.text), float(self.cofins.text), float(self.ipi.text), float(self.iss.text), float(self.irpj.text))
+        t.relatorio()
+        self.simples.text = ""
+        self.icms.text = ""
+        self.pis.text = ""
+        self.cofins.text = ""
+        self.ipi.text = ""
+        self.iss.text = ""
+        self.irpj.text = ""
+
 #Relatorio
 class RelatorioScreen(Screen):
     pass

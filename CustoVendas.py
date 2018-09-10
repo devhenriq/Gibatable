@@ -14,5 +14,6 @@ class CustoVendas:
         str = "custovendas (descricao, porcentagem, indice)"
         Banco.insert(Banco, str, list)
 
-    def relatorio(self):
-        pass
+    def relatorio(self, col = None, cond = None):
+        ret = Banco.relatorio(Banco, 'custovendas', col, cond)
+        return ret

@@ -49,8 +49,8 @@ try:
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         descricao TEXT,
         quant INTEGER,
-        custounit FLOAT NOT NULL,
-        custototal FLOAT NOT NULL,
+        custounit FLOAT,
+        custototal FLOAT,
         mes INTEGER,
         FOREIGN KEY(descricao) REFERENCES estimativa(descricao),
         FOREIGN KEY(quant) REFERENCES estimativa(quant),
@@ -74,10 +74,10 @@ try:
 
     table.append("""CREATE TABLE IF NOT EXISTS tributos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        simples TEXT NOT NULL,
+        simples FLOAT NOT NULL,
         icms FLOAT NOT NULL,
         pis FLOAT NOT NULL,
-        cofins TEXT NOT NULL,
+        cofins FLOAT NOT NULL,
         ipi FLOAT NOT NULL,
         iss FLOAT NOT NULL,
         irpj FLOAT NOT NULL,
@@ -108,12 +108,14 @@ try:
         totalgiro FLOAT NOT NULL,
         estoque FLOAT NOT NULL,
         caixa FLOAT NOT NULL,
+        outrosg FLOAT NOT NULL,
         total FLOAT NOT NULL
     );""")
 
     table.append("""CREATE TABLE IF NOT EXISTS custofinanceiro (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        custo FLOAT NOT NULL
+        custo FLOAT,
+        invest FLOAT
     );""")
 
     table.append("""CREATE TABLE IF NOT EXISTS precovenda (

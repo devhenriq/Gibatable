@@ -21,5 +21,6 @@ class Tributos:
 
         Banco.insert(Banco, str, list)
 
-    def relatorio(self):
-        pass
+    def relatorio(self, col = None, cond = None):
+        ret = Banco.relatorio(Banco, 'tributos', col, cond)
+        return ret

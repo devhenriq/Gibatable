@@ -1,0 +1,105 @@
+<InvestimentoInicialScreen>
+    id: investimentoinicial
+    name: "investimentoinicial"
+    size_hint: 0.1,0.1
+    invoutros: invoutros
+    legal: legal
+    divulg: divulg
+    outros: outros
+    caixa: caixa
+    outrosg: outrosg
+
+    Label:
+        text: 'Investimento Inicial'
+        font_size: 0.6*self.height
+        pos_hint: {'top':9,'right':5.5}
+        size_hint: 1, 1
+
+    Label:
+        text: 'Outros custos com investimentos fixos:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 8, 'right': 1.8}
+        size_hint: 1,1
+
+    TextInput:
+        name: "invoutros"
+        id: invoutros
+        font_size: 0.6*self.height
+        pos_hint: {'top': 7.7, 'right': 3.7}
+        size_hint: 2,.45
+        multiline: False
+
+    Label:
+        text: 'Despesas com legalizacao:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 7, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "legal"
+        id: legal
+        font_size: 0.6*self.height
+        pos_hint: {'top': 6.7, 'right': 3.7}
+        size_hint: 2,.45
+        multiline: False
+
+    Label:
+        text: 'Despesas com divulgacao:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 6, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "divulg"
+        id: divulg
+        font_size: 0.6*self.height
+        pos_hint: {'top': 5.7, 'right': 3.7}
+        size_hint: 2,.45
+        multiline: False
+
+    Label:
+        text: 'Outras despesas pre-operacionais:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 5, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "outros"
+        id: outros
+        font_size: 0.6*self.height
+        pos_hint: {'top': 4.7, 'right': 2.7}
+        size_hint: .5,.45
+        multiline: False
+
+    Label:
+        text: 'Caixa:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 4, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "caixa"
+        id: caixa
+        font_size: 0.6*self.height
+        pos_hint: {'top': 3.7, 'right': 2.7}
+        size_hint: .5,.45
+        multiline: False
+
+    Label:
+        text: 'Outros investimentos de giro:'
+        font_size: 0.4*self.height
+        pos_hint: {'top': 3, 'right': 2}
+        size_hint: 1,1
+
+    TextInput:
+        name: "outrosg"
+        id: outrosg
+        font_size: 0.6*self.height
+        pos_hint: {'top': 2.7, 'right': 2.7}
+        size_hint: .5,.45
+        multiline: False
+
+    SendButton:
+        on_release: investimentoinicial.envia()
+    Voltar:
+        on_release: app.root.current = "cadastro"

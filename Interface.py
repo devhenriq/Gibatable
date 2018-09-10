@@ -12,6 +12,9 @@ from Estimativa import Estimativa
 from CustosFixos import CustosFixos
 from Tributos import Tributos
 from CustoVendas import CustoVendas
+from InvestimentoInicial import InvestimentoInicial
+from Estoque import Estoque
+from CustoFinanceiroMensal import CustoFinanceiroMensal
 
 Window.fullscreen = False
 Config.set('graphics', 'resizable', 1)
@@ -73,7 +76,8 @@ class EstimativaScreen(Screen):
         self.quant.text = ""
         self.lucro.text = ""
         self.mes.text = "-"
-
+        est = Estoque()
+        est.relatorio()
 
 class CustosFixosScreen(Screen):
     def envia(self):
@@ -107,6 +111,41 @@ class CustoVendasScreen(Screen):
         cv.relatorio()
         self.descricao.text = ""
         self.porc.text = ""
+
+
+class InvestimentoInicialScreen(Screen):
+    def envia(self):
+        ii = InvestimentoInicial(float(self.invoutros.text), float(self.legal.text), float(self.divulg.text), float(self.outros.text), float(self.caixa.text), float(self.outrosg.text))
+        ii.relatorio()
+        self.invoutros.text = ""
+        self.legal.text = ""
+        self.divulg.text = ""
+        self.outros.text = ""
+        self.caixa.text = ""
+        self.outrosg.text = ""
+
+
+class CustoFinanceiroMensalScreen(Screen):
+    def envia(self):
+        cfm = CustoFinanceiroMensal(float(self.custo.text))
+        cfm.relatorio()
+        self.custo.text = ""
+
+
+class RateioCustosFixosScreen(Screen):
+    def envia(self):
+        pass
+
+
+class RateioCustosOpScreen(Screen):
+    def envia(self):
+        pass
+
+
+class PrecoVendaScreen(Screen):
+    def envia(self):
+        pass
+
 
 #Relatorio
 class RelatorioScreen(Screen):

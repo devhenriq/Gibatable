@@ -48,6 +48,36 @@
         pos_hint: {'top':4, 'right': 5}
         on_release: app.root.current = "custovendas"
         size_hint: 2, .8
+    Button:
+        font_size: 0.4*self.height
+        text:'Investimento Inicial'
+        pos_hint: {'top':4, 'right': 7}
+        on_release: app.root.current = "investimentoinicial"
+        size_hint: 2, .8
+    Button:
+        font_size: 0.4*self.height
+        text:'Custo Financeiro Mensal'
+        pos_hint: {'top':3, 'right': 5}
+        on_release: app.root.current = "custofinmen"
+        size_hint: 2, .8
+    Button:
+        font_size: 0.4*self.height
+        text:'Rateio dos Custos Fixos'
+        pos_hint: {'top':3, 'right': 7}
+        on_release: app.root.current = "rateiocustosfixos"
+        size_hint: 2, .8
+    Button:
+        font_size: 0.4*self.height
+        text:'Rateio dos Custos Operacionais'
+        pos_hint: {'top':2, 'right': 5}
+        on_release: app.root.current = "rateiocustosop"
+        size_hint: 2, .8
+    Button:
+        font_size: 0.4*self.height
+        text:'Preco de Venda'
+        pos_hint: {'top':2, 'right': 7}
+        on_release: app.root.current = "precovenda"
+        size_hint: 2, .8
     Voltar:
         on_release: app.root.current = "menu"
 

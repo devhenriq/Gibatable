@@ -12,7 +12,7 @@ class Estimativa:
 
     def insereBanco(self):
         list = [self.descricao, self.quant, self.lucro, self.mes, self.lucrott]
-        str = ['estimativa(descricao, quant, lucrounitario, mes, lucrototal)']
+        str = 'estimativa(descricao, quant, lucrounitario, mes, lucrototal)'
 
         Banco.insert(Banco, str, list)
 

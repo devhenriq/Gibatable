@@ -1,8 +1,11 @@
 from kivy.app import App
 from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.config import Config
+from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from os import listdir
 from Pessoa import Pessoa
@@ -15,6 +18,10 @@ from CustoVendas import CustoVendas
 from InvestimentoInicial import InvestimentoInicial
 from Estoque import Estoque
 from CustoFinanceiroMensal import CustoFinanceiroMensal
+from RateioOp import RateioOp
+from RateioFixos import RateioFixos
+from kivy.clock import mainthread
+from kivy.uix.slider import Slider
 
 Window.fullscreen = False
 Config.set('graphics', 'resizable', 1)
@@ -133,14 +140,47 @@ class CustoFinanceiroMensalScreen(Screen):
 
 
 class RateioCustosFixosScreen(Screen):
+    inputs = []
     def envia(self):
-        pass
+            #rto = RateioOp(self.inputs) #adicionar na lista os inputs criado na linha 160 dos text input. (15 linhas abaixo)
+            #rto.relatorio()
+            print()
+
+    @mainthread
+    def on_enter(self):
+        slider = Slider()
+        self.add_widget(slider)
+        list = Estimativa.relatorio(Estimativa, 'descricao')
+
+        x = 0
+        for e in list:
+
+            label = Label(size_hint=[1, 1], text=e[0], pos_hint={'top': 7 - x, 'right': 2})
+            self.add_widget(label)
+            textin = TextInput(id='porc'+str(x), size_hint=[1,.45], pos_hint={'top': 6.7 - x, 'right': 4}, multiline=False)
+            self.add_widget(textin)
+            self.inputs.append('porc'+str(x))
+            x = x + 1
 
 
 class RateioCustosOpScreen(Screen):
     def envia(self):
         pass
 
+    @mainthread
+    def on_enter(self):
+        slider = Slider()
+        self.add_widget(slider)
+        list = Estimativa.relatorio(Estimativa, 'descricao')
+
+        x = 0
+        for e in list:
+
+            label = Label(size_hint=[1, 1], text=e[0], pos_hint={'top': 7 - x, 'right': 2})
+            self.add_widget(label)
+            textin = TextInput(size_hint=[1,.45], pos_hint={'top': 6.7 - x, 'right': 4}, multiline=False)
+            self.add_widget(textin)
+            x = x + 1
 
 class PrecoVendaScreen(Screen):
     def envia(self):

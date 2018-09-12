@@ -5,8 +5,7 @@ from kivy.uix.textinput import TextInput
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.config import Config
-from kivy.graphics.texture import Texture
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
+from kivy.uix.screenmanager import ScreenManager, Screen
 from os import listdir
 from Pessoa import Pessoa
 from InvestimentoFixo import InvestimentoFixo
@@ -20,8 +19,12 @@ from Estoque import Estoque
 from CustoFinanceiroMensal import CustoFinanceiroMensal
 from RateioOp import RateioOp
 from RateioFixos import RateioFixos
+from PrecoVenda import PrecoVenda
 from kivy.clock import mainthread
+from kivy.clock import Clock
 from kivy.uix.slider import Slider
+from kivy.uix.scrollview import ScrollView
+from functools import partial
 
 Window.fullscreen = False
 Config.set('graphics', 'resizable', 1)
@@ -86,6 +89,7 @@ class EstimativaScreen(Screen):
         est = Estoque()
         est.relatorio()
 
+
 class CustosFixosScreen(Screen):
     def envia(self):
         c = CustosFixos(float(self.limp.text), float(self.cont.text), float(self.mat.text), float(self.agua.text), float(self.aluguel.text), float(self.man.text), float(self.outros.text))
@@ -141,15 +145,25 @@ class CustoFinanceiroMensalScreen(Screen):
 
 class RateioCustosFixosScreen(Screen):
     inputs = []
+
     def envia(self):
-            #rto = RateioOp(self.inputs) #adicionar na lista os inputs criado na linha 160 dos text input. (15 linhas abaixo)
-            #rto.relatorio()
-            print()
+        for w in self.inputs:
+            rto = RateioFixos(w) #adicionar na lista os inputs criado na linha 160 dos text input. (15 linhas abaixo)k
+            rto.relatorio()
 
     @mainthread
     def on_enter(self):
-        slider = Slider()
-        self.add_widget(slider)
+        #Clock.schedule_once(self.create_scrollview)
+
+   # def create_scrollview(self):
+        for w in self.inputs:
+            w[0].canvas.clear()
+            w[1].canvas.clear()
+
+
+        #scrollview = ScrollView(size_hint=(1, None), size=(Window.width, Window.height))
+
+
         list = Estimativa.relatorio(Estimativa, 'descricao')
 
         x = 0
@@ -157,35 +171,51 @@ class RateioCustosFixosScreen(Screen):
 
             label = Label(size_hint=[1, 1], text=e[0], pos_hint={'top': 7 - x, 'right': 2})
             self.add_widget(label)
-            textin = TextInput(id='porc'+str(x), size_hint=[1,.45], pos_hint={'top': 6.7 - x, 'right': 4}, multiline=False)
-            self.add_widget(textin)
-            self.inputs.append('porc'+str(x))
-            x = x + 1
-
-
-class RateioCustosOpScreen(Screen):
-    def envia(self):
-        pass
-
-    @mainthread
-    def on_enter(self):
-        slider = Slider()
-        self.add_widget(slider)
-        list = Estimativa.relatorio(Estimativa, 'descricao')
-
-        x = 0
-        for e in list:
-
-            label = Label(size_hint=[1, 1], text=e[0], pos_hint={'top': 7 - x, 'right': 2})
-            self.add_widget(label)
+            lista = []
+            lista.append(label)
             textin = TextInput(size_hint=[1,.45], pos_hint={'top': 6.7 - x, 'right': 4}, multiline=False)
             self.add_widget(textin)
+            lista.append(textin)
+            self.inputs.append(lista)
             x = x + 1
+        #self.add_widget(scrollview)
+
+class RateioCustosOpScreen(Screen):
+    inputs = []
+
+    def envia(self):
+        for w in self.inputs:
+            rto = RateioOp(w)  # adicionar na lista os inputs criado na linha 160 dos text input. (15 linhas abaixo)k
+            rto.relatorio()
+
+    @mainthread
+    def on_enter(self):
+        for w in self.inputs:
+            w[0].canvas.clear()
+            w[1].canvas.clear()
+        slider = Slider()
+        self.add_widget(slider)
+        list = Estimativa.relatorio(Estimativa, 'descricao')
+
+        x = 0
+        for e in list:
+            label = Label(size_hint=[1, 1], text=e[0], pos_hint={'top': 7 - x, 'right': 2})
+            self.add_widget(label)
+            lista = []
+            lista.append(label)
+            textin = TextInput(size_hint=[1, .45], pos_hint={'top': 6.7 - x, 'right': 4}, multiline=False)
+            self.add_widget(textin)
+            lista.append(textin)
+            self.inputs.append(lista)
+            x = x + 1
+
 
 class PrecoVendaScreen(Screen):
     def envia(self):
-        pass
-
+        pv = PrecoVenda(self.outros.text, self.mes.text)
+        pv.relatorio()
+        self.outros.text = ""
+        self.mes.text = ""
 
 #Relatorio
 class RelatorioScreen(Screen):

@@ -2,11 +2,17 @@ from Banco import Banco
 from Estimativa import Estimativa
 
 class RateioFixos:
-    def __init__(self):
-        pass
+    def __init__(self, list):
+        self.produto = list[0].text
+        self.porc = list[1].text
+        self.insereBanco()
 
     def insereBanco(self):
-        pass
+        list = [self.produto, self.porc]
+        str = 'rateiocustosfixos (produto, porc)'
+
+        Banco.delete(Banco, 'rateiocustosfixos')
+        Banco.insert(Banco, str, list)
 
     def relatorio(self, col=None, cond=None):
-        return Banco(Banco, 'rateiocustosfixos', col, cond)
+        return Banco.relatorio(Banco, 'rateiocustosfixos', col, cond)

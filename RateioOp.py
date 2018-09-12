@@ -3,10 +3,16 @@ from Estimativa import Estimativa
 
 class RateioOp:
     def __init__(self, list):
-        pass
+        self.produto = list[0].text
+        self.porc = list[1].text
+        self.insereBanco()
 
     def insereBanco(self):
-        pass
+        list = [self.produto, self.porc]
+        str = 'rateiocustosop (produto, porc)'
+
+        Banco.delete(Banco, 'rateiocustosop')
+        Banco.insert(Banco, str, list)
 
     def relatorio(self, col=None, cond=None):
-        return Banco(Banco, 'rateiocustosop', col, cond)
+        return Banco.relatorio(Banco, 'rateiocustosop', col, cond)

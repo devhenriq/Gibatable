@@ -121,15 +121,13 @@ try:
     table.append("""CREATE TABLE IF NOT EXISTS precovenda (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         mes INTEGER NOT NULL,
-        outros FLOAT NOT NULL,
-        total FLOAT NOT NULL
+        outros FLOAT NOT NULL
     );""")
 
     table.append("""CREATE TABLE IF NOT EXISTS rateiocustosfixos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         produto TEXT NOT NULL,
         porc FLOAT NOT NULL,
-        total FLOAT NOT NULL,
         FOREIGN KEY (produto) REFERENCES estimativa(descricao)
     );""")
 
@@ -137,7 +135,6 @@ try:
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         produto TEXT NOT NULL,
         porc FLOAT NOT NULL,
-        total FLOAT NOT NULL,
         
         FOREIGN KEY (produto) REFERENCES estimativa(descricao)
     );""")

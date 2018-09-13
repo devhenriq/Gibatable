@@ -159,7 +159,7 @@ class RateioCustosFixosScreen(Screen):
         for w in self.inputs:
             w[0].canvas.clear()
             w[1].canvas.clear()
-
+            w[2].canvas.clear()
 
         #scrollview = ScrollView(size_hint=(1, None), size=(Window.width, Window.height))
 
@@ -168,14 +168,20 @@ class RateioCustosFixosScreen(Screen):
 
         x = 0
         for e in list:
-
-            label = Label(size_hint=[1, 1], text=e[0], pos_hint={'top': 7 - x, 'right': 2})
-            self.add_widget(label)
             lista = []
+
+            label = Label(text=e[0])
+            self.scrl.add_widget(label)
             lista.append(label)
-            textin = TextInput(size_hint=[1,.45], pos_hint={'top': 6.7 - x, 'right': 4}, multiline=False)
-            self.add_widget(textin)
+
+            textin = TextInput(font_size=32,multiline=False)
+            self.scrl.add_widget(textin)
             lista.append(textin)
+
+            label2 = Label(text='%')
+            self.scrl.add_widget(label2)
+            lista.append(label2)
+
             self.inputs.append(lista)
             x = x + 1
         #self.add_widget(scrollview)
@@ -200,11 +206,11 @@ class RateioCustosOpScreen(Screen):
         x = 0
         for e in list:
             label = Label(size_hint=[1, 1], text=e[0], pos_hint={'top': 7 - x, 'right': 2})
-            self.add_widget(label)
+            self.scrl.add_widget(label)
             lista = []
             lista.append(label)
             textin = TextInput(size_hint=[1, .45], pos_hint={'top': 6.7 - x, 'right': 4}, multiline=False)
-            self.add_widget(textin)
+            self.scrl.add_widget(textin)
             lista.append(textin)
             self.inputs.append(lista)
             x = x + 1

@@ -1,29 +1,57 @@
 <RateioCustosFixosScreen>:
-    size_hint: 0.1,0.1
     id: rateiocustosfixos
     name: "rateiocustosfixos"
+    scrl: scrl
 
-    ScrollView:
-        do_scroll_x: False
-        do_scroll_y: True
-        bar_width: 4
+    GridLayout:
+        cols:1
+        rows:3
+        height: self.minimum_height
+        size_hint: 1, 1
+        row_default_height: 60
+        Label:
+            text: 'Rateio dos Custos Fixos'
+            font_size: 0.6*self.height
+            size_hint: 1,None
+        BoxLayout:
+            orientation: 'vertical'
+            scrl: scrl
 
-    Label:
-        text: 'Rateio dos Custos Fixos'
-        font_size: 0.6*self.height
-        pos_hint: {'top':9,'right':5.5}
-        size_hint: 1, 1
-    Label:
-        text: 'Produto'
-        font_size: 0.4*self.height
-        pos_hint: {'top':8,'right':2}
-        size_hint: 1, 1
-    Label:
-        text: '% de rateio'
-        font_size: 0.4*self.height
-        pos_hint: {'top':8,'right':4}
-        size_hint: 1, 1
-    SendButton:
-        on_release: rateiocustosfixos.envia()
-    Voltar:
-        on_release: app.root.current = "cadastro"
+            ScrollView:
+                scrl: scrl
+                height: root.height * 1.5
+
+                GridLayout:
+                    cols: 3
+                    id: scrl
+                    height: self.minimum_height
+                    padding: 100
+                    spacing: 50
+                    row_default_height: 60
+                    col_default_width: 100
+                    size_hint: 1,None
+                    Label:
+                        text: 'Produto'
+                        font_size: 0.4*self.height
+                        size_hint: 1,.1
+                    Label:
+                        text: '% de rateio'
+                        font_size: 0.4*self.height
+                        size_hint: 1,.1
+                    Label:
+                        text: ''
+                        font_size: 0.4*self.height
+                        size_hint: 1,.1
+                        
+        GridLayout:
+            cols: 2
+            height: self.minimum_height
+            padding: 50
+            size_hint: 0.1, 0.1
+            row_default_height: 60
+            col_default_width: 100
+            spacing: 500
+            SendButton:
+                on_release: custofinmen.envia()
+            Voltar:
+                on_release: app.root.current = "cadastro"

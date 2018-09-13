@@ -169,12 +169,12 @@ class RateioCustosFixosScreen(Screen):
         x = 0
         for e in list:
 
-            label = Label(size_hint=[1, 1], text=e[0], pos_hint={'top': 7 - x, 'right': 2})
-            self.add_widget(label)
+            label = Label(text=e[0])
+            self.scrl.add_widget(label)
             lista = []
             lista.append(label)
-            textin = TextInput(size_hint=[1,.45], pos_hint={'top': 6.7 - x, 'right': 4}, multiline=False)
-            self.add_widget(textin)
+            textin = TextInput( multiline=False)
+            self.scrl.add_widget(textin)
             lista.append(textin)
             self.inputs.append(lista)
             x = x + 1

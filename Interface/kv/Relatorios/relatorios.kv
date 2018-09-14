@@ -92,12 +92,7 @@
                     padding_y: 10
                     on_release: app.root.current: "relrateiofixo"
                 Button:
-                    size_hint: .1,.1
-                    text_size: self.size
-                    halign: 'center'
                     text:"Rateio de Custos Operacionais"
-                    valign: 'center'
-                    padding_y: 10
                     on_release: app.root.current: "relrateioop"
 
         GridLayout:
@@ -114,4 +109,4 @@
                 halign: 'center'
                 valign: 'center'
                 padding_y: 10
-                on_release: app.root.current: "menu"
+                on_release: app.root.current = "menu"

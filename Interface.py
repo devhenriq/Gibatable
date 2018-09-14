@@ -227,6 +227,10 @@ class PrecoVendaScreen(Screen):
 class RelatorioScreen(Screen):
     pass
 
+class RelPessoaScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        pass
 
 class AlterarScreen(Screen):
     pass

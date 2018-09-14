@@ -1,19 +1,117 @@
 <RelatorioScreen>:
-    size_hint: 0.1,0.1
     name: "relatorio"
-    Label:
-        text: 'Relatorios'
-        font_size: 0.6*self.height
-        pos_hint: {'top':9,'right':5.5}
+    GridLayout:
+        rows:3
+        height: self.minimum_height
         size_hint: 1, 1
+        row_default_height: 60
+        spacing: 50
+        Label:
+            text: 'Relatorios'
+            font_size: 0.6*self.height
+            size_hint: 0.1, 0.1
+        BoxLayout:
+            padding: 30
+            GridLayout:
+                cols: 3
+                spacing: 25
+                height: self.minimum_height
+                size_hint: 1, 1
+                row_default_height: 60
+                font_size: 0.2 * self.height
+                Button:
+                    size_hint: .1,.1
+                    text:"Investimentos Fixos"
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current: "relinvfixo"
+                Button:
+                    size_hint: .1,.1
+                    text:"Pessoas"
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current: "relpessoa"
+                Button:
+                    size_hint: .1,.1
+                    text:"Materia Prima"
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current: "relmatprima"
+                Button:
+                    size_hint: .1,.1
+                    text:"Estimativa de Vendas"
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current: "relestimativa"
+                Button:
+                    size_hint: .1,.1
+                    text:"Custos Fixos Mensais"
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current: "relcustofixo"
+                Button:
+                    size_hint: .1,.1
+                    text:"Investimentos Iniciais"
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current: "relinvini"
+                Button:
+                    size_hint: .1,.1
+                    text:"Custo Financeiro Mensal"
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current: "relcustofinmen"
+                Button:
+                    size_hint: .1,.1
+                    text:"Estoque"
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current: "relestoque"
+                Button:
+                    size_hint: .1,.1
+                    text:"Rateio de Custos Fixos"
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current: "relrateiofixo"
+                Button:
+                    size_hint: .1,.1
+                    text_size: self.size
+                    halign: 'center'
+                    text:"Rateio de Custos Operacionais"
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current: "relrateioop"
 
-
-    Button:
-        font_size: 0.4*self.height
-        text:'Alterar'
-        pos_hint: {'top':7, 'right': 6}
-        on_release: app.root.current = "alterar"
-        size_hint: 2, .8
-
-    Voltar:
-        on_release: app.root.current = "menu"
+        GridLayout:
+            cols: 2
+            height: self.minimum_height
+            size_hint: .1, .1
+            row_default_height: 20
+            font_size: 0.2 * self.height
+            Label:
+                text: ""
+            Voltar:
+                size_hint: 0.1, 0.1
+                text_size: self.size
+                halign: 'center'
+                valign: 'center'
+                padding_y: 10
+                on_release: app.root.current: "menu"

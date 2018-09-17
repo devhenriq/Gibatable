@@ -1,8 +1,10 @@
 <PessoaScreen>:
     id: pessoa
     name: "pessoa"
-    scrl: scrl
-
+    cargo: cargo
+    quant: quant
+    salario: salario
+    categoria: categoria
     GridLayout:
         cols:1
         rows:3
@@ -15,15 +17,11 @@
             size_hint: 1,None
         BoxLayout:
             orientation: 'vertical'
-            scrl: scrl
-
+            size_hint: 1,1
             ScrollView:
-                scrl: scrl
                 height: root.height * 1.5
-
                 GridLayout:
                     cols: 2
-                    id: scrl
                     height: self.minimum_height
                     padding: 100
                     spacing: 50
@@ -50,33 +48,54 @@
                         text: 'Quantidade:'
                         font_size: 0.4*self.height
                         size_hint: 1,1
-                    TextInput:
-                        name: "quantidade"
-                        id: quant
-                        font_size: 0.6*self.height
-                        size_hint: .5,.45
-                        multiline: False
+                    GridLayout:
+                        cols: 3
+                        spacing: 140
+                        TextInput:
+                            name: "quantidade"
+                            id: quant
+                            font_size: 0.6*self.height
+                            size_hint: .5,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                        Label:
+                            text: ""
                     Label:
                         text: 'Salario:'
                         font_size: 0.4*self.height
                         size_hint: 1,1
-                    TextInput:
-                        name: "salario"
-                        id: salario
-                        font_size: 0.6*self.height
-                        size_hint: .5,.45
-                        multiline: False
+                    GridLayout:
+                        cols: 3
+                        spacing: 80
+                        size_hint: 1,1
+                        TextInput:
+                            name: "salario"
+                            id: salario
+                            font_size: 0.6*self.height
+                            size_hint: .5,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                        Label:
+                            text: ""
                     Label:
                         text: 'Categoria:'
                         font_size: 0.4*self.height
                         size_hint: 1,1
-                    Spinner:
-                        name: "categoria"
-                        id: categoria
-                        font_size: 0.4*self.height
-                        size_hint: .8,.45
-                        text: '-'
-                        values: ('Produtor', 'Administrativo', 'Diretor')
+                    GridLayout:
+                        cols: 2
+                        spacing: 80
+                        size_hint: 1,1
+                        Spinner:
+                            name: "categoria"
+                            id: categoria
+                            font_size: 0.4*self.height
+                            size_hint: .8,.45
+                            text: '-'
+                            values: ('Produtor', 'Administrativo', 'Diretor')
+                        Label:
+                            text: ""
 
 
         GridLayout:

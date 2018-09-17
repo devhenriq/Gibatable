@@ -5,6 +5,7 @@ from kivy.uix.textinput import TextInput
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.config import Config
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from os import listdir
 from Pessoa import Pessoa
@@ -27,7 +28,7 @@ from kivy.uix.scrollview import ScrollView
 from functools import partial
 
 Window.fullscreen = False
-Config.set('graphics', 'resizable', 1)
+Config.set('graphics', 'resizable', False)
 Config.write()
 
 # Manager
@@ -239,7 +240,8 @@ class AlterarScreen(Screen):
 class StartButton(Button):
     pass
 
-
+class ScrollGridCustom(BoxLayout):
+    pass
 
 class SendButton(Button):
     pass

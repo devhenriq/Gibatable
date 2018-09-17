@@ -246,9 +246,27 @@ class RelPessoaScreen(Screen):
     def on_enter(self):
         dados = Pessoa.relatorio(Pessoa, 'cargo, quant, salario, ferias, decimo, fgts, inss, total')
 
-        for l in self.labels:
-            l.canvas.clear()
-
+        #for l in self.labels:
+           # l.canvas.clear()
+        self.scrl.clear_widgets()
+        label = Label(text = '')
+        self.scrl.add_widget(label)
+        label = Label(text = 'Cargo')
+        self.scrl.add_widget(label)
+        label = Label(text='Quantidade')
+        self.scrl.add_widget(label)
+        label = Label(text='Salario')
+        self.scrl.add_widget(label)
+        label = Label(text='Ferias')
+        self.scrl.add_widget(label)
+        label = Label(text='Decimo Terceiro')
+        self.scrl.add_widget(label)
+        label = Label(text='FGTS')
+        self.scrl.add_widget(label)
+        label = Label(text='INSS')
+        self.scrl.add_widget(label)
+        label = Label(text='Total')
+        self.labels.append(label)
         x = 1
         for pessoa in dados:
             label = Label(text=str(x))

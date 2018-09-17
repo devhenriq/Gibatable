@@ -192,27 +192,39 @@ class RateioCustosOpScreen(Screen):
 
     def envia(self):
         for w in self.inputs:
-            rto = RateioOp(w)  # adicionar na lista os inputs criado na linha 160 dos text input. (15 linhas abaixo)k
+            rto = RateioFixos(w)  # adicionar na lista os inputs criado na linha 160 dos text input. (15 linhas abaixo)k
             rto.relatorio()
 
     @mainthread
     def on_enter(self):
+        # Clock.schedule_once(self.create_scrollview)
+
+        # def create_scrollview(self):
         for w in self.inputs:
             w[0].canvas.clear()
             w[1].canvas.clear()
-        slider = Slider()
-        self.add_widget(slider)
+            w[2].canvas.clear()
+
+        # scrollview = ScrollView(size_hint=(1, None), size=(Window.width, Window.height))
+
         list = Estimativa.relatorio(Estimativa, 'descricao')
 
         x = 0
         for e in list:
-            label = Label(size_hint=[1, 1], text=e[0], pos_hint={'top': 7 - x, 'right': 2})
-            self.scrl.add_widget(label)
             lista = []
+
+            label = Label(text=e[0])
+            self.scrl.add_widget(label)
             lista.append(label)
-            textin = TextInput(size_hint=[1, .45], pos_hint={'top': 6.7 - x, 'right': 4}, multiline=False)
+
+            textin = TextInput(font_size=32, multiline=False)
             self.scrl.add_widget(textin)
             lista.append(textin)
+
+            label2 = Label(text='%')
+            self.scrl.add_widget(label2)
+            lista.append(label2)
+
             self.inputs.append(lista)
             x = x + 1
 
@@ -229,10 +241,31 @@ class RelatorioScreen(Screen):
     pass
 
 class RelPessoaScreen(Screen):
+    labels = []
     @mainthread
     def on_enter(self):
-        pass
+        dados = Pessoa.relatorio(Pessoa, 'cargo, quant, salario, ferias, decimo, fgts, inss, total')
 
+        for l in self.labels:
+            l.canvas.clear()
+
+        x = 1
+        for pessoa in dados:
+            label = Label(text=str(x))
+            self.scrl.add_widget(label)
+            self.labels.append(label)
+            for d in pessoa:
+
+                if isinstance(d,str):
+                    label = Label(text=d, font_size=0.4 * self.height, size_hint=[1, 1])
+                else:
+                    if isinstance(d, int):
+                        label = Label(text=str(d), font_size=0.4*self.height, size_hint=[1,1])
+                    else:
+                        label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
+                self.labels.append(label)
+                self.scrl.add_widget(label)
+            x = x + 1
 class AlterarScreen(Screen):
     pass
 

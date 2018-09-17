@@ -1,4 +1,5 @@
 <RelatorioScreen>:
+    id: relatorio
     name: "relatorio"
     GridLayout:
         rows:3
@@ -26,7 +27,7 @@
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current: "relinvfixo"
+                    on_release: app.root.current= "relinvfixo"
                 Button:
                     size_hint: .1,.1
                     text:"Pessoas"
@@ -34,7 +35,7 @@
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current: "relpessoa"
+                    on_release: app.root.current= "relpessoa"
                 Button:
                     size_hint: .1,.1
                     text:"Materia Prima"
@@ -42,7 +43,7 @@
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current: "relmatprima"
+                    on_release: app.root.current= "relmatprima"
                 Button:
                     size_hint: .1,.1
                     text:"Estimativa de Vendas"
@@ -50,7 +51,7 @@
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current: "relestimativa"
+                    on_release: app.root.current= "relestimativa"
                 Button:
                     size_hint: .1,.1
                     text:"Custos Fixos Mensais"
@@ -58,7 +59,7 @@
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current: "relcustofixo"
+                    on_release: app.root.current= "relcustofixo"
                 Button:
                     size_hint: .1,.1
                     text:"Investimentos Iniciais"
@@ -66,7 +67,7 @@
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current: "relinvini"
+                    on_release: app.root.current= "relinvini"
                 Button:
                     size_hint: .1,.1
                     text:"Custo Financeiro Mensal"
@@ -74,7 +75,7 @@
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current: "relcustofinmen"
+                    on_release: app.root.current= "relcustofinmen"
                 Button:
                     size_hint: .1,.1
                     text:"Estoque"
@@ -82,7 +83,7 @@
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current: "relestoque"
+                    on_release: app.root.current= "relestoque"
                 Button:
                     size_hint: .1,.1
                     text:"Rateio de Custos Fixos"
@@ -90,10 +91,15 @@
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current: "relrateiofixo"
+                    on_release: app.root.current= "relrateiofixo"
                 Button:
+                    size_hint: .1,.1
                     text:"Rateio de Custos Operacionais"
-                    on_release: app.root.current: "relrateioop"
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current= "relrateioop"
 
         GridLayout:
             cols: 2

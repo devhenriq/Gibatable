@@ -54,9 +54,7 @@ class Banco:
         query = "SELECT " + col + " FROM " + table + cond
 
         cur.execute(query)
-        print(query)
         ret = cur.fetchall()
-        print(ret)
         conn.commit()
         conn.close()
         return ret

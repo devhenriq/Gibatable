@@ -1,35 +1,59 @@
 <RelPessoaScreen>:
     id: relpessoa
     name: "relpessoa"
-    scrl: scrl
+
     GridLayout:
-        cols:1
         rows:3
         height: self.minimum_height
-        size_hint: 1, 1
         row_default_height: 60
+        spacing: 50
         Label:
             text: 'Gastos com Pessoal'
             font_size: 0.6*self.height
-            size_hint: 1,None
+            size_hint: .1, .1
         BoxLayout:
-            orientation: 'vertical'
-            scrl: scrl
-
-            ScrollView:
-                scrl: scrl
-                height: root.height * 1.5
-
+            padding: 30
+            GridLayout:
+                cols: 3
+                row_default_height: 60
+                height: self.minimum_height
+                Label:
+                    text: ''
                 GridLayout:
-                    cols: 9
-                    id: scrl
+                    rows: 3
                     height: self.minimum_height
-                    padding: 100
-                    spacing: 50
-                    row_default_height: 60
-                    col_default_width: 100
-                    size_hint: 1,None
-                    
+                    spacing: 25
+                    row_default_height: 30
+
+                    Button:
+                        font_size: 0.2*self.height
+                        size_hint: .1,.1
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        text: 'GASTOS COM PESSOAL DE PRODUCAO'
+                        on_release: app.root.current = 'relpessoaop'
+                    Button:
+                        font_size: 0.2*self.height
+                        size_hint: .1,.1
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        text: 'GASTOS COM PESSOAL ADMINISTRATIVO'
+                        on_release: app.root.current = 'relpessoaadm'
+                    Button:
+                        font_size: 0.2*self.height
+                        size_hint: .1,.1
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        text: 'GASTOS COM DIRECAO'
+                        on_release: app.root.current = 'relpessoadir'
+                Label:
+                    text: ''
         GridLayout:
             cols: 2
             height: self.minimum_height

@@ -16,7 +16,7 @@ class Pessoa:
 
     def calculoPessoal(self):
 
-        if self.categoria != "diretor":
+        if self.categoria != "Diretor":
             self.provferias = (self.salario/12)*0.333333
             self.provdecimo = self.salario/12
             self.fgts = (self.salario + self.provferias + self.provdecimo) * 0.08

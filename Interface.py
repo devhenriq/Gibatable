@@ -26,6 +26,8 @@ from kivy.clock import Clock
 from kivy.uix.slider import Slider
 from kivy.uix.scrollview import ScrollView
 from functools import partial
+import gc
+
 
 Window.fullscreen = False
 Config.set('graphics', 'resizable', False)
@@ -241,14 +243,50 @@ class RelatorioScreen(Screen):
     pass
 
 class RelPessoaScreen(Screen):
-    labels = []
+    pass
+
+class RelPessoaDirScreen(Screen):
     @mainthread
     def on_enter(self):
-        dados = Pessoa.relatorio(Pessoa, 'cargo, quant, salario, ferias, decimo, fgts, inss, total')
+        dados = Pessoa.relatorio(Pessoa, 'cargo, quant, salario, inss, total', ' WHERE categoria="Diretor"')
 
-        #for l in self.labels:
-           # l.canvas.clear()
         self.scrl.clear_widgets()
+        gc.collect()
+        label = Label(text = '')
+        self.scrl.add_widget(label)
+        label = Label(text = 'Cargo')
+        self.scrl.add_widget(label)
+        label = Label(text='Quantidade')
+        self.scrl.add_widget(label)
+        label = Label(text='Salario')
+        self.scrl.add_widget(label)
+        label = Label(text='INSS')
+        self.scrl.add_widget(label)
+        label = Label(text='Total')
+        self.scrl.add_widget(label)
+        x = 1
+        for pessoa in dados:
+            label = Label(text=str(x))
+            self.scrl.add_widget(label)
+            for d in pessoa:
+
+                if isinstance(d,str):
+                    label = Label(text=d, font_size=0.4 * self.height, size_hint=[1, 1])
+                else:
+                    if isinstance(d, int):
+                        label = Label(text=str(d), font_size=0.4*self.height, size_hint=[1,1])
+                    else:
+                        label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
+                self.scrl.add_widget(label)
+            x = x + 1
+
+class RelPessoaOpScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        dados = Pessoa.relatorio(Pessoa, 'cargo, quant, salario, ferias, decimo, fgts, inss, total', ' WHERE categoria="Produtor"')
+
+        self.scrl.clear_widgets()
+        gc.collect()
         label = Label(text = '')
         self.scrl.add_widget(label)
         label = Label(text = 'Cargo')
@@ -266,12 +304,11 @@ class RelPessoaScreen(Screen):
         label = Label(text='INSS')
         self.scrl.add_widget(label)
         label = Label(text='Total')
-        self.labels.append(label)
+        self.scrl.add_widget(label)
         x = 1
         for pessoa in dados:
             label = Label(text=str(x))
             self.scrl.add_widget(label)
-            self.labels.append(label)
             for d in pessoa:
 
                 if isinstance(d,str):
@@ -281,9 +318,254 @@ class RelPessoaScreen(Screen):
                         label = Label(text=str(d), font_size=0.4*self.height, size_hint=[1,1])
                     else:
                         label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
-                self.labels.append(label)
                 self.scrl.add_widget(label)
             x = x + 1
+
+class RelPessoaAdmScreen(Screen):
+    labels = []
+    @mainthread
+    def on_enter(self):
+        dados = Pessoa.relatorio(Pessoa, 'cargo, quant, salario, ferias, decimo, fgts, inss, total', ' WHERE categoria="Administrativo"')
+
+        self.scrl.clear_widgets()
+        gc.collect()
+        label = Label(text = '')
+        self.scrl.add_widget(label)
+        label = Label(text = 'Cargo')
+        self.scrl.add_widget(label)
+        label = Label(text='Quantidade')
+        self.scrl.add_widget(label)
+        label = Label(text='Salario')
+        self.scrl.add_widget(label)
+        label = Label(text='Ferias')
+        self.scrl.add_widget(label)
+        label = Label(text='Decimo Terceiro')
+        self.scrl.add_widget(label)
+        label = Label(text='FGTS')
+        self.scrl.add_widget(label)
+        label = Label(text='INSS')
+        self.scrl.add_widget(label)
+        label = Label(text='Total')
+        self.scrl.add_widget(label)
+        x = 1
+        for pessoa in dados:
+            label = Label(text=str(x))
+            self.scrl.add_widget(label)
+            for d in pessoa:
+
+                if isinstance(d,str):
+                    label = Label(text=d, font_size=0.4 * self.height, size_hint=[1, 1])
+                else:
+                    if isinstance(d, int):
+                        label = Label(text=str(d), font_size=0.4*self.height, size_hint=[1,1])
+                    else:
+                        label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
+                self.scrl.add_widget(label)
+            x = x + 1
+
+
+class RelInvFixoScreen(Screen):
+    pass
+
+class RelCompScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        dados = InvestimentoFixo.relatorio(InvestimentoFixo, 'descricao, quant, valorunitario, total', ' WHERE categoria="Computadores/Equipamentos de Informatica"')
+
+        self.scrl.clear_widgets()
+        label = Label(text = '')
+        self.scrl.add_widget(label)
+        label = Label(text = 'Descricao')
+        self.scrl.add_widget(label)
+        label = Label(text='Quantidade')
+        self.scrl.add_widget(label)
+        label = Label(text='Valor Unitario')
+        self.scrl.add_widget(label)
+        label = Label(text='Valor Total')
+        self.scrl.add_widget(label)
+        x = 1
+        for pessoa in dados:
+            label = Label(text=str(x))
+            self.scrl.add_widget(label)
+            for d in pessoa:
+
+                if isinstance(d,str):
+                    label = Label(text=d, font_size=0.4 * self.height, size_hint=[1, 1])
+                else:
+                    if isinstance(d, int):
+                        label = Label(text=str(d), font_size=0.4*self.height, size_hint=[1,1])
+                    else:
+                        label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
+                self.scrl.add_widget(label)
+            x = x + 1
+
+class RelDeprecScreen(Screen):
+    pass
+
+class RelMaqScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        dados = InvestimentoFixo.relatorio(InvestimentoFixo, 'descricao, quant, valorunitario, total', ' WHERE categoria="Maquinas e Equipamentos"')
+
+        self.scrl.clear_widgets()
+        label = Label(text = '')
+        self.scrl.add_widget(label)
+        label = Label(text = 'Descricao')
+        self.scrl.add_widget(label)
+        label = Label(text='Quantidade')
+        self.scrl.add_widget(label)
+        label = Label(text='Valor Unitario')
+        self.scrl.add_widget(label)
+        label = Label(text='Valor Total')
+        self.scrl.add_widget(label)
+        x = 1
+        for pessoa in dados:
+            label = Label(text=str(x))
+            self.scrl.add_widget(label)
+            for d in pessoa:
+
+                if isinstance(d,str):
+                    label = Label(text=d, font_size=0.4 * self.height, size_hint=[1, 1])
+                else:
+                    if isinstance(d, int):
+                        label = Label(text=str(d), font_size=0.4*self.height, size_hint=[1,1])
+                    else:
+                        label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
+                self.scrl.add_widget(label)
+            x = x + 1
+
+class RelMovScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        dados = InvestimentoFixo.relatorio(InvestimentoFixo, 'descricao, quant, valorunitario, total',
+                                           ' WHERE categoria="Moveis e Utensilios"')
+
+        self.scrl.clear_widgets()
+        label = Label(text='')
+        self.scrl.add_widget(label)
+        label = Label(text='Descricao')
+        self.scrl.add_widget(label)
+        label = Label(text='Quantidade')
+        self.scrl.add_widget(label)
+        label = Label(text='Valor Unitario')
+        self.scrl.add_widget(label)
+        label = Label(text='Valor Total')
+        self.scrl.add_widget(label)
+        x = 1
+        for pessoa in dados:
+            label = Label(text=str(x))
+            self.scrl.add_widget(label)
+            for d in pessoa:
+
+                if isinstance(d, str):
+                    label = Label(text=d, font_size=0.4 * self.height, size_hint=[1, 1])
+                else:
+                    if isinstance(d, int):
+                        label = Label(text=str(d), font_size=0.4 * self.height, size_hint=[1, 1])
+                    else:
+                        label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
+                self.scrl.add_widget(label)
+            x = x + 1
+
+class RelPredScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        dados = InvestimentoFixo.relatorio(InvestimentoFixo, 'descricao, quant, valorunitario, total',
+                                           ' WHERE categoria="Imoveis Predios"')
+
+        self.scrl.clear_widgets()
+        label = Label(text='')
+        self.scrl.add_widget(label)
+        label = Label(text='Descricao')
+        self.scrl.add_widget(label)
+        label = Label(text='Quantidade')
+        self.scrl.add_widget(label)
+        label = Label(text='Valor Unitario')
+        self.scrl.add_widget(label)
+        label = Label(text='Valor Total')
+        self.scrl.add_widget(label)
+        x = 1
+        for pessoa in dados:
+            label = Label(text=str(x))
+            self.scrl.add_widget(label)
+            for d in pessoa:
+
+                if isinstance(d, str):
+                    label = Label(text=d, font_size=0.4 * self.height, size_hint=[1, 1])
+                else:
+                    if isinstance(d, int):
+                        label = Label(text=str(d), font_size=0.4 * self.height, size_hint=[1, 1])
+                    else:
+                        label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
+                self.scrl.add_widget(label)
+            x = x + 1
+
+class RelTerrScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        dados = InvestimentoFixo.relatorio(InvestimentoFixo, 'descricao, quant, valorunitario, total',
+                                           ' WHERE categoria="Imoveis Terrenos"')
+
+        self.scrl.clear_widgets()
+        label = Label(text='')
+        self.scrl.add_widget(label)
+        label = Label(text='Descricao')
+        self.scrl.add_widget(label)
+        label = Label(text='Quantidade')
+        self.scrl.add_widget(label)
+        label = Label(text='Valor Unitario')
+        self.scrl.add_widget(label)
+        label = Label(text='Valor Total')
+        self.scrl.add_widget(label)
+        x = 1
+        for pessoa in dados:
+            label = Label(text=str(x))
+            self.scrl.add_widget(label)
+            for d in pessoa:
+
+                if isinstance(d, str):
+                    label = Label(text=d, font_size=0.4 * self.height, size_hint=[1, 1])
+                else:
+                    if isinstance(d, int):
+                        label = Label(text=str(d), font_size=0.4 * self.height, size_hint=[1, 1])
+                    else:
+                        label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
+                self.scrl.add_widget(label)
+            x = x + 1
+
+class RelVeicScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        dados = InvestimentoFixo.relatorio(InvestimentoFixo, 'descricao, quant, valorunitario, total',
+                                           ' WHERE categoria="Fixos em Veiculos"')
+
+        self.scrl.clear_widgets()
+        label = Label(text='')
+        self.scrl.add_widget(label)
+        label = Label(text='Descricao')
+        self.scrl.add_widget(label)
+        label = Label(text='Quantidade')
+        self.scrl.add_widget(label)
+        label = Label(text='Valor Unitario')
+        self.scrl.add_widget(label)
+        label = Label(text='Valor Total')
+        self.scrl.add_widget(label)
+        x = 1
+        for pessoa in dados:
+            label = Label(text=str(x))
+            self.scrl.add_widget(label)
+            for d in pessoa:
+
+                if isinstance(d, str):
+                    label = Label(text=d, font_size=0.4 * self.height, size_hint=[1, 1])
+                else:
+                    if isinstance(d, int):
+                        label = Label(text=str(d), font_size=0.4 * self.height, size_hint=[1, 1])
+                    else:
+                        label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
+                self.scrl.add_widget(label)
+            x = x + 1
+
 class AlterarScreen(Screen):
     pass
 

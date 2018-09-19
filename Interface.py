@@ -81,6 +81,10 @@ class MateriaPrimaScreen(Screen):
         self.quant.text = ""
 
 
+class PreEstimativaScreen(Screen):
+    pass
+
+
 class EstimativaScreen(Screen):
     def envia(self):
         e = Estimativa(self.descr.text, int(self.quant.text), float(self.lucro.text), self.mes.text)
@@ -189,6 +193,7 @@ class RateioCustosFixosScreen(Screen):
             x = x + 1
         #self.add_widget(scrollview)
 
+
 class RateioCustosOpScreen(Screen):
     inputs = []
 
@@ -238,10 +243,11 @@ class PrecoVendaScreen(Screen):
         self.outros.text = ""
         self.mes.text = ""
 
-#Relatorio
+#Relatorios
 class RelatorioScreen(Screen):
     pass
 
+#Pessoas
 class RelPessoaScreen(Screen):
     pass
 
@@ -363,7 +369,7 @@ class RelPessoaAdmScreen(Screen):
                 self.scrl.add_widget(label)
             x = x + 1
 
-
+#Investimentos Fixos e Depreciaçoes
 class RelInvFixoScreen(Screen):
     pass
 
@@ -373,6 +379,7 @@ class RelCompScreen(Screen):
         dados = InvestimentoFixo.relatorio(InvestimentoFixo, 'descricao, quant, valorunitario, total', ' WHERE categoria="Computadores/Equipamentos de Informatica"')
 
         self.scrl.clear_widgets()
+        gc.collect()
         label = Label(text = '')
         self.scrl.add_widget(label)
         label = Label(text = 'Descricao')
@@ -400,7 +407,73 @@ class RelCompScreen(Screen):
             x = x + 1
 
 class RelDeprecScreen(Screen):
-    pass
+
+    @mainthread
+    def on_enter(self):
+        contas = ['Moveis e Utensilios', 'Maquinas e Equipamentos', 'Computadores/Equipamentos de Informatica', 'Fixos em Veiculos', 'Imoveis Predios', 'Imoveis Terrenos']
+        total = 0
+        totalmes = 0
+
+        self.scrl.clear_widgets()
+        gc.collect()
+
+
+        label = Label(text='Conta')
+        self.scrl.add_widget(label)
+        label = Label(text='Valor aquisicao')
+        self.scrl.add_widget(label)
+        label = Label(text='Taxa anual')
+        self.scrl.add_widget(label)
+        label = Label(text='Valor mensal')
+        self.scrl.add_widget(label)
+
+        for t in contas:
+
+            label = Label(text=t)
+            self.scrl.add_widget(label)
+
+            valor=self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "' + t + '"')
+            label = Label(text=str(valor))
+            self.scrl.add_widget(label)
+
+            if t == 'Moveis e Utensilios' or t == 'Maquinas e Equipamentos':
+                taxa = 10
+            else:
+                if t == 'Computadores/Equipamentos de Informatica' or t == 'Fixos em Veiculos':
+                    taxa = 20
+                else:
+                    if  t == 'Imoveis Predios':
+                        taxa = 4
+                    else:
+                        taxa = 0
+
+            label = Label(text=str(taxa))
+            self.scrl.add_widget(label)
+
+            mensal = ((valor*taxa)/100)/12
+            label = Label(text=str(mensal))
+            self.scrl.add_widget(label)
+
+            total = total + valor
+            totalmes = totalmes + mensal
+
+        label = Label(text='Total')
+        self.scrl.add_widget(label)
+        label = Label(text=str(total))
+        self.scrl.add_widget(label)
+        label = Label(text='-')
+        self.scrl.add_widget(label)
+        label = Label(text=str(totalmes))
+        self.scrl.add_widget(label)
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
 
 class RelMaqScreen(Screen):
     @mainthread
@@ -408,6 +481,7 @@ class RelMaqScreen(Screen):
         dados = InvestimentoFixo.relatorio(InvestimentoFixo, 'descricao, quant, valorunitario, total', ' WHERE categoria="Maquinas e Equipamentos"')
 
         self.scrl.clear_widgets()
+        gc.collect()
         label = Label(text = '')
         self.scrl.add_widget(label)
         label = Label(text = 'Descricao')
@@ -441,6 +515,7 @@ class RelMovScreen(Screen):
                                            ' WHERE categoria="Moveis e Utensilios"')
 
         self.scrl.clear_widgets()
+        gc.collect()
         label = Label(text='')
         self.scrl.add_widget(label)
         label = Label(text='Descricao')
@@ -474,6 +549,7 @@ class RelPredScreen(Screen):
                                            ' WHERE categoria="Imoveis Predios"')
 
         self.scrl.clear_widgets()
+        gc.collect()
         label = Label(text='')
         self.scrl.add_widget(label)
         label = Label(text='Descricao')
@@ -507,6 +583,7 @@ class RelTerrScreen(Screen):
                                            ' WHERE categoria="Imoveis Terrenos"')
 
         self.scrl.clear_widgets()
+        gc.collect()
         label = Label(text='')
         self.scrl.add_widget(label)
         label = Label(text='Descricao')
@@ -540,6 +617,7 @@ class RelVeicScreen(Screen):
                                            ' WHERE categoria="Fixos em Veiculos"')
 
         self.scrl.clear_widgets()
+        gc.collect()
         label = Label(text='')
         self.scrl.add_widget(label)
         label = Label(text='Descricao')
@@ -565,6 +643,178 @@ class RelVeicScreen(Screen):
                         label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
                 self.scrl.add_widget(label)
             x = x + 1
+
+
+#Materia prima
+class RelMatPrimaScreen(Screen):
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
+
+    @mainthread
+    def pre_enter(self):
+        pass
+
+    def on_enter(self):
+        self.clear_widgets()
+        gc.collect()
+
+
+
+        label = Label(text='')
+        self.title.add_widget(label)
+
+        label = Label(text='')
+        self.scrl.add_widget(label)
+        label = Label(text='Descricao')
+        self.scrl.add_widget(label)
+        label = Label(text='Un. Medida')
+        self.scrl.add_widget(label)
+        label = Label(text='Preco Unit.')
+        self.scrl.add_widget(label)
+        label = Label(text='Quant')
+        self.scrl.add_widget(label)
+        label = Label(text='Custo Total')
+        self.scrl.add_widget(label)
+
+
+
+        label = Label(text='')
+        self.scrl.add_widget(label)
+
+#Estimativa
+class RelEstimativaScreen(Screen):
+    @mainthread
+    def pre_enter(self):
+        pass
+
+    def on_enter(self):
+        pass
+
+#Custos Fixos Mensais
+class RelCustosFixosScreen(Screen):
+    pass
+
+#Investimentos Iniciais
+class RelInvIniScreen(Screen):
+    pass
+
+#Estoque
+class RelEstoqueScreen(Screen):
+    pass
+
+#Custo Financeiro Mensal
+class RelCustoFinMenScreen(Screen):
+    pass
+
+#Tributos
+class RelTribScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        list = ['simples', 'icms', 'pis', 'cofins', 'ipi', 'iss', 'irpj', 'total']
+
+        label = Label(text='TRIBUTO')
+        self.scrl.add_widget(label)
+        label = Label(text='ALIQUOTA')
+        self.scrl.add_widget(label)
+        label = Label(text='INDICE')
+        self.scrl.add_widget(label)
+
+        for t in list:
+
+            label = Label(text=t.upper())
+            self.scrl.add_widget(label)
+
+            ali = self.preenche(Tributos, t)
+
+            label = Label(text=str(ali))
+            self.scrl.add_widget(label)
+
+            label = Label(text=str(ali/100))
+            self.scrl.add_widget(label)
+
+    def preenche(self, table=None, col=None, cond=None):
+
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
+
+#Custo com Vendas
+class RelCustoVendasScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+
+        label = Label(text='DESCRICAO')
+        self.scrl.add_widget(label)
+        label = Label(text='%')
+        self.scrl.add_widget(label)
+        label = Label(text='INDICE')
+        self.scrl.add_widget(label)
+
+
+
+        for t in self.listastr(CustoVendas, 'descricao'):
+            label = Label(text=t)
+            self.scrl.add_widget(label)
+
+            porc = self.preenche(CustoVendas, 'porcentagem')
+
+            label = Label(text=str(porc))
+            self.scrl.add_widget(label)
+
+            label = Label(text=str(porc / 100))
+            self.scrl.add_widget(label)
+
+    def listastr(self, table=None, col=None, cond=None):
+
+        list = table.relatorio(table, col, cond)
+        val = []
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val.append(t)
+        return val
+
+    def preenche(self, table=None, col=None, cond=None):
+
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
+
+#Preco de venda
+class RelPrecoVendaScreen(Screen):
+    pass
+
+#Rateio custos fixos
+class RelRateioCustoFixoScreen(Screen):
+    pass
+
+#Ponto de Equilibrio
+class RelPontoEquilibrioScreen(Screen):
+    pass
+
+#Rateio custos operacionais
+class RelRateioCustosOpScreen(Screen):
+    pass
+
+
 
 class AlterarScreen(Screen):
     pass

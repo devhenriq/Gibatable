@@ -1,32 +1,31 @@
-<RelDeprecScreen>:
-    id: reldeprec
-    name: "reldeprec"
+<PreEstimativaScreen>:
+    id: preestimativa
+    name: 'preestimativa'
     scrl: scrl
     GridLayout:
         cols:1
         rows:3
-        scrl: scrl
         height: self.minimum_height
         size_hint: 1, 1
         row_default_height: 60
         Label:
-            text: 'GASTOS COM DEPRECIACOES'
+            text: 'Estimativa de Vendas'
             font_size: 0.6*self.height
             size_hint: 1,None
         BoxLayout:
             orientation: 'vertical'
             scrl: scrl
-
+            spacing: 50
             ScrollView:
                 scrl: scrl
                 height: root.height * 1.5
 
                 GridLayout:
-                    cols: 4
+                    cols: 2
                     id: scrl
                     height: self.minimum_height
                     padding: 100
-                    spacing: 25
+                    spacing: 50
                     row_default_height: 60
                     col_default_width: 100
                     size_hint: 1,None
@@ -42,4 +41,4 @@
             Label:
                 text: ''
             Voltar:
-                on_release: app.root.current = "relinvfixo"
+                on_release: app.root.current = "cadastros"

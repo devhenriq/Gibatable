@@ -110,7 +110,24 @@
                     valign: 'center'
                     padding_y: 10
                     on_release: app.root.current= "relrateioop"
-
+                Button:
+                    font_size: 0.2*self.height
+                    size_hint: .1,.1
+                    text:"Tributos"
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current= "reltrib"
+                Button:
+                    font_size: 0.2*self.height
+                    size_hint: .1,.1
+                    text:"Custo com vendas"
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current= "relcustovendas"
         GridLayout:
             cols: 2
             height: self.minimum_height

@@ -92,4 +92,7 @@
             Label:
                 text: ''
             Voltar:
-                on_release: app.root.current = "relatorio"
+                on_release:
+                    self.clear_widgets()
+                    gc.collect()
+                    app.root.current = "relatorios"

@@ -767,7 +767,7 @@ class RelCustoVendasScreen(Screen):
 
 
         for t in self.listastr(CustoVendas, 'descricao'):
-            label = Label(text=t)
+            label = Label(text=t.upper())
             self.scrl.add_widget(label)
 
             porc = self.preenche(CustoVendas, 'porcentagem')
@@ -784,7 +784,7 @@ class RelCustoVendasScreen(Screen):
         val = []
         if list is not None:
             for t in list:
-                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                t = str(t).replace(",", "").replace(")", "").replace("(", "").replace("'","")
                 val.append(t)
         return val
 

@@ -1,105 +1,148 @@
-<InvestimentoInicialScreen>
+<InvestimentoInicialScreen>:
     id: investimentoinicial
     name: "investimentoinicial"
-    size_hint: 0.1,0.1
     invoutros: invoutros
     legal: legal
     divulg: divulg
     outros: outros
     caixa: caixa
     outrosg: outrosg
-
-    Label:
-        text: 'Investimento Inicial'
-        font_size: 0.6*self.height
-        pos_hint: {'top':9,'right':5.5}
+    GridLayout:
+        cols:1
+        rows:3
+        height: self.minimum_height
         size_hint: 1, 1
+        row_default_height: 60
+        Label:
+            text: 'Investimento Inicial'
+            font_size: 0.6*self.height
+            size_hint: 1,None
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 1,1
+            ScrollView:
+                height: root.height * 1.5
+                GridLayout:
+                    cols: 2
+                    height: self.minimum_height
+                    padding: 100
+                    spacing: 50
+                    row_default_height: 60
+                    col_default_width: 100
+                    size_hint: 1,None
+                    Label:
+                        text: 'Outros custos com inv fixos:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,.1
+                    GridLayout:
+                        invoutros: invoutros
+                        cols: 2
+                        spacing: 40
+                        TextInput:
+                            name: "invoutros"
+                            id: invoutros
+                            font_size: 0.6*self.height
+                            size_hint: 2,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'Despesas com legalizacao:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,1
+                    GridLayout:
+                        cols: 3
+                        spacing: 140
+                        TextInput:
+                            name: "legal"
+                            id: legal
+                            font_size: 0.6*self.height
+                            size_hint: .5,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'Despesas com divulgacao:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,1
+                    GridLayout:
+                        cols: 3
+                        spacing: 80
+                        size_hint: 1,1
+                        TextInput:
+                            name: "divulg"
+                            id: divulg
+                            font_size: 0.6*self.height
+                            size_hint: .5,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'Outras despesas pre-operacionais:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,1
+                    GridLayout:
+                        cols: 2
+                        spacing: 80
+                        size_hint: 1,1
+                        TextInput:
+                            name: "outros"
+                            id: outros
+                            font_size: 0.6*self.height
+                            size_hint: .5,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'Caixa:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,1
+                    GridLayout:
+                        cols: 2
+                        spacing: 80
+                        size_hint: 1,1
+                        TextInput:
+                            name: "caixa"
+                            id: caixa
+                            font_size: 0.4*self.height
+                            size_hint: .8,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'Outros investimentos de giro:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,1
+                    GridLayout:
+                        cols: 2
+                        spacing: 80
+                        size_hint: 1,1
+                        TextInput:
+                            name: "outrosg"
+                            id: outrosg
+                            font_size: 0.4*self.height
+                            size_hint: .8,.45
+                            multiline: False
+                        Label:
+                            text: ""
 
-    Label:
-        text: 'Outros custos com investimentos fixos:'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 8, 'right': 1.8}
-        size_hint: 1,1
-
-    TextInput:
-        name: "invoutros"
-        id: invoutros
-        font_size: 0.6*self.height
-        pos_hint: {'top': 7.7, 'right': 3.7}
-        size_hint: 2,.45
-        multiline: False
-
-    Label:
-        text: 'Despesas com legalizacao:'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 7, 'right': 2}
-        size_hint: 1,1
-
-    TextInput:
-        name: "legal"
-        id: legal
-        font_size: 0.6*self.height
-        pos_hint: {'top': 6.7, 'right': 3.7}
-        size_hint: 2,.45
-        multiline: False
-
-    Label:
-        text: 'Despesas com divulgacao:'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 6, 'right': 2}
-        size_hint: 1,1
-
-    TextInput:
-        name: "divulg"
-        id: divulg
-        font_size: 0.6*self.height
-        pos_hint: {'top': 5.7, 'right': 3.7}
-        size_hint: 2,.45
-        multiline: False
-
-    Label:
-        text: 'Outras despesas pre-operacionais:'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 5, 'right': 2}
-        size_hint: 1,1
-
-    TextInput:
-        name: "outros"
-        id: outros
-        font_size: 0.6*self.height
-        pos_hint: {'top': 4.7, 'right': 2.7}
-        size_hint: .5,.45
-        multiline: False
-
-    Label:
-        text: 'Caixa:'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 4, 'right': 2}
-        size_hint: 1,1
-
-    TextInput:
-        name: "caixa"
-        id: caixa
-        font_size: 0.6*self.height
-        pos_hint: {'top': 3.7, 'right': 2.7}
-        size_hint: .5,.45
-        multiline: False
-
-    Label:
-        text: 'Outros investimentos de giro:'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 3, 'right': 2}
-        size_hint: 1,1
-
-    TextInput:
-        name: "outrosg"
-        id: outrosg
-        font_size: 0.6*self.height
-        pos_hint: {'top': 2.7, 'right': 2.7}
-        size_hint: .5,.45
-        multiline: False
-
-    SendButton:
-        on_release: investimentoinicial.envia()
-    Voltar:
-        on_release: app.root.current = "cadastro"
+        GridLayout:
+            cols: 2
+            height: self.minimum_height
+            padding: 50
+            size_hint: 0.1, 0.1
+            row_default_height: 60
+            col_default_width: 100
+            spacing: 500
+            SendButton:
+                on_release: pessoa.envia()
+            Voltar:
+                on_release: app.root.current = "cadastro"

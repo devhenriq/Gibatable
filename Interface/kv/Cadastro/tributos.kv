@@ -1,7 +1,6 @@
 <TributosScreen>:
     id: tributo
     name: "tributo"
-    size_hint: 0.1,0.1
     simples: simples
     icms: icms
     pis: pis
@@ -9,125 +8,189 @@
     ipi: ipi
     iss: iss
     irpj: irpj
-
-    Label:
-        text: 'Tributos'
-        font_size: 0.6*self.height
-        pos_hint: {'top':9,'right':5.5}
+    GridLayout:
+        cols:1
+        rows:3
+        height: self.minimum_height
         size_hint: 1, 1
+        row_default_height: 60
+        Label:
+            text: 'Tributos'
+            font_size: 0.6*self.height
+            size_hint: 1,None
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 1,1
+            ScrollView:
+                height: root.height * 1.5
+                GridLayout:
+                    cols: 2
+                    height: self.minimum_height
+                    padding: 100
+                    spacing: 50
+                    row_default_height: 60
+                    col_default_width: 100
+                    size_hint: 1,None
+                    Label:
+                        text: 'Tributo'
+                        font_size: 0.4*self.height
+                        size_hint: 1,.1
+                    GridLayout:
+                        tributo: tributo
+                        cols: 2
+                        spacing: 40
+
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'Aliquota'
+                        font_size: 0.4*self.height
+                        size_hint: 1,1
+                    GridLayout:
+                        cols: 3
+                        spacing: 140
+
+                        Label:
+                            text: ""
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'Simples:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,1
+                    GridLayout:
+                        cols: 3
+                        spacing: 80
+                        size_hint: 1,1
+                        TextInput:
+                            name: "simples"
+                            id: simples
+                            font_size: 0.6*self.height
+                            size_hint: .5,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'ICMS:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,1
+                    GridLayout:
+                        cols: 2
+                        spacing: 80
+                        size_hint: 1,1
+                        TextInput:
+                            name: "icms"
+                            id: icms
+                            font_size: 0.6*self.height
+                            size_hint: .5,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'PIS:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,1
+                    GridLayout:
+                        cols: 2
+                        spacing: 80
+                        size_hint: 1,1
+                        TextInput:
+                            name: "pis"
+                            id: pis
+                            font_size: 0.6*self.height
+                            size_hint: .5,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'COFINS:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,1
+                    GridLayout:
+                        cols: 2
+                        spacing: 80
+                        size_hint: 1,1
+                        TextInput:
+                            name: "cofins"
+                            id: cofins
+                            font_size: 0.6*self.height
+                            size_hint: .5,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'IPI:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,1
+                    GridLayout:
+                        cols: 2
+                        spacing: 80
+                        size_hint: 1,1
+                        TextInput:
+                            name: "ipi"
+                            id: ipi
+                            font_size: 0.6*self.height
+                            size_hint: .5,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'ISS:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,1
+                    GridLayout:
+                        cols: 2
+                        spacing: 80
+                        size_hint: 1,1
+                        TextInput:
+                            name: "iss"
+                            id: iss
+                            font_size: 0.6*self.height
+                            size_hint: .5,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'IRPJ/CSLL:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,1
+                    GridLayout:
+                        cols: 2
+                        spacing: 80
+                        size_hint: 1,1
+                        TextInput:
+                            name: "irpj"
+                            id: irpj
+                            font_size: 0.6*self.height
+                            size_hint: .5,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                        Label:
+                            text: ""
 
 
-    Label:
-        text: 'TRIBUTO'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 8, 'right': 1.8}
-        size_hint: 1,1
-
-    Label:
-        name: "ALIQUOTA"
-        font_size: 0.6*self.height
-        pos_hint: {'top': 9, 'right': 3.7}
-        size_hint: 2,.45
-
-    Label:
-        text: 'Simples:'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 7, 'right': 2}
-        size_hint: 1,1
-
-    TextInput:
-        name: "simples"
-        id: simples
-        font_size: 0.6*self.height
-        pos_hint: {'top': 6.7, 'right': 2.7}
-        size_hint: .5,.45
-        multiline: False
-
-    Label:
-        text: 'ICMS:'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 6, 'right': 2}
-        size_hint: 1,1
-
-    TextInput:
-        name: "icms"
-        id: icms
-        font_size: 0.6*self.height
-        pos_hint: {'top': 5.7, 'right': 2.7}
-        size_hint: .5,.45
-        multiline: False
-
-    Label:
-        text: 'PIS:'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 5, 'right': 2}
-        size_hint: 1,1
-
-    TextInput:
-        name: "pis"
-        id: pis
-        font_size: 0.6*self.height
-        pos_hint: {'top': 4.7, 'right': 2.7}
-        size_hint: .5,.45
-        multiline: False
-
-    Label:
-        text: 'COFINS:'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 4, 'right': 2}
-        size_hint: 1,1
-
-    TextInput:
-        name: "cofins"
-        id: cofins
-        font_size: 0.6*self.height
-        pos_hint: {'top': 3.7, 'right': 2.7}
-        size_hint: .5,.45
-        multiline: False
-
-    Label:
-        text: 'IPI:'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 3, 'right': 2}
-        size_hint: 1,1
-
-    TextInput:
-        name: "ipi"
-        id: ipi
-        font_size: 0.6*self.height
-        pos_hint: {'top': 2.7, 'right': 2.7}
-        size_hint: .5,.45
-        multiline: False
-
-    Label:
-        text: 'ISS:'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 2, 'right': 2}
-        size_hint: 1,1
-
-    TextInput:
-        name: "iss"
-        id: iss
-        font_size: 0.6*self.height
-        pos_hint: {'top': 1.7, 'right': 2.7}
-        size_hint: .5,.45
-        multiline: False
-
-    Label:
-        text: 'IRPJ/CSLL:'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 1, 'right': 2}
-        size_hint: 1,1
-
-    TextInput:
-        name: "irpj"
-        id: irpj
-        font_size: 0.6*self.height
-        pos_hint: {'top': 0.7, 'right': 2.7}
-        size_hint: .5,.45
-        multiline: False
-
-    SendButton:
-        on_release: tributo.envia()
-    Voltar:
-        on_release: app.root.current = "cadastro"
+        GridLayout:
+            cols: 2
+            height: self.minimum_height
+            padding: 50
+            size_hint: 0.1, 0.1
+            row_default_height: 60
+            col_default_width: 100
+            spacing: 500
+            SendButton:
+                on_release: pessoa.envia()
+            Voltar:
+                on_release: app.root.current = "cadastro"

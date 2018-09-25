@@ -6,6 +6,7 @@ from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.config import Config
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from os import listdir
 from Pessoa import Pessoa
@@ -30,7 +31,7 @@ import gc
 
 
 Window.fullscreen = False
-Config.set('graphics', 'resizable', False)
+Config.set('graphics', 'resizable', True)
 Config.write()
 
 # Manager
@@ -646,55 +647,96 @@ class RelVeicScreen(Screen):
 
 
 #Materia prima
-class RelMatPrimaScreen(Screen):
-    def calculaTotal(self, table, col=None, cond=None):
-        list = table.relatorio(table, col, cond)
-        val = 0
-        if list is not None:
-            for t in list:
-                t = str(t).replace(",", "").replace(")", "").replace("(", "")
-                val = val + float(t)
-        return val
+class RelMpScreen(Screen):
 
     @mainthread
-    def pre_enter(self):
-        pass
-
     def on_enter(self):
-        self.clear_widgets()
+        self.scrl.clear_widgets()
         gc.collect()
+        self.title.text = 'Materia Prima'
+        self.back.clear_widgets()
+        self.back.add_widget(RelatorioBt())
+        dados = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
 
+        for prod in dados:
 
+            for mp in prod:
+                bt = Button(text=mp)
+                bt.bind(on_release=lambda x:self.preenche(mp))
+                self.scrl.add_widget(bt)
 
-        label = Label(text='')
-        self.title.add_widget(label)
+    def preenche(self, nome):
+        self.scrl.clear_widgets()
+        self.back.clear_widgets()
+        gc.collect()
+        self.title.text = nome
+        self.back.add_widget(Voltar(on_release=lambda x : self.on_enter()))
+        x = 1
+        dados = MateriaPrima.relatorio(MateriaPrima, 'descricao, unmedida, precounitario, quant, total', ' WHERE produto = "'+nome+'"')
 
         label = Label(text='')
         self.scrl.add_widget(label)
         label = Label(text='Descricao')
         self.scrl.add_widget(label)
-        label = Label(text='Un. Medida')
+        label = Label(text='Unidade de Medida')
         self.scrl.add_widget(label)
-        label = Label(text='Preco Unit.')
+        label = Label(text='Valor Unitario')
         self.scrl.add_widget(label)
-        label = Label(text='Quant')
+        label = Label(text='Quantidade')
         self.scrl.add_widget(label)
-        label = Label(text='Custo Total')
+        label = Label(text='Total')
         self.scrl.add_widget(label)
 
+        for prod in dados:
+            print(prod)
+            self.scrl.add_widget(Label(text=str(x)))
+            for p in prod:
+                self.scrl.add_widget(Label(text=str(p)))
+            x = x+1
 
-
-        label = Label(text='')
-        self.scrl.add_widget(label)
 
 #Estimativa
 class RelEstimativaScreen(Screen):
     @mainthread
-    def pre_enter(self):
-        pass
-
     def on_enter(self):
-        pass
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Estimativa de Vendas'
+        self.back.clear_widgets()
+        self.back.add_widget(RelatorioBt())
+        for mes in range(1, 13):
+            bt = Button(text='Mes ' + str(mes))
+            bt.bind(on_release=lambda x:self.preenche(mes))
+            self.scrl.add_widget(bt)
+
+    def preenche(self, mes):
+        self.scrl.clear_widgets()
+        self.back.clear_widgets()
+        gc.collect()
+        self.title.text = str(mes) + ' Mes'
+        self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
+        x = 1
+        dados = Estimativa.relatorio(Estimativa, 'descricao, quant, lucrounitario, lucrototal', ' WHERE mes = '+str(mes))
+
+        label = Label(text='')
+        self.scrl.add_widget(label)
+        label = Label(text='Descricao')
+        self.scrl.add_widget(label)
+        label = Label(text='Quantidade')
+        self.scrl.add_widget(label)
+        label = Label(text='Lucro Unitario')
+        self.scrl.add_widget(label)
+        label = Label(text='Lucro Total')
+        self.scrl.add_widget(label)
+
+        for prod in dados:
+            print(prod)
+            self.scrl.add_widget(Label(text=str(x)))
+            for p in prod:
+                self.scrl.add_widget(Label(text=str(p)))
+            x = x+1
+
+
 
 #Custos Fixos Mensais
 class RelCustosFixosScreen(Screen):
@@ -832,6 +874,8 @@ class SendButton(Button):
 class Voltar(Button):
     pass
 
+class RelatorioBt(Button):
+    pass
 
 
 kv_path = './Interface/kv/'

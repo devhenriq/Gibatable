@@ -30,7 +30,7 @@
                     col_default_width: 100
                     size_hint: 1,None
                     Label:
-                        text: 'Nome da materia prima'
+                        text: 'Nome do produto'
                         font_size: 0.4*self.height
                         size_hint: 1,.1
                     GridLayout:
@@ -46,20 +46,18 @@
                         Label:
                             text: ""
                     Label:
-                        text: 'Descricao:'
+                        text: 'Descricao da materia prima:'
                         font_size: 0.4*self.height
                         size_hint: 1,1
                     GridLayout:
-                        cols: 3
-                        spacing: 140
+                        cols: 2
+                        spacing: 40
                         TextInput:
                             name: "materia"
                             id: materia
                             font_size: 0.6*self.height
-                            size_hint: .5,.45
+                            size_hint: 2,.45
                             multiline: False
-                        Label:
-                            text: ""
                         Label:
                             text: ""
                     Label:
@@ -85,14 +83,14 @@
                         font_size: 0.4*self.height
                         size_hint: 1,1
                     GridLayout:
-                        cols: 2
+                        cols: 3
                         spacing: 80
                         size_hint: 1,1
                         TextInput:
                             name: "preco"
                             id: preco
                             font_size: 0.6*self.height
-                            size_hint: .5,.45
+                            size_hint: 1,1
                             multiline: False
                         Label:
                             text: ""
@@ -109,7 +107,7 @@
                         TextInput:
                             name: "quantidade"
                             id: quant
-                            font_size: 0.4*self.height
+                            font_size: 0.6*self.height
                             size_hint: .8,.45
                             multiline: False
                         Label:
@@ -124,6 +122,6 @@
             col_default_width: 100
             spacing: 500
             SendButton:
-                on_release: pessoa.envia()
+                on_release: matprima.envia()
             Voltar:
                 on_release: app.root.current = "cadastro"

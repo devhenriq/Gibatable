@@ -286,6 +286,22 @@ class RelPessoaDirScreen(Screen):
                         label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
                 self.scrl.add_widget(label)
             x = x + 1
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="TOTAL"))
+        self.scrl.add_widget(Label(text="%.2f" % self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Diretor"')))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'salario', ' WHERE categoria="Diretor"')))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'inss', ' WHERE categoria="Diretor"')))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'total', ' WHERE categoria="Diretor"')))
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
+
 
 class RelPessoaOpScreen(Screen):
     @mainthread
@@ -327,6 +343,25 @@ class RelPessoaOpScreen(Screen):
                         label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
                 self.scrl.add_widget(label)
             x = x + 1
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="TOTAL"))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Produtor"')))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'salario', ' WHERE categoria="Produtor"')))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'ferias', ' WHERE categoria="Produtor"')))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'decimo', ' WHERE categoria="Produtor"')))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'fgts', ' WHERE categoria="Produtor"')))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'inss', ' WHERE categoria="Produtor"')))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'total', ' WHERE categoria="Produtor"')))
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
+
 
 class RelPessoaAdmScreen(Screen):
     labels = []
@@ -369,6 +404,25 @@ class RelPessoaAdmScreen(Screen):
                         label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
                 self.scrl.add_widget(label)
             x = x + 1
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="TOTAL"))
+        self.scrl.add_widget(Label(text=self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Administrativo"')))
+        self.scrl.add_widget(Label(text=self.calculaTotal(Pessoa, 'salario', ' WHERE categoria="Administrativo"')))
+        self.scrl.add_widget(Label(text=self.calculaTotal(Pessoa, 'ferias', ' WHERE categoria="Administrativo"')))
+        self.scrl.add_widget(Label(text=self.calculaTotal(Pessoa, 'decimo', ' WHERE categoria="Administrativo"')))
+        self.scrl.add_widget(Label(text=self.calculaTotal(Pessoa, 'fgts', ' WHERE categoria="Administrativo"')))
+        self.scrl.add_widget(Label(text=self.calculaTotal(Pessoa, 'inss', ' WHERE categoria="Administrativo"')))
+        self.scrl.add_widget(Label(text=self.calculaTotal(Pessoa, 'total', ' WHERE categoria="Administrativo"')))
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return str(val)
+
 
 #Investimentos Fixos e Depreciaçoes
 class RelInvFixoScreen(Screen):
@@ -406,6 +460,21 @@ class RelCompScreen(Screen):
                         label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
                 self.scrl.add_widget(label)
             x = x + 1
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="TOTAL"))
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria="Computadores/Equipamentos de Informatica"')))
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return str(val)
+
 
 class RelDeprecScreen(Screen):
 
@@ -508,6 +577,21 @@ class RelMaqScreen(Screen):
                         label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
                 self.scrl.add_widget(label)
             x = x + 1
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="TOTAL"))
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria="Maquinas e Equipamentos"')))
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return str(val)
+
 
 class RelMovScreen(Screen):
     @mainthread
@@ -542,6 +626,20 @@ class RelMovScreen(Screen):
                         label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
                 self.scrl.add_widget(label)
             x = x + 1
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="TOTAL"))
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria="Moveis e Utensilios"')))
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return str(val)
 
 class RelPredScreen(Screen):
     @mainthread
@@ -577,6 +675,22 @@ class RelPredScreen(Screen):
                 self.scrl.add_widget(label)
             x = x + 1
 
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="TOTAL"))
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria="Imoveis Predios"')))
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return str(val)
+
+
 class RelTerrScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -610,6 +724,20 @@ class RelTerrScreen(Screen):
                         label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
                 self.scrl.add_widget(label)
             x = x + 1
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="TOTAL"))
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=self.calculaTotal(InvestimentoFixo,'total',' WHERE categoria="Imoveis Terrenos"')))
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return str(val)
 
 class RelVeicScreen(Screen):
     @mainthread
@@ -644,7 +772,20 @@ class RelVeicScreen(Screen):
                         label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
                 self.scrl.add_widget(label)
             x = x + 1
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="TOTAL"))
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=self.calculaTotal(InvestimentoFixo,'total',' WHERE categoria="Fixos em Veiculos"')))
 
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return str(val)
 
 #Materia prima
 class RelMpScreen(Screen):
@@ -655,6 +796,7 @@ class RelMpScreen(Screen):
         gc.collect()
         self.title.text = 'Materia Prima'
         self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
         self.back.add_widget(RelatorioBt())
         dados = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
 
@@ -694,6 +836,23 @@ class RelMpScreen(Screen):
                 self.scrl.add_widget(Label(text=str(p)))
             x = x+1
 
+        self.scrl.add_widget(Label(text='TOTAL'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "'+nome+'"')))
+
+
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
+
 
 #Estimativa
 class RelEstimativaScreen(Screen):
@@ -703,20 +862,25 @@ class RelEstimativaScreen(Screen):
         gc.collect()
         self.title.text = 'Estimativa de Vendas'
         self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
         self.back.add_widget(RelatorioBt())
         for mes in range(1, 13):
-            bt = Button(text='Mes ' + str(mes))
-            bt.bind(on_release=lambda x:self.preenche(mes))
-            self.scrl.add_widget(bt)
+            self.criabotao(mes)
+
+    def criabotao(self, mes):
+        bt = Button(text = 'Mes ' + str(mes))
+        bt.bind(on_release=lambda x: self.preenche(mes))
+        self.scrl.add_widget(bt)
 
     def preenche(self, mes):
         self.scrl.clear_widgets()
         self.back.clear_widgets()
         gc.collect()
         self.title.text = str(mes) + ' Mes'
+        self.back.add_widget(Label(text=""))
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
         x = 1
-        dados = Estimativa.relatorio(Estimativa, 'descricao, quant, lucrounitario, lucrototal', ' WHERE mes = '+str(mes))
+        dados = Estimativa.relatorio(Estimativa, 'descricao, quant, lucrounitario, lucrototal', ' WHERE mes = "'+str(mes)+'"')
 
         label = Label(text='')
         self.scrl.add_widget(label)
@@ -736,7 +900,22 @@ class RelEstimativaScreen(Screen):
                 self.scrl.add_widget(Label(text=str(p)))
             x = x+1
 
+        self.scrl.add_widget(Label(text=' '))
+        self.scrl.add_widget(Label(text='TOTAL'))
+        self.scrl.add_widget(Label(text=str(self.calculaTotal(Estimativa, 'quant', ' WHERE mes = "'+str(mes)+'"'))))
+        self.scrl.add_widget(Label(text=' '))
+        self.scrl.add_widget(Label(text=str(self.calculaTotal(Estimativa, 'lucrototal', ' WHERE mes = "' + str(mes) + '"'))))
 
+
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
 
 #Custos Fixos Mensais
 class RelCustosFixosScreen(Screen):

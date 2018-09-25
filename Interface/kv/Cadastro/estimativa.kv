@@ -87,14 +87,14 @@
                         cols: 2
                         spacing: 80
                         size_hint: 1,1
-                        TextInput:
+                        Spinner:
                             name: "mes"
                             id: mes
-                            font_size: 0.6*self.height
-                            size_hint: .5,.45
-                            multiline: False
-                        Label:
-                            text: ""
+                            font_size: 0.4*self.height
+                            pos_hint: {'top': 4.7, 'right': 3}
+                            size_hint: 2,.45
+                            text: '-'
+                            values: ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12')
 
 
         GridLayout:
@@ -106,6 +106,6 @@
             col_default_width: 100
             spacing: 500
             SendButton:
-                on_release: pessoa.envia()
+                on_release: estimativa.envia()
             Voltar:
                 on_release: app.root.current = "cadastro"

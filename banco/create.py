@@ -74,14 +74,13 @@ try:
 
     table.append("""CREATE TABLE IF NOT EXISTS tributos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        simples FLOAT NOT NULL,
-        icms FLOAT NOT NULL,
-        pis FLOAT NOT NULL,
-        cofins FLOAT NOT NULL,
-        ipi FLOAT NOT NULL,
-        iss FLOAT NOT NULL,
-        irpj FLOAT NOT NULL,
-        total FLOAT NOT NULL
+        simples FLOAT,
+        icms FLOAT,
+        pis FLOAT,
+        cofins FLOAT,
+        ipi FLOAT,
+        iss FLOAT,
+        irpj FLOAT
     );""")
 
     table.append("""CREATE TABLE IF NOT EXISTS custovendas (

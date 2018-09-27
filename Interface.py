@@ -836,11 +836,12 @@ class RelMpScreen(Screen):
                 self.scrl.add_widget(Label(text=str(p)))
             x = x+1
 
+        self.scrl.add_widget(Label(text=''))
         self.scrl.add_widget(Label(text='TOTAL'))
         self.scrl.add_widget(Label(text=''))
         self.scrl.add_widget(Label(text=''))
         self.scrl.add_widget(Label(text=''))
-        self.scrl.add_widget(Label(text=self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "'+nome+'"')))
+        self.scrl.add_widget(Label(text=str(self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "'+nome+'"'))))
 
 
 
@@ -919,11 +920,197 @@ class RelEstimativaScreen(Screen):
 
 #Custos Fixos Mensais
 class RelCustosFixosScreen(Screen):
-    pass
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+
+        label = Label(text='DESCRICAO')
+        self.scrl.add_widget(label)
+        label = Label(text='VALOR')
+        self.scrl.add_widget(label)
+
+        label = Label(text='MAO-DE-OBRA COM ENCARGOS(GASTO C/ PESSOAL ADMINISTRATIVO')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(CustosFixos, 'maodeobra')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='PRÓ-LABORE COM ENCARGOS(GASTOS C/ DIREÇÃO)')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(CustosFixos, 'prolabore')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='MATERIAL DE LIMPEZA')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(CustosFixos, 'limpeza')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='HONORÁRIOS DO CONTADOR(SERV. TERC. DE CONTABILIDADE)')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(CustosFixos, 'contador')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='MATERIAL DE EXPEDIENTE')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(CustosFixos, 'material')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='ÁGUA E LUZ')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(CustosFixos, 'agua')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='ALUGUEL')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(CustosFixos, 'aluguel')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='MANUTENÇÃO')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(CustosFixos, 'manutencao')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='DEPRECIAÇÕES/AMORTIZAÇÕES')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(CustosFixos, 'deprec')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='OUTROS(OUTROS SERV. TERC., TELEFONE, VERBA P/ AÇÕES SOCIAIS ETC.)')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(CustosFixos, 'outros')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='TOTAL')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(CustosFixos, 'total')))
+        self.scrl.add_widget(label)
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
+
 
 #Investimentos Iniciais
 class RelInvIniScreen(Screen):
-    pass
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+
+
+
+        label = Label(text='INVESTIMENTOS INICIAIS')
+        self.scrl.add_widget(label)
+        label = Label(text='')
+        self.scrl.add_widget(label)
+
+        label = Label(text='INVESTIMENTOS FIXOS')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'totalfixo')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='MOVEIS E UTENSILIOS')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'movs')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='MAQUINAS E EQUIPAMENTOS')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'maqs')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='COMPUTADORES E EQ. DE INFORMATICA')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'comps')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='VEICULOS')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'veic')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='IMOVEIS PREDIOS')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'predios')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='IMOVEIS E TERRENOS')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'terrenos')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='OUTROS')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'invoutros')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='-------------')
+        self.scrl.add_widget(label)
+        label = Label(text='-----------')
+        self.scrl.add_widget(label)
+
+        label = Label(text='DESPESAS PRE-OPERACIONAIS')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'totaldesp')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='DESPESAS COM LEGALIZACAO')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'legalizacao')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='DESPESAS COM DIVULGACAO')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'divulgacao')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='OUTROS')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'outros')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='-------------')
+        self.scrl.add_widget(label)
+        label = Label(text='-------------')
+        self.scrl.add_widget(label)
+
+        label = Label(text='INVESTIMENTOS DE GIRO')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'totalgiro')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='ESTOQUES (MATERIA PRIMA)')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'estoque')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='CAIXA (RESERVA DE CAIXA)')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'caixa')))
+        self.scrl.add_widget(label)
+
+        label = Label(text='OUTROS')
+        self.scrl.add_widget(label)
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'outrosg')))
+        self.scrl.add_widget(label)
+
+        self.scrl.add_widget(Label(text="TOTAL"))
+        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'total')))
+        self.scrl.add_widget(label)
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
 
 #Estoque
 class RelEstoqueScreen(Screen):
@@ -948,6 +1135,8 @@ class RelTribScreen(Screen):
         label = Label(text='INDICE')
         self.scrl.add_widget(label)
 
+        total = 0
+        ind = 0
         for t in list:
 
             label = Label(text=t.upper())
@@ -955,11 +1144,18 @@ class RelTribScreen(Screen):
 
             ali = self.preenche(Tributos, t)
 
+            if t != 'total':
+                total = total + ali
+                ind = ind + (ali/100)
+
             label = Label(text=str(ali))
             self.scrl.add_widget(label)
 
-            label = Label(text=str(ali/100))
+            label = Label(text=str(ali*0.01))
             self.scrl.add_widget(label)
+
+        print(total)
+        print(ind)
 
     def preenche(self, table=None, col=None, cond=None):
 

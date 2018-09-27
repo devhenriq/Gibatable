@@ -61,8 +61,6 @@
                             multiline: False
                         Label:
                             text: ""
-                        Label:
-                            text: ""
                     Label:
                         text: 'Despesas com divulgacao:'
                         font_size: 0.4*self.height
@@ -77,8 +75,6 @@
                             font_size: 0.6*self.height
                             size_hint: .5,.45
                             multiline: False
-                        Label:
-                            text: ""
                         Label:
                             text: ""
                     Label:
@@ -97,8 +93,6 @@
                             multiline: False
                         Label:
                             text: ""
-                        Label:
-                            text: ""
                     Label:
                         text: 'Caixa:'
                         font_size: 0.4*self.height
@@ -113,8 +107,6 @@
                             font_size: 0.4*self.height
                             size_hint: .8,.45
                             multiline: False
-                        Label:
-                            text: ""
                         Label:
                             text: ""
                     Label:
@@ -143,6 +135,6 @@
             col_default_width: 100
             spacing: 500
             SendButton:
-                on_release: pessoa.envia()
+                on_release: investimentoinicial.envia()
             Voltar:
                 on_release: app.root.current = "cadastro"

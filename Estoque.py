@@ -14,6 +14,7 @@ class Estoque:
                 self.custounit = self.calculaTotal(MateriaPrima, 'total', " WHERE produto = '" + str(self.descr)+ "'")
                 self.custototal = self.quant * self.custounit
                 self.mes = e[3]
+                #Banco.delete(Banco, 'estoque')
                 self.insereBanco()
 
     def calculaTotal(self, table, col=None, cond=None):

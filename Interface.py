@@ -94,8 +94,7 @@ class EstimativaScreen(Screen):
         self.quant.text = ""
         self.lucro.text = ""
         self.mes.text = "-"
-        est = Estoque()
-        est.relatorio()
+        Estoque()
 
 
 class CustosFixosScreen(Screen):
@@ -194,7 +193,7 @@ class RateioCustosOpScreen(Screen):
 
     def envia(self):
         for w in self.inputs:
-            rto = RateioFixos(w)  # adicionar na lista os inputs criado na linha 160 dos text input. (15 linhas abaixo)k
+            rto = RateioOp(w)  # adicionar na lista os inputs criado na linha 160 dos text input. (15 linhas abaixo)k
             rto.relatorio()
 
     @mainthread
@@ -300,7 +299,7 @@ class RelPessoaDirScreen(Screen):
 class RelPessoaOpScreen(Screen):
     @mainthread
     def on_enter(self):
-        dados = Pessoa.relatorio(Pessoa, 'cargo, quant, salario, ferias, decimo, fgts, inss, total', ' WHERE categoria="Produtor"')
+        dados = Pessoa.relatorio(Pessoa, 'cargo, quant, salario, ferias, decimo, fgts, inss, total', ' WHERE categoria="Producao"')
 
         self.scrl.clear_widgets()
         gc.collect()
@@ -339,13 +338,13 @@ class RelPessoaOpScreen(Screen):
             x = x + 1
         self.scrl.add_widget(Label(text=""))
         self.scrl.add_widget(Label(text="TOTAL"))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Produtor"')))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'salario', ' WHERE categoria="Produtor"')))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'ferias', ' WHERE categoria="Produtor"')))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'decimo', ' WHERE categoria="Produtor"')))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'fgts', ' WHERE categoria="Produtor"')))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'inss', ' WHERE categoria="Produtor"')))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'total', ' WHERE categoria="Produtor"')))
+        self.scrl.add_widget(Label(text=str(self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Producao"'))))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'salario', ' WHERE categoria="Producao"')))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'ferias', ' WHERE categoria="Producao"')))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'decimo', ' WHERE categoria="Producao"')))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'fgts', ' WHERE categoria="Producao"')))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'inss', ' WHERE categoria="Producao"')))
+        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'total', ' WHERE categoria="Producao"')))
 
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
@@ -1108,11 +1107,130 @@ class RelInvIniScreen(Screen):
 
 #Estoque
 class RelEstoqueScreen(Screen):
-    pass
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Estoque'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioBt())
+        for mes in range(1, 13):
+            self.criabotao(mes)
+
+    def criabotao(self, mes):
+        bt = Button(text='Mes ' + str(mes))
+        bt.bind(on_release=lambda x: self.preenche(mes))
+        self.scrl.add_widget(bt)
+
+    def preenche(self, mes):
+        self.scrl.clear_widgets()
+        self.back.clear_widgets()
+        gc.collect()
+
+        self.title.text = str(mes) + ' Mes'
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
+        x = 1
+        dados = Estoque.relatorio(Estoque, 'descricao, quant, custounit, custototal',
+                                     ' WHERE mes = "' + str(mes) + '"')
+
+        label = Label(text='')
+        self.scrl.add_widget(label)
+        label = Label(text='Descricao')
+        self.scrl.add_widget(label)
+        label = Label(text='Quantidade')
+        self.scrl.add_widget(label)
+        label = Label(text='Custo Unitario')
+        self.scrl.add_widget(label)
+        label = Label(text='Custo Total')
+        self.scrl.add_widget(label)
+
+        list = []
+        prods = []
+        for prod in dados:
+            print(prod)
+            if prod[0] in prods:
+                for e in list:
+                    if prod[0] == e['descr']:
+                        e['quant'] += prod[1]
+                        e['custounit'] += prod[2]
+                        e['custototal'] += prod[3]
+
+            if prod[0] not in prods:
+                prods.append(prod[0])
+                list.append({'descr': prod[0], 'quant': prod[1], 'custounit': prod[2], 'custototal': prod[3]})
+            #self.scrl.add_widget(Label(text=str(p)))
+
+
+        for prod in list:
+            print(prod)
+            self.scrl.add_widget(Label(text=str(x)))
+            self.scrl.add_widget(Label(text=str(prod['descr'])))
+            self.scrl.add_widget(Label(text=str(prod['quant'])))
+            self.scrl.add_widget(Label(text=str(prod['custounit'])))
+            self.scrl.add_widget(Label(text=str(prod['custototal'])))
+
+            x = x + 1
+
+
+        self.scrl.add_widget(Label(text=' '))
+        self.scrl.add_widget(Label(text='TOTAL'))
+        self.scrl.add_widget(Label(text=str(self.calculaTotal(Estoque, 'quant', ' WHERE mes = "' + str(mes) + '"'))))
+        self.scrl.add_widget(Label(text=' '))
+        self.scrl.add_widget(
+            Label(text=str(self.calculaTotal(Estoque, 'custototal', ' WHERE mes = "' + str(mes) + '"'))))
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
 
 #Custo Financeiro Mensal
 class RelCustoFinMenScreen(Screen):
-    pass
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+
+        total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
+        print(total)
+        self.scrl.add_widget(Label(text="PRODUTO"))
+        custo = self.calculaTotal(CustoFinanceiroMensal, 'custo')
+        self.scrl.add_widget(Label(text=str(custo)))
+        print(custo)
+
+        self.scrl.add_widget(Label(text="INVESTIMENTO INICIAL"))
+        inv = self.calculaTotal(CustoFinanceiroMensal, 'invest')
+        self.scrl.add_widget(Label(text=str(inv)))
+        print(inv)
+
+        self.scrl.add_widget(Label(text="VALOR/MES"))
+        valormes = inv*custo
+        self.scrl.add_widget(Label(text=str(valormes)))
+        print(valormes)
+
+        for mes in range(1,13):
+            self.scrl.add_widget(Label(text=str(mes) + ' MES'))
+            if(self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0):
+                val = valormes/self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
+            else:
+                val = 'Erro'
+            print(val)
+            self.scrl.add_widget(Label(text=str(val)))
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
 
 #Tributos
 class RelTribScreen(Screen):
@@ -1217,8 +1335,36 @@ class RelPrecoVendaScreen(Screen):
 class RelRateioFixoScreen(Screen):
     @mainthread
     def on_enter(self):
-        list = CustosFixos.relatorio(CustosFixos, 'total')
+        self.scrl.clear_widgets()
+        gc.collect()
+
+        total = self.calculaTotal(CustosFixos, 'total')
         dados = RateioFixos.relatorio(RateioFixos, 'produto, porc')
+        totalt = 0
+        totalporc = 0
+
+        self.scrl.add_widget(Label(text="PRODUTO"))
+        self.scrl.add_widget(Label(text="% DE RATEIO"))
+        self.scrl.add_widget(Label(text="C.FIXO P/ LOTE P/ PROD"))
+
+        for rateio in dados:
+            self.scrl.add_widget(Label(text=rateio[0]))
+            self.scrl.add_widget(Label(text=str(rateio[1])))
+            totalporc = totalporc + rateio[1]
+            totalt = totalt + total*(rateio[1]/100)
+            self.scrl.add_widget(Label(text=str(total*(rateio[1]/100))))
+
+        if totalporc == 100:
+            pass
+        else:
+            #exception
+            pass
+
+        self.scrl.add_widget(Label(text="TOTAL"))
+        self.scrl.add_widget(Label(text=str(totalporc)))
+        self.scrl.add_widget(Label(text=str(totalt)))
+
+
 
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
@@ -1235,8 +1381,45 @@ class RelPontoEquilibrioScreen(Screen):
 
 #Rateio custos operacionais
 class RelRateioOpScreen(Screen):
-    pass
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
 
+        total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
+        dados = RateioOp.relatorio(RateioOp, 'produto, porc')
+        totalt = 0
+        totalporc = 0
+
+        self.scrl.add_widget(Label(text="PRODUTO"))
+        self.scrl.add_widget(Label(text="% DE RATEIO"))
+        self.scrl.add_widget(Label(text="C.FIXO P/ LOTE P/ PROD"))
+
+        for rateio in dados:
+            self.scrl.add_widget(Label(text=rateio[0]))
+            self.scrl.add_widget(Label(text=str(rateio[1])))
+            totalporc = totalporc + rateio[1]
+            totalt = totalt + total*(rateio[1]/100)
+            self.scrl.add_widget(Label(text=str(total*(rateio[1]/100))))
+
+        if totalporc == 100:
+            pass
+        else:
+            #exception
+            pass
+
+        self.scrl.add_widget(Label(text="TOTAL"))
+        self.scrl.add_widget(Label(text=str(totalporc)))
+        self.scrl.add_widget(Label(text=str(totalt)))
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
 
 
 class AlterarScreen(Screen):

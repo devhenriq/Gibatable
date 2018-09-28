@@ -1,5 +1,4 @@
 from Banco import Banco
-from Estimativa import Estimativa
 
 class RateioOp:
     def __init__(self, list):

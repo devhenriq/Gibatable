@@ -7,6 +7,7 @@ class CustoFinanceiroMensal:
         self.custo = 0
         self.custo = custo
         self.invest = self.calculaTotal(InvestimentoInicial, 'total')
+        Banco.delete(Banco, 'custofinanceiro')
         self.insereBanco()
 
     def calculaTotal(self, table, col=None, cond=None):

@@ -161,18 +161,12 @@ class RateioCustosFixosScreen(Screen):
 
     @mainthread
     def on_enter(self):
-        #Clock.schedule_once(self.create_scrollview)
-
-   # def create_scrollview(self):
         for w in self.inputs:
             w[0].canvas.clear()
             w[1].canvas.clear()
             w[2].canvas.clear()
 
-        #scrollview = ScrollView(size_hint=(1, None), size=(Window.width, Window.height))
-
-
-        list = Estimativa.relatorio(Estimativa, 'descricao')
+        list = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
 
         x = 0
         for e in list:
@@ -215,7 +209,7 @@ class RateioCustosOpScreen(Screen):
 
         # scrollview = ScrollView(size_hint=(1, None), size=(Window.width, Window.height))
 
-        list = Estimativa.relatorio(Estimativa, 'descricao')
+        list = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
 
         x = 0
         for e in list:
@@ -1220,15 +1214,27 @@ class RelPrecoVendaScreen(Screen):
     pass
 
 #Rateio custos fixos
-class RelRateioCustoFixoScreen(Screen):
-    pass
+class RelRateioFixoScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        list = CustosFixos.relatorio(CustosFixos, 'total')
+        dados = RateioFixos.relatorio(RateioFixos, 'produto, porc')
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
 
 #Ponto de Equilibrio
 class RelPontoEquilibrioScreen(Screen):
     pass
 
 #Rateio custos operacionais
-class RelRateioCustosOpScreen(Screen):
+class RelRateioOpScreen(Screen):
     pass
 
 

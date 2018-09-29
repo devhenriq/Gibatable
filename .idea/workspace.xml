@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dcac81b7-a83c-4a9b-9272-bb1914797cbc" name="Default" comment="Investimentos Fixos">
+    <list default="true" id="dcac81b7-a83c-4a9b-9272-bb1914797cbc" name="Default" comment="Telas de Cadastro feitas na base do ódio">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interface/kv/Cadastro/custofinmensal.kv" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/kv/Cadastro/custofinmensal.kv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Interface/kv/Cadastro/custosfixos.kv" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/kv/Cadastro/custosfixos.kv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Interface/kv/Cadastro/custovendas.kv" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/kv/Cadastro/custovendas.kv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interface/kv/Cadastro/estimativa.kv" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/kv/Cadastro/estimativa.kv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interface/kv/Cadastro/investimentoinicial.kv" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/kv/Cadastro/investimentoinicial.kv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interface/kv/Cadastro/materiaprima.kv" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/kv/Cadastro/materiaprima.kv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interface/kv/Cadastro/rateiocustosfixos.kv" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/kv/Cadastro/rateiocustosfixos.kv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Interface/kv/Cadastro/tributos.kv" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/kv/Cadastro/tributos.kv" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -52,66 +47,49 @@
     <session id="436849931">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="6" />
+          <entry key="project.closed" value="8" />
           <entry key="project.open.time.13" value="1" />
+          <entry key="project.open.time.15" value="1" />
           <entry key="project.open.time.18" value="1" />
           <entry key="project.open.time.34" value="2" />
-          <entry key="project.open.time.40" value="1" />
+          <entry key="project.open.time.40" value="2" />
           <entry key="project.open.time.41" value="1" />
           <entry key="project.open.time.84" value="1" />
-          <entry key="project.opened" value="7" />
+          <entry key="project.opened" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="kv" value="13" />
+          <entry key="kv" value="20" />
           <entry key="py" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="PLAIN_TEXT" value="13" />
+          <entry key="PLAIN_TEXT" value="20" />
           <entry key="Python" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="kv" value="1735" />
-          <entry key="txt" value="69" />
+          <entry key="kv" value="1826" />
+          <entry key="txt" value="123" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="1804" />
+          <entry key="PLAIN_TEXT" value="1949" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/custosfixos.kv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="50" column="53" selection-start-line="50" selection-start-column="53" selection-end-line="50" selection-end-column="53" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/tributos.kv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2261">
-              <caret line="38" column="40" selection-start-line="38" selection-start-column="40" selection-end-line="38" selection-end-column="40" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/custovendas.kv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="166">
-              <caret line="61" selection-start-line="61" selection-end-line="61" />
+            <state relative-caret-position="387">
+              <caret line="162" column="23" selection-start-line="162" selection-start-column="23" selection-end-line="162" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -119,16 +97,37 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/pessoa.kv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1479">
-              <caret line="87" column="35" lean-forward="true" selection-end-line="111" selection-end-column="57" />
+            <state relative-caret-position="-225">
+              <caret line="75" column="41" selection-start-line="75" selection-start-column="41" selection-end-line="75" selection-end-column="41" />
             </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/precovenda.kv">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-412" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/preestimativa.kv">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-293" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/rateiocustosop.kv">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-565" />
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/investimento.kv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="506">
+            <state relative-caret-position="-55">
               <caret line="88" column="38" selection-start-line="88" selection-start-column="38" selection-end-line="88" selection-end-column="38" />
             </state>
           </provider>
@@ -137,17 +136,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/investimentoinicial.kv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
+            <state relative-caret-position="-1415">
               <caret line="33" column="52" selection-start-line="33" selection-start-column="52" selection-end-line="33" selection-end-column="52" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/custofinmensal.kv">
+        <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/rateiocustosfixos.kv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="32" column="36" selection-start-line="32" selection-start-column="36" selection-end-line="32" selection-end-column="36" />
+            <state relative-caret-position="387">
+              <caret line="56" column="57" selection-start-line="56" selection-start-column="57" selection-end-line="56" selection-end-column="57" />
             </state>
           </provider>
         </entry>
@@ -155,17 +154,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/materiaprima.kv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1598">
-              <caret line="94" column="41" selection-end-line="128" selection-end-column="57" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/rateiocustosfixos.kv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="952">
-              <caret line="56" column="57" selection-start-line="56" selection-start-column="57" selection-end-line="56" selection-end-column="57" />
+            <state relative-caret-position="336">
+              <caret line="123" column="23" lean-forward="true" selection-start-line="123" selection-start-column="23" selection-end-line="123" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -173,7 +163,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/estimativa.kv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
+            <state relative-caret-position="115">
               <caret line="94" column="44" selection-start-line="94" selection-start-column="44" selection-end-line="94" selection-end-column="44" />
             </state>
           </provider>
@@ -207,13 +197,13 @@
         <option value="$PROJECT_DIR$/Interface/kv/Cadastro/investimento.kv" />
         <option value="$PROJECT_DIR$/Interface/kv/Cadastro/materiaprima.kv" />
         <option value="$PROJECT_DIR$/Interface/kv/Cadastro/estimativa.kv" />
-        <option value="$PROJECT_DIR$/Interface/kv/Cadastro/custosfixos.kv" />
-        <option value="$PROJECT_DIR$/Interface/kv/Cadastro/tributos.kv" />
-        <option value="$PROJECT_DIR$/Interface/kv/Cadastro/custovendas.kv" />
         <option value="$PROJECT_DIR$/Interface/kv/Cadastro/investimentoinicial.kv" />
         <option value="$PROJECT_DIR$/Interface/kv/Cadastro/custofinmensal.kv" />
-        <option value="$PROJECT_DIR$/Interface/kv/Cadastro/pessoa.kv" />
         <option value="$PROJECT_DIR$/Interface/kv/Cadastro/rateiocustosfixos.kv" />
+        <option value="$PROJECT_DIR$/Interface/kv/Cadastro/pessoa.kv" />
+        <option value="$PROJECT_DIR$/Interface/kv/Cadastro/custosfixos.kv" />
+        <option value="$PROJECT_DIR$/Interface/kv/Cadastro/custovendas.kv" />
+        <option value="$PROJECT_DIR$/Interface/kv/Cadastro/tributos.kv" />
       </list>
     </option>
   </component>
@@ -450,7 +440,14 @@
       <option name="project" value="LOCAL" />
       <updated>1537216010639</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Telas de Cadastro feitas na base do ódio">
+      <created>1537473073550</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1537473073550</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TodoView">
@@ -471,14 +468,14 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49736565" visible="true" weight="0.44251627" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4963119" visible="true" weight="0.44251627" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49947312" weight="0.329718" />
       <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49894625" weight="0.329718" />
-      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50263435" side_tool="true" visible="true" weight="0.44251627" />
-      <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.49789253" weight="0.329718" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.5036881" side_tool="true" visible="true" weight="0.44251627" />
+      <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.49736565" weight="0.329718" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -492,7 +489,8 @@
     <MESSAGE value="Inicio de classes" />
     <MESSAGE value="Primeira Telinha feita por minha pessoa" />
     <MESSAGE value="Investimentos Fixos" />
-    <option name="LAST_COMMIT_MESSAGE" value="Investimentos Fixos" />
+    <MESSAGE value="Telas de Cadastro feitas na base do ódio" />
+    <option name="LAST_COMMIT_MESSAGE" value="Telas de Cadastro feitas na base do ódio" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/InvestimentoFixo" />
@@ -561,9 +559,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="748">
           <caret line="45" column="56" selection-start-line="45" selection-start-column="56" selection-end-line="45" selection-end-column="56" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -571,16 +566,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="901">
           <caret line="55" selection-start-line="55" selection-end-line="55" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/cadastros.kv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="39" selection-start-line="23" selection-start-column="39" selection-end-line="23" selection-end-column="39" />
         </state>
       </provider>
     </entry>
@@ -591,73 +576,95 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/estimativa.kv">
+    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/cadastros.kv">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="94" column="44" selection-start-line="94" selection-start-column="44" selection-end-line="94" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/custosfixos.kv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="50" column="53" selection-start-line="50" selection-start-column="53" selection-end-line="50" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/tributos.kv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2261">
-          <caret line="38" column="40" selection-start-line="38" selection-start-column="40" selection-end-line="38" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/custovendas.kv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="166">
-          <caret line="61" selection-start-line="61" selection-end-line="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/investimento.kv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="506">
-          <caret line="88" column="38" selection-start-line="88" selection-start-column="38" selection-end-line="88" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/materiaprima.kv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1598">
-          <caret line="94" column="41" selection-end-line="128" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/investimentoinicial.kv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="33" column="52" selection-start-line="33" selection-start-column="52" selection-end-line="33" selection-end-column="52" />
+        <state relative-caret-position="-871">
+          <caret line="23" column="39" selection-start-line="23" selection-start-column="39" selection-end-line="23" selection-end-column="39" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/custofinmensal.kv">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
+        <state relative-caret-position="-4">
           <caret line="32" column="36" selection-start-line="32" selection-start-column="36" selection-end-line="32" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/custosfixos.kv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-684">
+          <caret line="100" column="23" selection-start-line="100" selection-start-column="23" selection-end-line="100" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/custovendas.kv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="353">
+          <caret line="72" column="40" selection-start-line="72" selection-start-column="40" selection-end-line="72" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/estimativa.kv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="94" column="44" selection-start-line="94" selection-start-column="44" selection-end-line="94" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/investimento.kv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-55">
+          <caret line="88" column="38" selection-start-line="88" selection-start-column="38" selection-end-line="88" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/investimentoinicial.kv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1415">
+          <caret line="33" column="52" selection-start-line="33" selection-start-column="52" selection-end-line="33" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/materiaprima.kv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="123" column="23" lean-forward="true" selection-start-line="123" selection-start-column="23" selection-end-line="123" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/pessoa.kv">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1479">
-          <caret line="87" column="35" lean-forward="true" selection-end-line="111" selection-end-column="57" />
+        <state relative-caret-position="-225">
+          <caret line="75" column="41" selection-start-line="75" selection-start-column="41" selection-end-line="75" selection-end-column="41" />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/precovenda.kv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-412" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/preestimativa.kv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-293" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/rateiocustosfixos.kv">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="952">
+        <state relative-caret-position="387">
           <caret line="56" column="57" selection-start-line="56" selection-start-column="57" selection-end-line="56" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/rateiocustosop.kv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-565" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Interface/kv/Cadastro/tributos.kv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="387">
+          <caret line="162" column="23" selection-start-line="162" selection-start-column="23" selection-end-line="162" selection-end-column="23" />
         </state>
       </provider>
     </entry>

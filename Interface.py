@@ -1333,10 +1333,6 @@ class RelCustoVendasScreen(Screen):
                 val = val + float(t)
         return val
 
-#Preco de venda
-class RelPrecoVendaScreen(Screen):
-    pass
-
 #Rateio custos fixos
 class RelRateioFixoScreen(Screen):
     @mainthread
@@ -1427,6 +1423,122 @@ class RelRateioOpScreen(Screen):
                 val = val + float(t)
         return val
 
+#Preço de venda
+class RelPrecoVendaScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Preco de Venda'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioBt())
+        dados = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
+
+        for prod in dados:
+
+            for mp in prod:
+                bt = Button(text=mp)
+                bt.bind(on_release=lambda x: self.BtMes(mp))
+                self.scrl.add_widget(bt)
+
+    def BtMes(self, nome):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Preco de Venda'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioBt())
+        for mes in range(1,13):
+            bt = Button(text=str(mes)+' mes')
+            bt.bind(on_release=lambda x: self.preenche(nome, mes))
+            self.scrl.add_widget(bt)
+
+    def returnMes(self, mes):
+        return mes
+
+    def preenche(self, nome, mes):
+        self.scrl.clear_widgets()
+        self.back.clear_widgets()
+        gc.collect()
+        self.title.text = nome
+        self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
+        x = 1
+
+
+        label = Label(text='CUSTO C/ MATERIA PRIMA (MAT. DIRETOS)')
+        self.scrl.add_widget(label)
+        mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
+        self.scrl.add_widget(Label(text=str(mat)))
+
+        label = Label(text='CUSTO DE PRODUCAO (OPERACIONAL)')
+        self.scrl.add_widget(label)
+
+        total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
+        rateio = self.calculaTotal(RateioOp, 'porc', ' WHERE produto = "'+nome+'"')
+        op = total * (rateio/100)
+        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
+        cprod = op/quant
+
+        self.scrl.add_widget(Label(text=str(cprod)))
+
+        label = Label(text='OUTROS CUSTOS PRODUCAO (TERCEIROS)')
+        self.scrl.add_widget(label)
+        outros = self.calculaTotal(PrecoVenda, 'outros', ' WHERE mes =' + str(mes) + ' AND produto = "' + nome + '"')
+        self.scrl.add_widget(Label(text=str(outros)))
+
+        label = Label(text='CUSTO INDEPENDENTE DO PRECO')
+        self.scrl.add_widget(label)
+        self.scrl.add_widget(Label(text=''))
+
+        label = Label(text='CUSTO TRIBUTARIO DIRETO')
+        self.scrl.add_widget(label)
+        self.scrl.add_widget(Label(text=''))
+
+        label = Label(text='CUSTO FINANCEIRO DO GIRO')
+        self.scrl.add_widget(label)
+        self.scrl.add_widget(Label(text=''))
+
+        label = Label(text='CUSTO DIRETO COM VENDAS')
+        self.scrl.add_widget(label)
+        self.scrl.add_widget(Label(text=''))
+
+        label = Label(text='CUSTO TOTAL')
+        self.scrl.add_widget(label)
+        self.scrl.add_widget(Label(text=''))
+
+        label = Label(text='MARGEM DE CONTRIBUICAO')
+        self.scrl.add_widget(label)
+        self.scrl.add_widget(Label(text=''))
+
+        label = Label(text='CUSTO FIXO')
+        self.scrl.add_widget(label)
+        self.scrl.add_widget(Label(text=''))
+
+        label = Label(text='LUCRO')
+        self.scrl.add_widget(label)
+        self.scrl.add_widget(Label(text=''))
+
+
+        label = Label(text='PRECO DE VENDA')
+        self.scrl.add_widget(label)
+
+        # self.scrl.add_widget(Label(text=''))
+        # self.scrl.add_widget(Label(text='TOTAL'))
+        # self.scrl.add_widget(Label(text=''))
+        # self.scrl.add_widget(Label(text=''))
+        # self.scrl.add_widget(Label(text=''))
+        # self.scrl.add_widget(
+        #     Label(text=str(self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"'))))
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
 
 class AlterarScreen(Screen):
     pass

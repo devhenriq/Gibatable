@@ -119,8 +119,9 @@ try:
 
     table.append("""CREATE TABLE IF NOT EXISTS precovenda (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        produto TEXT NOT NULL,
         mes INTEGER NOT NULL,
-        outros FLOAT NOT NULL
+        outros FLOAT
     );""")
 
     table.append("""CREATE TABLE IF NOT EXISTS rateiocustosfixos (

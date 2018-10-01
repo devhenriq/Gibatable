@@ -1,6 +1,6 @@
-<RelatorioScreen>:
-    id: relatorio
-    name: "relatorio"
+<RelatoriosFinScreen>:
+    id: relatoriosfin
+    name: "relatoriosfin"
     GridLayout:
         rows:3
         height: self.minimum_height
@@ -23,121 +23,111 @@
                 Button:
                     font_size: 0.2*self.height
                     size_hint: .1,.1
-                    text:"Investimentos Fixos"
+                    text:"Calculo do preco de venda"
                     text_size: self.size
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current= "relinvfixo"
+                    on_release: app.root.current= "relprecovenda"
                 Button:
                     font_size: 0.2*self.height
                     size_hint: .1,.1
-                    text:"Pessoas"
+                    text:"Preco de venda unitario mensal"
                     text_size: self.size
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current = "relpessoa"
+                    on_release: app.root.current= "relprecovun"
                 Button:
                     font_size: 0.2*self.height
                     size_hint: .1,.1
-                    text:"Materia Prima"
+                    text:"Projecao de vendas p/ produto p/ mes"
                     text_size: self.size
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current= "relmp"
+                    on_release: app.root.current= "relprojecao"
                 Button:
                     font_size: 0.2*self.height
                     size_hint: .1,.1
-                    text:"Estimativa de Vendas"
+                    text:"Faturamento bruto de vendas p/ produto p/ mes"
                     text_size: self.size
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current= "relestimativa"
+                    on_release: app.root.current= "relfaturamento"
                 Button:
                     font_size: 0.2*self.height
                     size_hint: .1,.1
-                    text:"Custos Fixos Mensais"
+                    text:"Planilha de custos totais"
                     text_size: self.size
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current= "relcustofixo"
+                    on_release: app.root.current= "relcustostotais"
                 Button:
                     font_size: 0.2*self.height
                     size_hint: .1,.1
-                    text:"Investimentos Iniciais"
+                    text:"Demonstrativo de resultados"
                     text_size: self.size
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current= "relinvini"
+                    on_release: app.root.current= "reldemonstrativo"
                 Button:
                     font_size: 0.2*self.height
                     size_hint: .1,.1
-                    text:"Custo Financeiro Mensal"
+                    text:"Indice de margem de contribuicao (margem de contribuicao / faturamento bruto)"
                     text_size: self.size
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current= "relcustofinmen"
+                    on_release: app.root.current= "relmargemcontrib"
                 Button:
                     font_size: 0.2*self.height
                     size_hint: .1,.1
-                    text:"Estoque"
+                    text:"Ponto de equilibrio (EM REAIS)"
                     text_size: self.size
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current= "relestoque"
+                    on_release: app.root.current= "relpontoequilibrio"
                 Button:
                     font_size: 0.2*self.height
                     size_hint: .1,.1
-                    text:"Rateio de Custos Fixos"
+                    text:"Lucratividade, Rentabilidade e Prazo de Retorno de investimento"
                     text_size: self.size
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current= "relrateiofixo"
+                    on_release: app.root.current= "relrent"
                 Button:
                     font_size: 0.2*self.height
                     size_hint: .1,.1
-                    text:"Rateio de Custos Operacionais"
+                    text:"TIR e VPL"
                     text_size: self.size
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current= "relrateioop"
+                    on_release: app.root.current= "reltir"
                 Button:
                     font_size: 0.2*self.height
                     size_hint: .1,.1
-                    text:"Tributos"
+                    text:"Fluxo de caixa projetado para o primeiro ano"
                     text_size: self.size
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current= "reltrib"
+                    on_release: app.root.current= "relfluxo"
                 Button:
                     font_size: 0.2*self.height
                     size_hint: .1,.1
-                    text:"Custo com vendas"
+                    text:"Calculos para capital de giro"
                     text_size: self.size
                     halign: 'center'
                     valign: 'center'
                     padding_y: 10
-                    on_release: app.root.current= "relcustovendas"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Ponto de equilibrio em unidade"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relpontoeq"
-
+                    on_release: app.root.current= "relgiro"
         GridLayout:
             cols: 2
             height: self.minimum_height

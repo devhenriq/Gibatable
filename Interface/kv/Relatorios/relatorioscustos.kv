@@ -1,0 +1,56 @@
+<RelatoriosCustosScreen>:
+    id: relatorioscustos
+    name: "relatorioscustos"
+    GridLayout:
+        rows:3
+        height: self.minimum_height
+        size_hint: 1, 1
+        row_default_height: 60
+        spacing: 50
+        Label:
+            text: 'Relatorios'
+            font_size: 0.6*self.height
+            size_hint: 0.1, 0.1
+        BoxLayout:
+            padding: 30
+            GridLayout:
+                cols: 3
+                spacing: 150
+                height: self.minimum_height
+                size_hint: 1,1
+                row_default_height: 120
+                row_force_default: True
+                font_size: 0.2 * self.height
+                Button:
+                    font_size: 0.2*self.height
+                    size_hint: .1,.1
+                    text:"Custos"
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current= "relatorio"
+                Button:
+                    font_size: 0.2*self.height
+                    size_hint: .1,.1
+                    text:"Financeiro"
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current = "relatoriosfin"
+        GridLayout:
+            cols: 2
+            height: self.minimum_height
+            size_hint: .1, .1
+            row_default_height: 20
+            font_size: 0.2 * self.height
+            Label:
+                text: ""
+            Voltar:
+                size_hint: 0.1, 0.1
+                text_size: self.size
+                halign: 'center'
+                valign: 'center'
+                padding_y: 10
+                on_release: app.root.current = "menu"

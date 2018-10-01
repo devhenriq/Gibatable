@@ -241,6 +241,12 @@ class PrecoVendaScreen(Screen):
 class RelatorioScreen(Screen):
     pass
 
+class RelatoriosCustosScreen(Screen):
+    pass
+
+class RelatoriosFinScreen(Screen):
+    pass
+
 #Pessoas
 class RelPessoaScreen(Screen):
     pass

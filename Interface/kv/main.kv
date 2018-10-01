@@ -3,6 +3,8 @@ Manager:
     MenuScreen:
     CadastroScreen:
     RelatorioScreen:
+    RelatoriosFinScreen:
+    RelatoriosCustosScreen:
     AlterarScreen:
     PessoaScreen:
     InvestimentoScreen:
@@ -74,7 +76,7 @@ Manager:
         font_size: 0.4*self.height
         text:'Relatorios'
         pos_hint: {'top':8, 'right': 8}
-        on_release: app.root.current = "relatorio"
+        on_release: app.root.current = "relatorioscustos"
         size_hint: 2, .8
 
     Button:

@@ -58,7 +58,7 @@
                             name: "cont"
                             id: cont
                             font_size: 0.6*self.height
-                            size_hint: .5,.45
+                            size_hint: 2,.45
                             multiline: False
                         Label:
                             text: ""
@@ -76,7 +76,7 @@
                             name: "mat"
                             id: mat
                             font_size: 0.6*self.height
-                            size_hint: .5,.45
+                            size_hint: 2,.45
                             multiline: False
                         Label:
                             text: ""
@@ -94,12 +94,11 @@
                             name: "agua"
                             id: agua
                             font_size: 0.6*self.height
-                            size_hint: .5,.45
+                            size_hint: 2,.45
                             multiline: False
                         Label:
                             text: ""
-                        Label:
-                            text: ""
+
                     Label:
                         text: 'Aluguel:'
                         font_size: 0.4*self.height
@@ -112,12 +111,11 @@
                             name: "aluguel"
                             id: aluguel
                             font_size: 0.6*self.height
-                            size_hint: .5,.45
+                            size_hint: 2,.45
                             multiline: False
                         Label:
                             text: ""
-                        Label:
-                            text: ""
+
                     Label:
                         text: 'Manutencao:'
                         font_size: 0.4*self.height
@@ -130,12 +128,11 @@
                             name: "man"
                             id: man
                             font_size: 0.6*self.height
-                            size_hint: .5,.45
+                            size_hint: 2,.45
                             multiline: False
                         Label:
                             text: ""
-                        Label:
-                            text: ""
+
                     Label:
                         text: 'Outros:'
                         font_size: 0.4*self.height
@@ -148,7 +145,7 @@
                             name: "outros"
                             id: outros
                             font_size: 0.6*self.height
-                            size_hint: .5,.45
+                            size_hint: 2,.45
                             multiline: False
                         Label:
                             text: ""
@@ -162,6 +159,6 @@
             col_default_width: 100
             spacing: 500
             SendButton:
-                on_release: pessoa.envia()
+                on_release: custosfixos.envia()
             Voltar:
                 on_release: app.root.current = "cadastro"

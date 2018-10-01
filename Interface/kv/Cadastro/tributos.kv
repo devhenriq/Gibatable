@@ -88,8 +88,7 @@
                             multiline: False
                         Label:
                             text: ""
-                        Label:
-                            text: ""
+
                     Label:
                         text: 'PIS:'
                         font_size: 0.4*self.height
@@ -106,8 +105,7 @@
                             multiline: False
                         Label:
                             text: ""
-                        Label:
-                            text: ""
+
                     Label:
                         text: 'COFINS:'
                         font_size: 0.4*self.height
@@ -124,8 +122,7 @@
                             multiline: False
                         Label:
                             text: ""
-                        Label:
-                            text: ""
+
                     Label:
                         text: 'IPI:'
                         font_size: 0.4*self.height
@@ -142,8 +139,7 @@
                             multiline: False
                         Label:
                             text: ""
-                        Label:
-                            text: ""
+
                     Label:
                         text: 'ISS:'
                         font_size: 0.4*self.height
@@ -160,8 +156,7 @@
                             multiline: False
                         Label:
                             text: ""
-                        Label:
-                            text: ""
+
                     Label:
                         text: 'IRPJ/CSLL:'
                         font_size: 0.4*self.height
@@ -178,8 +173,7 @@
                             multiline: False
                         Label:
                             text: ""
-                        Label:
-                            text: ""
+
 
 
         GridLayout:
@@ -191,6 +185,6 @@
             col_default_width: 100
             spacing: 500
             SendButton:
-                on_release: pessoa.envia()
+                on_release: tributos.envia()
             Voltar:
                 on_release: app.root.current = "cadastro"

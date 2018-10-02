@@ -41,6 +41,7 @@ class CustosFixos:
             total = total + float(dep)
 
         self.deprec = self.deprec + total
+        self.deprec = self.deprec
         print(self.deprec)
 
         Banco.delete(Banco, 'custosfixos')

@@ -35,25 +35,12 @@
                         text: 'Tributo'
                         font_size: 0.4*self.height
                         size_hint: 1,.1
-                    GridLayout:
-                        tributo: tributo
-                        cols: 2
-                        spacing: 40
 
-                        Label:
-                            text: ""
                     Label:
                         text: 'Aliquota'
                         font_size: 0.4*self.height
                         size_hint: 1,1
-                    GridLayout:
-                        cols: 3
-                        spacing: 140
 
-                        Label:
-                            text: ""
-                        Label:
-                            text: ""
                     Label:
                         text: 'Simples:'
                         font_size: 0.4*self.height
@@ -185,6 +172,6 @@
             col_default_width: 100
             spacing: 500
             SendButton:
-                on_release: tributos.envia()
+                on_release: tributo.envia()
             Voltar:
                 on_release: app.root.current = "cadastro"

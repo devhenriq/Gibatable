@@ -32,7 +32,7 @@ try:
         descricao TEXT NOT NULL,
         unmedida TEXT NOT NULL,
         precounitario FLOAT NOT NULL,
-        quant INTEGER NOT NULL,
+        quant FLOAT NOT NULL,
         total FLOAT NOT NULL
     );""")
 
@@ -80,7 +80,8 @@ try:
         cofins FLOAT,
         ipi FLOAT,
         iss FLOAT,
-        irpj FLOAT
+        irpj FLOAT,
+        total FLOAT
     );""")
 
     table.append("""CREATE TABLE IF NOT EXISTS custovendas (

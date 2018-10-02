@@ -73,7 +73,7 @@ class InvestimentoScreen(Screen):
 
 class MateriaPrimaScreen(Screen):
     def envia(self):
-        m = MateriaPrima(self.nome.text, self.materia.text, self.medida.text, float(self.preco.text), int(self.quant.text))
+        m = MateriaPrima(self.nome.text, self.materia.text, self.medida.text, float(self.preco.text), float(self.quant.text))
         m.relatorio()
         self.nome.text = ""
         self.materia.text = ""
@@ -1205,7 +1205,7 @@ class RelCustoFinMenScreen(Screen):
 
         total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
         print(total)
-        self.scrl.add_widget(Label(text="PRODUTO"))
+        self.scrl.add_widget(Label(text="CUSTO FINANCEIRO MENSAL POR UNIDADE"))
         custo = self.calculaTotal(CustoFinanceiroMensal, 'custo')
         self.scrl.add_widget(Label(text=str(custo)))
         print(custo)
@@ -1271,9 +1271,6 @@ class RelTribScreen(Screen):
 
             label = Label(text=str(ali*0.01))
             self.scrl.add_widget(label)
-
-        print(total)
-        print(ind)
 
     def preenche(self, table=None, col=None, cond=None):
 
@@ -1354,7 +1351,7 @@ class RelRateioFixoScreen(Screen):
             self.scrl.add_widget(Label(text=str(rateio[1])))
             totalporc = totalporc + rateio[1]
             totalt = totalt + total*(rateio[1]/100)
-            self.scrl.add_widget(Label(text=str(total*(rateio[1]/100))))
+            self.scrl.add_widget(Label(text=str((total*rateio[1])/100)))
 
         if totalporc == 100:
             pass
@@ -1379,7 +1376,129 @@ class RelRateioFixoScreen(Screen):
 
 #Ponto de Equilibrio
 class RelPontoEquilibrioScreen(Screen):
-    pass
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Ponto de Equilibrio'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioBt())
+        dados = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
+
+        for prod in dados:
+
+            for mp in prod:
+                bt = Button(text=mp)
+                bt.bind(on_release=lambda x: self.BtMes(mp))
+                self.scrl.add_widget(bt)
+
+    def BtMes(self, nome):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Preco de Venda'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioBt())
+        for mes in range(1, 13):
+            bt = Button(text=str(mes) + ' mes')
+            bt.bind(on_release=lambda x: self.preenche(nome, mes))
+            self.scrl.add_widget(bt)
+
+    def returnMes(self, mes):
+        return mes
+
+    def preenche(self, nome, mes):
+        self.scrl.clear_widgets()
+        self.back.clear_widgets()
+        gc.collect()
+        self.title.text = nome
+        self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
+
+        total = self.calculaTotal(CustosFixos, 'total')
+        dados = RateioFixos.relatorio(RateioFixos, 'produto, porc')
+        totalt = 0
+        totalporc = 0
+        totalun = 0
+        self.scrl.add_widget(Label(text="RATEIO C. FIX"))
+        self.scrl.add_widget(Label(text="P. VENDA"))
+        self.scrl.add_widget(Label(text="C. VAR."))
+        self.scrl.add_widget(Label(text="Nº UNIDADES"))
+
+        for rateio in dados:
+            totalporc = totalporc + rateio[1]
+            totalt = totalt + total*(rateio[1]/100)
+            cfixo = (total*rateio[1])/100
+            self.scrl.add_widget(Label(text=str(cfixo)))
+            pv = self.calculaPrecoVenda(nome,mes, 'Preco')
+            self.scrl.add_widget(Label(text=str(pv)))
+            ct = self.calculaPrecoVenda(nome, mes, 'CTotal')
+            self.scrl.add_widget(Label(text=str(ct)))
+            un = cfixo / (pv - ct)
+            self.scrl.add_widget(Label(text=str(un)))
+            totalun += un
+
+        self.scrl.add_widget(Label(text="TOTAL"))
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=str(totalun)))
+
+    def calculaPrecoVenda(self, nome, mes, ret):
+        mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
+
+        total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
+        rateio = self.calculaTotal(RateioOp, 'porc', ' WHERE produto = "'+nome+'"')
+        op = total * (rateio/100)
+        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
+        if quant != 0:
+            cprod = op / quant
+        else:
+            cprod = 0
+
+        total = self.calculaTotal(CustosFixos, 'total')
+        rateio = self.calculaTotal(RateioFixos, 'porc', ' WHERE produto = "' + nome + '"')
+        op = total * (rateio / 100)
+        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
+        if quant != 0:
+            cfixo = op / quant
+        else:
+            cfixo = 0
+
+        outros = self.calculaTotal(PrecoVenda, 'outros', ' WHERE mes =' + str(mes) + ' AND produto = "' + nome + '"')
+
+        cip = mat + cprod + outros
+
+        if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
+            cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
+                                                                                              'invest')) / self.calculaTotal(
+                  Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
+        else:
+            cfgiro = 0
+
+
+        lucro = self.calculaTotal(Estimativa, 'lucrounitario', ' WHERE descricao = "' + nome + '"')
+
+        trib = self.calculaTotal(Tributos, 'total') * 0.01
+        cvenda = self.calculaTotal(CustoVendas, 'porcentagem') * 0.01
+        preco = (cip + cfixo + lucro + cfgiro) * (1/(1-(trib + cvenda)))
+
+        ctrib = preco * trib
+        cdirvendas = preco * cvenda
+
+        ctotal = cip + ctrib + cdirvendas
+        if ret == 'Preco':
+            return preco
+        if ret == 'CTotal':
+            return ctotal
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
 
 #Rateio custos operacionais
 class RelRateioOpScreen(Screen):
@@ -1402,7 +1521,7 @@ class RelRateioOpScreen(Screen):
             self.scrl.add_widget(Label(text=str(rateio[1])))
             totalporc = totalporc + rateio[1]
             totalt = totalt + total*(rateio[1]/100)
-            self.scrl.add_widget(Label(text=str(total*(rateio[1]/100))))
+            self.scrl.add_widget(Label(text=str((total*rateio[1])/100)))
 
         if totalporc == 100:
             pass
@@ -1465,47 +1584,83 @@ class RelPrecoVendaScreen(Screen):
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
         x = 1
 
+        #Calculos
 
-        label = Label(text='CUSTO C/ MATERIA PRIMA (MAT. DIRETOS)')
-        self.scrl.add_widget(label)
         mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
-        self.scrl.add_widget(Label(text=str(mat)))
-
-        label = Label(text='CUSTO DE PRODUCAO (OPERACIONAL)')
-        self.scrl.add_widget(label)
 
         total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
         rateio = self.calculaTotal(RateioOp, 'porc', ' WHERE produto = "'+nome+'"')
         op = total * (rateio/100)
         quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
-        cprod = op/quant
+        if quant != 0:
+            cprod = op / quant
+        else:
+            cprod = 0
 
+        total = self.calculaTotal(CustosFixos, 'total')
+        rateio = self.calculaTotal(RateioFixos, 'porc', ' WHERE produto = "' + nome + '"')
+        op = total * (rateio / 100)
+        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
+        if quant != 0:
+            cfixo = op / quant
+        else:
+            cfixo = 0
+
+        outros = self.calculaTotal(PrecoVenda, 'outros', ' WHERE mes =' + str(mes) + ' AND produto = "' + nome + '"')
+
+        cip = mat + cprod + outros
+
+        if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
+            cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
+                                                                                              'invest')) / self.calculaTotal(
+                  Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
+        else:
+            cfgiro = 0
+
+
+        lucro = self.calculaTotal(Estimativa, 'lucrounitario', ' WHERE descricao = "' + nome + '"')
+
+        trib = self.calculaTotal(Tributos, 'total') * 0.01
+        cvenda = self.calculaTotal(CustoVendas, 'porcentagem') * 0.01
+        preco = (cip + cfixo + lucro + cfgiro) * (1/(1-(trib + cvenda)))
+
+        ctrib = preco * trib
+        cdirvendas = preco * cvenda
+
+        ctotal = cip + ctrib + cdirvendas
+        #Coloca nas widget
+
+        label = Label(text='CUSTO C/ MATERIA PRIMA (MAT. DIRETOS)')
+        self.scrl.add_widget(label)
+        self.scrl.add_widget(Label(text=str(mat)))
+
+        label = Label(text='CUSTO DE PRODUCAO (OPERACIONAL)')
+        self.scrl.add_widget(label)
         self.scrl.add_widget(Label(text=str(cprod)))
 
         label = Label(text='OUTROS CUSTOS PRODUCAO (TERCEIROS)')
         self.scrl.add_widget(label)
-        outros = self.calculaTotal(PrecoVenda, 'outros', ' WHERE mes =' + str(mes) + ' AND produto = "' + nome + '"')
         self.scrl.add_widget(Label(text=str(outros)))
 
         label = Label(text='CUSTO INDEPENDENTE DO PRECO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=str(cip)))
 
         label = Label(text='CUSTO TRIBUTARIO DIRETO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=str(ctrib)))
 
         label = Label(text='CUSTO FINANCEIRO DO GIRO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=str(cfgiro)))
 
         label = Label(text='CUSTO DIRETO COM VENDAS')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=str(cdirvendas)))
 
         label = Label(text='CUSTO TOTAL')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=str(ctotal)))
 
         label = Label(text='MARGEM DE CONTRIBUICAO')
         self.scrl.add_widget(label)
@@ -1513,23 +1668,17 @@ class RelPrecoVendaScreen(Screen):
 
         label = Label(text='CUSTO FIXO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=str(cfixo)))
 
         label = Label(text='LUCRO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=str(lucro)))
 
 
         label = Label(text='PRECO DE VENDA')
         self.scrl.add_widget(label)
 
-        # self.scrl.add_widget(Label(text=''))
-        # self.scrl.add_widget(Label(text='TOTAL'))
-        # self.scrl.add_widget(Label(text=''))
-        # self.scrl.add_widget(Label(text=''))
-        # self.scrl.add_widget(Label(text=''))
-        # self.scrl.add_widget(
-        #     Label(text=str(self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"'))))
+        self.scrl.add_widget(Label(text=str(preco)))
 
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)

@@ -140,6 +140,21 @@ try:
         FOREIGN KEY (produto) REFERENCES estimativa(descricao)
     );""")
 
+    table.append("""CREATE TABLE IF NOT EXISTS progfin (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        frete FLOAT,
+        mes INT NOT NULL
+        
+    );""")
+    table.append("""CREATE TABLE IF NOT EXISTS capgiro (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        faturamento FLOAT,
+        pagamento FLOAT,
+        capsocial FLOAT NOT NULL,
+        reservas FLOAT NOT NULL
+    );""")
+
+
 except Error:
     print(Error)
 

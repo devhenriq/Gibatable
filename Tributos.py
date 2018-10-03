@@ -10,11 +10,11 @@ class Tributos:
         self.ipi = ipi
         self.iss = iss
         self.irpj = irpj
-        self.total = simples + icms + pis + cofins + ipi + iss + irpj
+        self.total = simples + icms + pis + cofins + ipi + iss
         self.insereBanco()
 
     def insereBanco(self):
-
+        Banco.delete(Banco, 'tributos')
         list = [self.simples, self.icms, self.pis, self.cofins, self.ipi, self.iss, self.irpj, self.total]
         str = 'tributos (simples, icms, pis, cofins, ipi, iss, irpj, total)'
 

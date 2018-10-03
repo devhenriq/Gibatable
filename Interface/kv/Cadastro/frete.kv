@@ -1,0 +1,74 @@
+<FinFreteScreen>:
+    id: finfrete
+    name: "finfrete"
+    frete: frete
+    mes: mes
+    GridLayout:
+        cols:1
+        rows:3
+        height: self.minimum_height
+        size_hint: 1, 1
+        row_default_height: 60
+        Label:
+            text: 'Frete - Custos Totais'
+            font_size: 0.6*self.height
+            size_hint: 1,None
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 1,1
+            ScrollView:
+                height: root.height * 1.5
+                GridLayout:
+                    cols: 2
+                    height: self.minimum_height
+                    padding: 100
+                    spacing: 50
+                    row_default_height: 60
+                    col_default_width: 100
+                    size_hint: 1,None
+                    Label:
+                        text: 'Frete'
+                        font_size: 0.4*self.height
+                        size_hint: 1,.1
+                    GridLayout:
+                        frete: frete
+                        cols: 2
+                        spacing: 40
+                        TextInput:
+                            name: "frete"
+                            id: frete
+                            font_size: 0.6*self.height
+                            size_hint: 2,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'Mes:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,1
+                    GridLayout:
+                        cols: 2
+                        spacing: 80
+                        size_hint: 1,1
+                        Spinner:
+                            name: "mes"
+                            id: mes
+                            font_size: 0.4*self.height
+                            pos_hint: {'top': 4.7, 'right': 3}
+                            size_hint: 2,.45
+                            text: '-'
+                            values: ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12')
+
+
+        GridLayout:
+            cols: 2
+            height: self.minimum_height
+            padding: 50
+            size_hint: 0.1, 0.1
+            row_default_height: 60
+            col_default_width: 100
+            spacing: 500
+            SendButton:
+                on_release: finfrete.envia()
+            Voltar:
+                on_release: app.root.current = "cadastro"

@@ -3128,8 +3128,14 @@ class RelMinScreen(Screen):
         pagar = fin.calculaPagRec(" ", 'Pagamentos')
         receita = fin.calculaFaturamento(" ")
         canual = fin.calculaTotal(Estoque, 'custototal')
-        pmrv = (receber / receita) * 360
-        pmpc = (pagar / canual) * 360
+        if receita != 0:
+            pmrv = (receber / receita) * 360
+        else:
+            pmrv = 0
+        if canual != 0:
+            pmpc = (pagar / canual) * 360
+        else:
+            pmpc = 0
         pmre = (fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = 1') + fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = 12') / 2 ) * 360
         #preenche
         self.scrl.add_widget(Label(text='CONTAS A RECEBER APÓS 12º MÊS'))

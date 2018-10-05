@@ -148,9 +148,12 @@ try:
     );""")
     table.append("""CREATE TABLE IF NOT EXISTS capgiro (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        faturamento FLOAT,
-        pagamento FLOAT,
         capsocial FLOAT NOT NULL,
+        avista FLOAT,
+        tres FLOAT,
+        seis FLOAT,
+        nov FLOAT,
+        categoria TEXT NOT NULL,
         reservas FLOAT NOT NULL
     );""")
 

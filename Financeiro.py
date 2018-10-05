@@ -11,6 +11,7 @@ from Tributos import Tributos
 from Frete import Frete
 from Estoque import Estoque
 from CapGiro import CapGiro
+from InvestimentoInicial import InvestimentoInicial
 
 class Financeiro:
     def demonstrativo(self, mes, ret):
@@ -154,3 +155,120 @@ class Financeiro:
         cvar = pd + imp + cvendas + etq + frete + ter + amort
 
         return cvar
+
+    def calculaPagRec(self, mes, var):
+
+        if mes == " ":
+            vtt = 0
+            for mes in range(1,16):
+                if var == 'Recebimentos':
+                    fat = self.calculaFaturamento(mes)
+                else:
+                    fat = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
+                avista = self.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"')
+                tres = self.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"')
+                seis = self.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"')
+                nove = self.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"')
+                total = avista + tres + seis + nove
+
+                valv = fat * (avista / 100)
+                valt = fat * (tres / 100)
+                vals = fat * (seis / 100)
+                valn = fat * (nove / 100)
+                valtotal = valv + valt + vals + valn
+                vtt += valtotal
+        else:
+            if var == 'Recebimentos':
+                fat = self.calculaFaturamento(mes)
+            else:
+                fat = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
+            avista = self.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"')
+            tres = self.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"')
+            seis = self.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"')
+            nove = self.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"')
+            total = avista + tres + seis + nove
+
+            valv = fat * (avista / 100)
+            valt = fat * (tres / 100)
+            vals = fat * (seis / 100)
+            valn = fat * (nove / 100)
+            vtt = valv + valt + vals + valn
+
+        return vtt
+
+    def calculaMin(self, ret):
+        receber = self.calculaPagRec(" ", 'Recebimentos')
+        pagar = self.calculaPagRec(" ", 'Pagamentos')
+        receita = self.calculaFaturamento(" ")
+        canual = self.calculaTotal(Estoque, 'custototal')
+        if receita != 0:
+            pmrv = (receber / receita) * 360
+        else:
+            pmrv = 0
+        if canual != 0:
+            pmpc = (pagar / canual) * 360
+        else:
+            pmpc = 0
+        pmre = (self.calculaTotal(Estoque, 'custototal', ' WHERE mes = 1') + self.calculaTotal(Estoque, 'custototal',
+                                                                                             ' WHERE mes = 12') / 2) * 360
+        if ret == 'pmrv':
+            return pmrv
+        if ret == 'pmpc':
+            return pmpc
+        if ret == 'pmre':
+            return pmre
+
+    def calculaInvPreOp(self):
+        legal = self.calculaTotal(InvestimentoInicial, 'legalizacao')
+        div = self.calculaTotal(InvestimentoInicial, 'divulgacao')
+        out = self.calculaTotal(InvestimentoInicial, 'outros')
+        return legal+div+out
+
+    def necessidadeGiro(self, ret):
+        receb = self.calculaMin('pmrv')
+        est = self.calculaMin('pmre')
+        sub = receb + est
+
+        forn = self.calculaMin('pmpc')
+        sub2 = forn
+        liq = sub - sub2
+
+        if ret == 'liq':
+            return liq
+        if ret == 'rec':
+            return receb
+        if ret == 'est':
+            return est
+        if ret == 'sub':
+            return sub
+        if ret == 'forn':
+            return forn
+        if ret == 'sub2':
+            return sub2
+
+    def caixaMin(self, ret):
+        cf = self.calculaTotal(CustosFixos, 'total')
+        cv = self.custosVariaveis(" ")/12
+        ct = cf + cv
+        ctd = ct/30
+        need = self.necessidadeGiro('liq')
+        total = need * ctd
+
+        if ret == 'total':
+            return total
+        if ret == 'cf':
+            return cf
+        if ret == 'cv':
+            return cv
+        if ret == 'ct':
+            return ct
+        if ret == 'ctd':
+            return ctd
+        if ret == 'need':
+            return need
+
+    def capGiro(self):
+        est = self.calculaTotal(Estoque, 'custototal')
+        caixa = self.caixaMin('total')
+
+        return est+caixa

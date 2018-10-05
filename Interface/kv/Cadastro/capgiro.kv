@@ -1,8 +1,10 @@
 <CapGiroScreen>:
     id: capgiro
     name: "capgiro"
-    faturamento: faturamento
-    pagamento: pagamento
+    avista: avista
+    tres: tres
+    seis: seis
+    nov: nov
     capsocial: capsocial
     reservas: reservas
     GridLayout:
@@ -45,7 +47,7 @@
                         Label:
                             text: ""
                     Label:
-                        text: 'Faturamento:'
+                        text: 'Prazo a vista:'
                         font_size: 0.4*self.height
                         size_hint: 1,.1
                     GridLayout:
@@ -53,15 +55,15 @@
                         cols: 2
                         spacing: 40
                         TextInput:
-                            name: "faturamento"
-                            id: faturamento
+                            name: "avista"
+                            id: avista
                             font_size: 0.6*self.height
                             size_hint: 2,.45
                             multiline: False
                         Label:
                             text: ""
                     Label:
-                        text: 'Pagamento:'
+                        text: 'Prazo a 30 dias:'
                         font_size: 0.4*self.height
                         size_hint: 1,.1
                     GridLayout:
@@ -69,11 +71,62 @@
                         cols: 2
                         spacing: 40
                         TextInput:
-                            name: "pagamento"
-                            id: pagamento
+                            name: "tres"
+                            id: tres
                             font_size: 0.6*self.height
                             size_hint: 2,.45
                             multiline: False
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'Prazo a 60 dias:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,.1
+                    GridLayout:
+
+                        cols: 2
+                        spacing: 40
+                        TextInput:
+                            name: "seis"
+                            id: seis
+                            font_size: 0.6*self.height
+                            size_hint: 2,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'Prazo a 90 dias:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,.1
+                    GridLayout:
+
+                        cols: 2
+                        spacing: 40
+                        TextInput:
+                            name: "nov"
+                            id: nov
+                            font_size: 0.6*self.height
+                            size_hint: 2,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'Categoria:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,.1
+                    GridLayout:
+
+                        cols: 2
+                        spacing: 40
+                        Spinner:
+                            name: "categoria"
+                            id: categoria
+                            font_size: 0.6*self.height
+                            size_hint: 2,.45
+                            multiline: False
+                            text: "-"
+                            values: ('Recebimentos', 'Pagamentos')
+
                         Label:
                             text: ""
                     Label:

@@ -249,7 +249,7 @@ class FinFreteScreen(Screen):
 
 class CapGiroScreen(Screen):
     def envia(self):
-        pv = CapGiroScreen(self.faturamento.text, self.pagamento.text, self.capsocial.text, self.reservas.text)
+        pv = CapGiroScreen(self.reservas.text, self.avista.text, self.tres.text, self.seis.text, self.nov.text, self.categoria.text, self.capsocial.text)
         pv.relatorio()
 
 
@@ -263,6 +263,8 @@ class RelatoriosCustosScreen(Screen):
 class RelatoriosFinScreen(Screen):
     pass
 
+class RelGiroScreen(Screen):
+    pass
 #Pessoas
 class RelPessoaScreen(Screen):
     pass
@@ -2963,6 +2965,285 @@ class RelFluxoScreen(Screen):
         self.scrl.add_widget(Label(text='(L) SALDO FINAL DAS DISPONIBILIDADES'))
         self.scrl.add_widget(Label(text=str(saldofim)))
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
+
+class RelRecebimentosScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'RECEBIMENTOS'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioGiroBt())
+        for mes in range(1, 16):
+            self.criabotao(mes)
+        self.back.add_widget(Button(text='Total', on_release=lambda x: self.total()))
+
+    def criabotao(self, mes):
+        bt = Button(text='Mes ' + str(mes))
+        bt.bind(on_release=lambda x: self.preenche(mes))
+        self.scrl.add_widget(bt)
+
+    def preenche(self, mes):
+        self.scrl.clear_widgets()
+        self.back.clear_widgets()
+        gc.collect()
+        self.title.text = 'RECEBIMENTOS'
+        fin = Financeiro()
+
+        #calculos
+        var = 'Recebimentos'
+        fat = fin.calculaFaturamento(mes)
+        avista = fin.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"')
+        tres = fin.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"')
+        seis = fin.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"')
+        nove = fin.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"')
+        total = avista + tres + seis + nove
+
+        valv = fat * (avista/100)
+        valt = fin.calculaFaturamento(mes-1) * (tres/100)
+        vals = fin.calculaFaturamento(mes-2) * (seis/100)
+        valn = fin.calculaFaturamento(mes-3) * (nove/100)
+        valtotal = valv + valt + vals + valn
+
+
+        #Escreve na tela
+        self.scrl.add_widget(Label(text='FATURAMENTO MENSAL'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=str(fat)))
+
+        self.scrl.add_widget(Label(text='PRAZO'))
+        self.scrl.add_widget(Label(text='%'))
+        self.scrl.add_widget(Label(text=str(mes) + ' MES'))
+
+        self.scrl.add_widget(Label(text='A VISTA'))
+        self.scrl.add_widget(Label(text=str(avista)))
+        self.scrl.add_widget(Label(text=str(valv)))
+
+        self.scrl.add_widget(Label(text='30 DIAS'))
+        self.scrl.add_widget(Label(text=str(tres)))
+        self.scrl.add_widget(Label(text=str(valt)))
+
+        self.scrl.add_widget(Label(text='60 DIAS'))
+        self.scrl.add_widget(Label(text=str(seis)))
+        self.scrl.add_widget(Label(text=str(vals)))
+
+        self.scrl.add_widget(Label(text='90 DIAS'))
+        self.scrl.add_widget(Label(text=str(nove)))
+        self.scrl.add_widget(Label(text=str(valn)))
+
+        self.scrl.add_widget(Label(text='TOTAL'))
+        self.scrl.add_widget(Label(text=str(total)))
+        self.scrl.add_widget(Label(text=str(valt)))
+
+        self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
+    def total(self):
+        pass
+
+class RelPagamentosScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Pagamentos'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioGiroBt())
+        for mes in range(1, 16):
+            self.criabotao(mes)
+        self.back.add_widget(Button(text='Total', on_release=lambda x: self.total()))
+
+    def criabotao(self, mes):
+        bt = Button(text='Mes ' + str(mes))
+        bt.bind(on_release=lambda x: self.preenche(mes))
+        self.scrl.add_widget(bt)
+
+    def preenche(self, mes):
+        self.scrl.clear_widgets()
+        self.back.clear_widgets()
+        gc.collect()
+        self.title.text = 'Pagamentos'
+        fin = Financeiro()
+
+        var = 'Pagamentos'
+        fat = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
+        avista = self.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"')
+        tres = self.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"')
+        seis = self.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"')
+        nove = self.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"')
+        total = avista + tres + seis + nove
+
+        valv = fat * (avista / 100)
+        valt = fat * (tres / 100)
+        vals = fat * (seis / 100)
+        valn = fat * (nove / 100)
+        valtotal = valv + valt + vals + valn
+
+        # Escreve na tela
+        self.scrl.add_widget(Label(text='PAGAMENTO MENSAL'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=str(fat)))
+
+        self.scrl.add_widget(Label(text='PRAZO'))
+        self.scrl.add_widget(Label(text='%'))
+        self.scrl.add_widget(Label(text=str(mes) + ' MES'))
+
+        self.scrl.add_widget(Label(text='A VISTA'))
+        self.scrl.add_widget(Label(text=str(avista)))
+        self.scrl.add_widget(Label(text=str(valv)))
+
+        self.scrl.add_widget(Label(text='30 DIAS'))
+        self.scrl.add_widget(Label(text=str(tres)))
+        self.scrl.add_widget(Label(text=str(valt)))
+
+        self.scrl.add_widget(Label(text='60 DIAS'))
+        self.scrl.add_widget(Label(text=str(seis)))
+        self.scrl.add_widget(Label(text=str(vals)))
+
+        self.scrl.add_widget(Label(text='90 DIAS'))
+        self.scrl.add_widget(Label(text=str(nove)))
+        self.scrl.add_widget(Label(text=str(valn)))
+
+        self.scrl.add_widget(Label(text='TOTAL'))
+        self.scrl.add_widget(Label(text=str(total)))
+        self.scrl.add_widget(Label(text=str(valt)))
+
+        self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
+
+    def total(self):
+        pass
+
+class RelMinScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Outros Relatorios'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioGiroBt())
+        fin = Financeiro()
+        #calculos
+        receber = fin.calculaPagRec(" ", 'Recebimentos')
+        pagar = fin.calculaPagRec(" ", 'Pagamentos')
+        receita = fin.calculaFaturamento(" ")
+        canual = fin.calculaTotal(Estoque, 'custototal')
+        pmrv = (receber / receita) * 360
+        pmpc = (pagar / canual) * 360
+        pmre = (fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = 1') + fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = 12') / 2 ) * 360
+        #preenche
+        self.scrl.add_widget(Label(text='CONTAS A RECEBER APÓS 12º MÊS'))
+        self.scrl.add_widget(Label(text=str(receber)))
+
+        self.scrl.add_widget(Label(text='CONTAS A PAGAR APÓS 12º MÊS'))
+        self.scrl.add_widget(Label(text=str(pagar)))
+
+        self.scrl.add_widget(Label(text='RECEITA ANUAL'))
+        self.scrl.add_widget(Label(text=str(receita)))
+
+        self.scrl.add_widget(Label(text='CUSTO ANUAL COM MATERIAL DIRETO'))
+        self.scrl.add_widget(Label(text=str(canual)))
+
+        self.scrl.add_widget(Label(text='PMRV'))
+        self.scrl.add_widget(Label(text=str(pmrv) + ' DIAS'))
+
+        self.scrl.add_widget(Label(text='PMPC'))
+        self.scrl.add_widget(Label(text=str(pmpc) + ' DIAS'))
+
+        self.scrl.add_widget(Label(text='PMRE'))
+        self.scrl.add_widget(Label(text=str(pmre) + ' DIAS'))
+
+class RelCapGiroScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Capital de Giro'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioGiroBt())
+        fin = Financeiro()
+
+        self.scrl.add_widget(Label(text='DESCRICAO'))
+        self.scrl.add_widget(Label(text='R$'))
+        self.scrl.add_widget(Label(text='ESTOQUE INICIAL'))
+        self.scrl.add_widget(Label(text=str(fin.calculaTotal(Estoque, 'custototal')/12)))
+        self.scrl.add_widget(Label(text='CAIXA MINIMO'))
+        self.scrl.add_widget(Label(text=str(fin.caixaMin('total'))))
+        self.scrl.add_widget(Label(text='TOTAL'))
+        self.scrl.add_widget(Label(text=str(fin.capGiro())))
+class RelInvPreOpScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Investimentos Pre-Operacionais'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioGiroBt())
+        fin = Financeiro()
+
+        self.scrl.add_widget(Label(text='DESPESAS COM LEGALIZACAO'))
+        self.scrl.add_widget(Label(text=str(fin.calculaTotal(InvestimentoInicial, 'legalizacao'))))
+        self.scrl.add_widget(Label(text='DIVULGACAO'))
+        self.scrl.add_widget(Label(text=str(fin.calculaTotal(InvestimentoInicial, 'divulgacao'))))
+        self.scrl.add_widget(Label(text='OUTRAS DESPESAS (OBRAS CIVIS/CURSOS E TREINAMENTOS ETC.'))
+        self.scrl.add_widget(Label(text=str(fin.calculaTotal(InvestimentoInicial, 'outros'))))
+        self.scrl.add_widget(Label(text='TOTAL'))
+        self.scrl.add_widget(Label(text=str(fin.calculaInvPreOp())))
+
+class RelCalcScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Calculo da Necessidade de Capital de Giro em Dias'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioGiroBt())
+        fin = Financeiro()
+
+        self.scrl.add_widget(Label(text='RECURSOS DA EMPRESA FORA DE SEU CAIXA'))
+        self.scrl.add_widget(Label(text='N DE DIAS'))
+        self.scrl.add_widget(Label(text='1. CONTAS A RECEBER-PRAZO MEDIO DE VENDAS'))
+        self.scrl.add_widget(Label(text=str(fin.necessidadeGiro('rec'))))
+        self.scrl.add_widget(Label(text='2. ESTOQUES (NECESSIDADE MEDIA DE ESTOQUES)'))
+        self.scrl.add_widget(Label(text=str(fin.necessidadeGiro('est'))))
+        self.scrl.add_widget(Label(text='Subtotal 1(1+2)'))
+        self.scrl.add_widget(Label(text=str(fin.necessidadeGiro('sub'))))
+        self.scrl.add_widget(Label(text='RECURSOS DE TERCEIROS NO CAIXA DA EMPRESA'))
+        self.scrl.add_widget(Label(text='N DE DIAS'))
+        self.scrl.add_widget(Label(text='3. FORNECEDORES PRAZO MEDIO DE COMPRAS'))
+        self.scrl.add_widget(Label(text=str(fin.necessidadeGiro('forn'))))
+        self.scrl.add_widget(Label(text='Subtotal 2 (3)'))
+        self.scrl.add_widget(Label(text=str(fin.necessidadeGiro('sub2'))))
+        self.scrl.add_widget(Label(text='NECESSIDADE LIQUIDA DE CAPITAL DE GIRO EM DIAS'))
+        self.scrl.add_widget(Label(text=str(fin.necessidadeGiro('liq'))))
+
+
+class RelCaixaMinScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Caixa Minimo'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioGiroBt())
+        fin = Financeiro()
+
+        self.scrl.add_widget(Label(text='1. CUSTO FIXO MENSAL'))
+        self.scrl.add_widget(Label(text=str(fin.caixaMin('cf'))))
+        self.scrl.add_widget(Label(text='2. CUSTO VARIAVEL MENSAL'))
+        self.scrl.add_widget(Label(text=str(fin.caixaMin('cv'))))
+        self.scrl.add_widget(Label(text='3. CUSTO TOTAL DA EMPRESA'))
+        self.scrl.add_widget(Label(text=str(fin.caixaMin('ct'))))
+        self.scrl.add_widget(Label(text='4. CUSTO TOTAL DIARIO'))
+        self.scrl.add_widget(Label(text=str(fin.caixaMin('ctd'))))
+        self.scrl.add_widget(Label(text='5. NECESSIDADE LIQUIDA DE CAPITAL DE GIRO EM DIAS'))
+        self.scrl.add_widget(Label(text=str(fin.caixaMin('need'))))
+        self.scrl.add_widget(Label(text='TOTAL DE B-CAIXA MINIMO (ITEM 4X5)'))
+        self.scrl.add_widget(Label(text=str(fin.caixaMin('total'))))
 # Functions
 class StartButton(Button):
     pass
@@ -2981,6 +3262,10 @@ class RelatorioBt(Button):
 
 class RelatorioFinBt(Button):
     pass
+
+class RelatorioGiroBt(Button):
+    pass
+
 
 kv_path = './Interface/kv/'
 for kv in listdir(kv_path):

@@ -12,7 +12,7 @@ from Frete import Frete
 from Estoque import Estoque
 from CapGiro import CapGiro
 from InvestimentoInicial import InvestimentoInicial
-
+from InvestimentoFixo import InvestimentoFixo
 class Financeiro:
     def demonstrativo(self, mes, ret):
         fat = self.calculaFaturamento(mes)
@@ -272,3 +272,50 @@ class Financeiro:
         caixa = self.caixaMin('total')
 
         return est+caixa
+
+    def balancoIni(self, ret):
+        est = self.calculaTotal(InvestimentoInicial, 'estoque')
+        caixa = self.calculaTotal(InvestimentoInicial, 'caixa')
+        desp = self.calculaTotal(InvestimentoInicial, 'totaldesp')
+        terr = self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Imoveis Terrenos"')
+        pred = self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Imoveis Predios"')
+        veic = self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Fixos em Veiculos"')
+        movs = self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Moveis e Utensilios"')
+        maqs = self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Maquinas e Equipamentos"')
+        comp = self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Computadores/Equipamentos de Informatica"')
+        total = est + caixa + desp + terr + pred + veic + movs + maqs + comp
+        forn = self.calculaPagRec(2, 'Pagamentos')+self.calculaPagRec(3, 'Pagamentos')+self.calculaPagRec(4, 'Pagamentos')
+        emp = total - caixa - terr
+        cap = self.calculaTotal(CapGiro, 'capsocial')
+        totalp = forn + emp + cap
+        outrosg = self.calculaTotal(InvestimentoInicial, 'outrosg')
+        if ret == 'estoques':
+            return est
+        if ret == 'caixa':
+            return caixa
+        if ret == 'despesas':
+            return desp
+        if ret == 'terrenos':
+            return terr
+        if ret == 'predios':
+            return pred
+        if ret == 'veiculos':
+            return veic
+        if ret == 'moveis':
+            return movs
+        if ret == 'computador':
+            return comp
+        if ret == 'maquinas':
+            return maqs
+        if ret == 'totalativo':
+            return total
+        if ret == 'fornecedores':
+            return forn
+        if ret == 'emprestimos':
+            return emp
+        if ret == 'capsocial':
+            return cap
+        if ret == 'totalpassivo':
+            return totalp
+        if ret == 'outrosest':
+            return outrosg

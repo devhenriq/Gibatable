@@ -1,4 +1,5 @@
 from Banco import Banco
+from decimal import Decimal, ROUND_HALF_UP
 
 class Pessoa:
 
@@ -17,15 +18,15 @@ class Pessoa:
     def calculoPessoal(self):
 
         if self.categoria != "Diretor":
-            self.provferias = (self.salario/12)*0.333333
-            self.provdecimo = self.salario/12
-            self.fgts = (self.salario + self.provferias + self.provdecimo) * 0.08
-            self.inss = (self.salario + self.provferias + self.provdecimo) * 0.258
-            self.total = (self.salario + self.provdecimo + self.provferias + self.fgts + self.inss) * self.quant #enquanto usarmos este meio de quantidade de pessoas na função usaremos esse quant aqui
+            self.provferias = float(Decimal((self.salario/12)*0.333333).quantize(Decimal('0.01'), ROUND_HALF_UP))
+            self.provdecimo = float(Decimal((self.salario/12)).quantize(Decimal('0.01'), ROUND_HALF_UP))
+            self.fgts = float(Decimal((self.salario + self.provferias + self.provdecimo) * 0.08).quantize(Decimal('0.01'), ROUND_HALF_UP))
+            self.inss = float(Decimal((self.salario + float(self.provferias) + self.provdecimo) * 0.258).quantize(Decimal('0.01'), ROUND_HALF_UP))
+            self.total = float(Decimal((self.salario + float(self.provferias) + self.provdecimo + self.fgts + self.inss) * self.quant).quantize(Decimal('0.01'), ROUND_HALF_UP)) #enquanto usarmos este meio de quantidade de pessoas na função usaremos esse quant aqui
 
         else:
-            self.inss = self.salario * 0.15
-            self.total = (self.salario + self.inss) * self.quant
+            self.inss = float(Decimal(self.salario * 0.15).quantize(Decimal('0.01'), ROUND_HALF_UP))
+            self.total = float(Decimal((self.salario + self.inss) * self.quant).quantize(Decimal('0.01'), ROUND_HALF_UP))
         self.insereBanco()
 
     def insereBanco(self):

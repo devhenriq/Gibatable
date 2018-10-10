@@ -31,6 +31,7 @@ from kivy.uix.scrollview import ScrollView
 from functools import partial
 import gc
 from Financeiro import *
+from decimal import Decimal, ROUND_HALF_UP
 
 
 Window.fullscreen = False
@@ -537,12 +538,12 @@ class RelDeprecScreen(Screen):
             label = Label(text=str(taxa))
             self.scrl.add_widget(label)
 
-            mensal = ((valor*taxa)/100)/12
+            mensal = float(Decimal(((valor*taxa)/100)/12).quantize(Decimal('0.01'),ROUND_HALF_UP))
             label = Label(text=str(mensal))
             self.scrl.add_widget(label)
 
-            total = total + valor
-            totalmes = totalmes + mensal
+            total = float(Decimal(total + valor).quantize(Decimal('0.01'),ROUND_HALF_UP))
+            totalmes = float(Decimal(totalmes + mensal).quantize(Decimal('0.01'),ROUND_HALF_UP))
 
         label = Label(text='Total')
         self.scrl.add_widget(label)
@@ -818,18 +819,21 @@ class RelMpScreen(Screen):
         dados = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
 
         for prod in dados:
-
             for mp in prod:
-                bt = Button(text=mp)
-                bt.bind(on_release=lambda x:self.preenche(mp))
-                self.scrl.add_widget(bt)
+                self.criabotao(mp)
+    def criabotao(self, nome):
+        bt = Button(text=nome)
+        bt.bind(on_release=lambda x: self.preenche(nome))
+        self.scrl.add_widget(bt)
 
     def preenche(self, nome):
+        fin = Financeiro()
+        print(nome)
         self.scrl.clear_widgets()
         self.back.clear_widgets()
         gc.collect()
         self.title.text = nome
-        self.back.add_widget(Voltar(on_release=lambda x : self.on_enter()))
+        self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
         x = 1
         dados = MateriaPrima.relatorio(MateriaPrima, 'descricao, unmedida, precounitario, quant, total', ' WHERE produto = "'+nome+'"')
 
@@ -858,19 +862,7 @@ class RelMpScreen(Screen):
         self.scrl.add_widget(Label(text=''))
         self.scrl.add_widget(Label(text=''))
         self.scrl.add_widget(Label(text=''))
-        self.scrl.add_widget(Label(text=str(self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "'+nome+'"'))))
-
-
-
-    def calculaTotal(self, table, col=None, cond=None):
-        list = table.relatorio(table, col, cond)
-        val = 0
-        if list is not None:
-            for t in list:
-                t = str(t).replace(",", "").replace(")", "").replace("(", "")
-                val = val + float(t)
-        return val
-
+        self.scrl.add_widget(Label(text=str(fin.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "'+nome+'"'))))
 
 #Estimativa
 class RelEstimativaScreen(Screen):
@@ -1807,7 +1799,6 @@ class RelPvUnMesScreen(Screen):
                 val = val + float(t)
         return val
 
-
 class RelProjecaoVendasScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -1854,7 +1845,6 @@ class RelProjecaoVendasScreen(Screen):
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
         return val
-
 
 class RelFaturamentoScreen(Screen):
     @mainthread
@@ -3251,8 +3241,6 @@ class RelCaixaMinScreen(Screen):
         self.scrl.add_widget(Label(text='TOTAL DE B-CAIXA MINIMO (ITEM 4X5)'))
         self.scrl.add_widget(Label(text=str(fin.caixaMin('total'))))
 
-
-
 class RelBalancoIniScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -3337,6 +3325,153 @@ class RelBalancoIniScreen(Screen):
         self.scrl.add_widget(Label(text='TOTAL DO PASSIVO'))
         self.scrl.add_widget(Label(text=str(fin.balancoIni('totalpassivo'))))
 
+class RelBalancoProjScreen(Screen):
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Balanco Projetado'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioGiroBt())
+        fin = Financeiro()
+
+        self.scrl.add_widget(Label(text='1 - ATIVO'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='2 - PASSIVO'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='11 - CIRCULANTE'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='21 - CIRCULANTE'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='111 - DISPONIVEL'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='211 - OBRIGACOES COM FORNECEDORES'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='1111 - CAIXA'))
+        self.scrl.add_widget(Label(text=str(fin.balancoProj('caixa'))))
+        self.scrl.add_widget(Label(text='2111 - FORNECEDORES A PAGAR'))
+        self.scrl.add_widget(Label(text=str(fin.balancoProj('fornecedores'))))
+        self.scrl.add_widget(Label(text='114 - ESTOQUES'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='212 - OBRIGACOES FINANCEIRAS'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='1141 - ESTOQUES'))
+        self.scrl.add_widget(Label(text=str(fin.balancoProj('estoques'))))
+        self.scrl.add_widget(Label(text='2121 - EMPRESTIMOS A PAGAR'))
+        self.scrl.add_widget(Label(text=str(fin.balancoProj('emprestimos'))))
+        self.scrl.add_widget(Label(text='1142 - OUTROS ESTOQUES'))
+        self.scrl.add_widget(Label(text=str(fin.balancoIni('outrosest'))))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='115 - DESPESAS DE EXERCICIOS SEGUINTES'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='1157 - DESPESAS A AMORTIZAR'))
+        self.scrl.add_widget(Label(text=str(fin.balancoProj('despesas'))))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='1158 - (-)DESPESAS AMORTIZADAS'))
+        self.scrl.add_widget(Label(text=str(fin.balancoProj('-despesas'))))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='12 - NAO CIRCULANTE'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='24 - PATRIMONIO LIQUIDO'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='123 - IMOBILIZADO'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='241 - CAPITAL SOCIAL'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='1231 - IMOVEIS TERRENOS'))
+        self.scrl.add_widget(Label(text=str(fin.balancoProj('terrenos'))))
+        self.scrl.add_widget(Label(text='2411 - CAPITAL SOCIAL'))
+        self.scrl.add_widget(Label(text=str(fin.balancoProj('capsocial'))))
+        self.scrl.add_widget(Label(text='1232 - IMOVEIS PREDIOS'))
+        self.scrl.add_widget(Label(text=str(fin.balancoIni('predios'))))
+        self.scrl.add_widget(Label(text='243 - LUCROS OU PREJUIZOS ACUMULADOS'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='1233 - (-)DEPR. ACUMULADA DE IMOVEIS'))
+        self.scrl.add_widget(Label(text=str(fin.balancoProj('-imoveis'))))
+        self.scrl.add_widget(Label(text='2431 - LUCRO ACUMULADO'))
+        self.scrl.add_widget(Label(text=str(fin.balancoProj('lucro'))))
+        self.scrl.add_widget(Label(text='1234 - VEICULOS'))
+        self.scrl.add_widget(Label(text=str(fin.balancoIni('veiculos'))))
+        self.scrl.add_widget(Label(text='244 - RESERVAS'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='1235 - (-)DEPR. ACUMULADA DE VEICULOS'))
+        self.scrl.add_widget(Label(text=str(fin.balancoProj('-veiculos'))))
+        self.scrl.add_widget(Label(text='2441 - RESERVAS'))
+        self.scrl.add_widget(Label(text=str(fin.balancoProj('reservas'))))
+        self.scrl.add_widget(Label(text='1236 - MOVEIS E UTENSILIOS'))
+        self.scrl.add_widget(Label(text=str(fin.balancoIni('moveis'))))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='1237 - (-)DEPR. ACUMULADA DE MOV. UTENS.'))
+        self.scrl.add_widget(Label(text=str(fin.balancoProj('-moveis'))))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='1238 - COMPUTADORES E EQUIPS. DE INF.'))
+        self.scrl.add_widget(Label(text=str(fin.balancoIni('computador'))))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='1237 - (-)DEPR. ACUMULADA DE EQUIPS. INF.'))
+        self.scrl.add_widget(Label(text=str(fin.balancoIni('-computador'))))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='12310 - MAQUINAS E EQUIPAMENTOS'))
+        self.scrl.add_widget(Label(text=str(fin.balancoIni('maquinas'))))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='12311 - (-)DEPR. ACUMULADA DE MAQS. EQUIP.'))
+        self.scrl.add_widget(Label(text=str(fin.balancoIni('-computador'))))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='TOTAL DO ATIVO'))
+        self.scrl.add_widget(Label(text=str(fin.balancoIni('totalativo'))))
+        self.scrl.add_widget(Label(text='TOTAL DO PASSIVO'))
+        self.scrl.add_widget(Label(text=str(fin.balancoIni('totalpassivo'))))
+
+class RelRecursosScreen(Screen):
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'ORIGEM E FONTE DOS RECURSOS'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioGiroBt())
+        fin = Financeiro()
+
+        forn = fin.balancoIni('fornecedores')/fin.balancoIni('totalpassivo')*100
+        emp = fin.balancoIni('emprestimos')/fin.balancoIni('totalpassivo')*100
+        cap = 100 - forn - emp
+
+        terc = forn + emp
+        prop = fin.balancoIni('capsocial')
+        total = terc + prop
+
+        self.scrl.add_widget(Label(text='DESCRICAO'))
+        self.scrl.add_widget(Label(text='%'))
+        self.scrl.add_widget(Label(text='FORNECEDORES'))
+        self.scrl.add_widget(Label(text=str(forn)))
+        self.scrl.add_widget(Label(text='EMPRESTIMOS'))
+        self.scrl.add_widget(Label(text=str(emp)))
+        self.scrl.add_widget(Label(text='CAPITAL SOCIAL'))
+        self.scrl.add_widget(Label(text=str(cap)))
+        self.scrl.add_widget(Label(text='TOTAL'))
+        self.scrl.add_widget(Label(text='100'))
+
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='FONTE DOS RECURSOS'))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='CAPITAIS DE TERCEIROS'))
+        self.scrl.add_widget(Label(text=str(terc)))
+        self.scrl.add_widget(Label(text='CAPITAIS PROPRIOS'))
+        self.scrl.add_widget(Label(text=str(prop)))
+        self.scrl.add_widget(Label(text='TOTAL'))
+        self.scrl.add_widget(Label(text=str(total)))
+
 # Functions
 class StartButton(Button):
     pass
@@ -3358,7 +3493,6 @@ class RelatorioFinBt(Button):
 
 class RelatorioGiroBt(Button):
     pass
-
 
 kv_path = './Interface/kv/'
 for kv in listdir(kv_path):

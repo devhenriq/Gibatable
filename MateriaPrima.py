@@ -1,4 +1,5 @@
 from Banco import Banco
+from decimal import Decimal, ROUND_HALF_UP
 class MateriaPrima:
 
     def __init__(self, nome, materia, medida, preco, quant):
@@ -7,7 +8,7 @@ class MateriaPrima:
         self.medida = medida
         self.preco = preco
         self.quant = quant
-        self.custoMateria = preco * quant
+        self.custoMateria = float(Decimal(preco * quant).quantize(Decimal('0.01'),ROUND_HALF_UP))
         self.insereBanco()
 
     def insereBanco(self):

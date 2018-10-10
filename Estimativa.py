@@ -1,12 +1,12 @@
 from Banco import Banco
-
+from decimal import Decimal, ROUND_HALF_UP
 class Estimativa:
 
     def __init__(self, descricao, quant, lucro, mes):
         self.descricao = descricao
         self.quant = quant
         self.lucro = lucro
-        self.lucrott = quant * lucro
+        self.lucrott = float(Decimal(quant * lucro).quantize(Decimal('0.01'),ROUND_HALF_UP))
         self.mes = mes
         self.insereBanco()
 

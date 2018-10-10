@@ -13,6 +13,7 @@ from Estoque import Estoque
 from CapGiro import CapGiro
 from InvestimentoInicial import InvestimentoInicial
 from InvestimentoFixo import InvestimentoFixo
+
 class Financeiro:
     def demonstrativo(self, mes, ret):
         fat = self.calculaFaturamento(mes)
@@ -32,6 +33,8 @@ class Financeiro:
             return liquido
         if ret == 'imposto':
             return ipr
+        if ret == 'reserva':
+            return rv
 
     def calculaFaturamento(self, mes):
         produtos = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
@@ -319,3 +322,117 @@ class Financeiro:
             return totalp
         if ret == 'outrosest':
             return outrosg
+
+    def balancoProj(self, ret):
+
+        terr = self.balancoIni('terrenos')
+        pred = self.balancoIni('predios')
+        deprimoveis = (self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Imoveis Predios"')*4)/100*(-1)
+
+        veic = self.balancoIni('veiculos')
+        mveic = (self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Fixos em Veiculos"')*20)/100*(-1)
+
+        movs = self.balancoIni('moveis')
+        mmovs = (self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Moveis e Utensilios"')*10)/100*(-1)
+
+        comp = self.balancoIni('computadores')
+        mcomp = (self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Computadores/Equipamentos de Informatica"')*20)/100*(-1)
+
+        maqs = self.balancoIni('maquinas')
+        mmaqs = (self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Maquinas e Equipamentos"')*10)/100*(-1)
+
+
+        desp = self.balancoIni('despesas')
+        est = self.balancoIni('estoques')
+        mdesp = desp/10*-1
+
+        cli = 0
+        for i in range(1,13):
+            cli += self.calculaPagRec(i, 'Recebimentos')
+
+        caixa = 0
+        for i in range(1,13):
+            caixa += self.calculaFaturamento(i)
+            caixa -= self.custosVariaveis(i)
+            caixa -= self.calculaTotal(CustosFixos, 'total')
+            caixa += self.calculaPagRec(i)
+            caixa -= self.calculaPagRec(i, 'Recebimentos')
+            caixa += self.calculaPagRec(i, 'Pagamentos')
+
+        caixa += self.balancoIni('caixa')
+        caixa -= self.balancoIni('fornecedores')
+        caixa -= mdesp
+        caixa -= deprimoveis
+        caixa -= mveic
+        caixa -= mmovs
+        caixa -= mcomp
+        caixa -= mmaqs
+
+        forn = self.balancoIni('fornecedores')
+
+        irpj = 0
+        for i in range(1,13):
+            irpj += self.demonstrativo(i, 'irpj')
+
+        emp = self.balancoIni('emprestimos')
+        cap = self.balancoIni('capsocial')
+
+        lucro = 0
+        for i in range(1,13):
+            lucro += self.demonstrativo('lucro')
+
+        res = 0
+        for i in range(1,13):
+            res += self.demonstrativo('reserva')
+
+        totala = caixa + cli + est + desp - mdesp + terr - deprimoveis + veic - mveic + movs - mmovs + comp - mcomp + maqs - mmaqs
+        totalp = forn + irpj + emp + cap + lucro + res
+
+        if ret == 'caixa':
+            return caixa
+        if ret == 'clientes':
+            return cli
+        if ret == 'estoques':
+            return est
+        if ret == 'despesas':
+            return desp
+        if ret == '-despesas':
+            return mdesp
+        if ret == 'terrenos':
+            return terr
+        if ret == 'predios':
+            return pred
+        if ret == '-imoveis':
+            return deprimoveis
+        if ret == 'veiculos':
+            return veic
+        if ret == '-veiculos':
+            return mveic
+        if ret == 'moveis':
+            return movs
+        if ret == '-moveis':
+            return mmovs
+        if ret == 'computadores':
+            return comp
+        if ret == '-computadores':
+            return mcomp
+        if ret == 'maquinas':
+            return maqs
+        if ret == '-maquinas':
+            return mmaqs
+        if ret == 'fornecedores':
+            return forn
+        if ret == 'irpj':
+            return irpj
+        if ret == 'emprestimos':
+            return emp
+        if ret == 'capsocial':
+            return cap
+        if ret == 'lucro':
+            return lucro
+        if ret == 'reservas':
+            return res
+        if ret == 'totalativo':
+            return totala
+        if ret == 'totalpassivo':
+            return totalp

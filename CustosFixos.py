@@ -1,6 +1,7 @@
 from Banco import Banco
 from Pessoa import Pessoa
 from InvestimentoFixo import InvestimentoFixo
+from decimal import Decimal, ROUND_HALF_UP
 
 class CustosFixos:
 
@@ -33,17 +34,7 @@ class CustosFixos:
                 t = str(t).replace(",", "").replace(")","").replace("(","")
                 self.dir = self.dir + float(t)
 
-
-        total = 0
-        list = InvestimentoFixo.relatorio(InvestimentoFixo, "total", " WHERE categoria = 'Moveis e Utensilios' OR categoria = 'Maquinas e Equipamentos' OR categoria = 'Computadores/Equipamentos de Informatica' OR categoria = 'Fixos em Veiculos' OR categoria = 'Imoveis Predios' OR categoria = 'Imoveis Terrenos'")
-        for dep in list:
-            dep = str(dep).replace(",", "").replace(")","").replace("(","")
-            total = total + float(dep)
-
-        self.deprec = self.deprec + total
-        self.deprec = self.deprec
-        print(self.deprec)
-
+        self.deprec = self.calculaDeprec('totalmes')
         Banco.delete(Banco, 'custosfixos')
         self.total = self.adm + self.dir + self.limpeza + self.cont + self.mat + self.agua + self.aluguel + self.manutencao + self.deprec + self.outros
         self.insereBanco()
@@ -58,3 +49,33 @@ class CustosFixos:
     def relatorio(self, col = None, cond = None):
         ret = Banco.relatorio(Banco, 'custosfixos', col, cond)
         return ret
+
+    def calculaDeprec(self, ret):
+        contas = ['Moveis e Utensilios', 'Maquinas e Equipamentos', 'Computadores/Equipamentos de Informatica',
+                  'Fixos em Veiculos', 'Imoveis Predios', 'Imoveis Terrenos']
+        total = 0
+        totalmes = 0
+
+        for t in contas:
+
+            valor = self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "' + t + '"')
+
+            if t == 'Moveis e Utensilios' or t == 'Maquinas e Equipamentos':
+                taxa = 10
+            else:
+                if t == 'Computadores/Equipamentos de Informatica' or t == 'Fixos em Veiculos':
+                    taxa = 20
+                else:
+                    if t == 'Imoveis Predios':
+                        taxa = 4
+                    else:
+                        taxa = 0
+
+            mensal = float(Decimal(((valor * taxa) / 100) / 12).quantize(Decimal('0.01'), ROUND_HALF_UP))
+            total = float(Decimal(total + valor).quantize(Decimal('0.01'), ROUND_HALF_UP))
+            totalmes = float(Decimal(totalmes + mensal).quantize(Decimal('0.01'), ROUND_HALF_UP))
+
+        if ret == 'total':
+            return total
+        if ret == 'totalmes':
+            return totalmes

@@ -149,10 +149,14 @@ try:
     table.append("""CREATE TABLE IF NOT EXISTS capgiro (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         capsocial FLOAT NOT NULL,
-        avista FLOAT,
-        tres FLOAT,
-        seis FLOAT,
-        nov FLOAT,
+        avistaf FLOAT,
+        tresf FLOAT,
+        seisf FLOAT,
+        novf FLOAT,
+        avistap FLOAT,
+        tresp FLOAT,
+        seisp FLOAT,
+        novp FLOAT,
         categoria TEXT NOT NULL,
         reservas FLOAT NOT NULL
     );""")

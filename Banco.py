@@ -59,6 +59,22 @@ class Banco:
         conn.close()
         return ret
 
+    def update(self, table, col = None, cond = None):
+        conn = self.connect(self)
+        cur = conn.cursor()
+
+        if col is None:
+            col = "*"
+        if cond is None:
+            cond = ""
+        query = "UPDATE " + table + " SET " + col + cond
+
+        cur.execute(query)
+        ret = cur.fetchall()
+        conn.commit()
+        conn.close()
+        return ret
+
     def operation(self, query, list = None):
         conn = self.connect(self)
         cur = conn.cursor()

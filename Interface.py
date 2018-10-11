@@ -79,11 +79,11 @@ class MateriaPrimaScreen(Screen):
     def envia(self):
         m = MateriaPrima(self.nome.text, self.materia.text, self.medida.text, float(self.preco.text), float(self.quant.text))
         m.relatorio()
-        self.nome.text = ""
-        self.materia.text = ""
-        self.medida.text = ""
-        self.preco.text = ""
-        self.quant.text = ""
+        # self.nome.text = ""
+        # self.materia.text = ""
+        # self.medida.text = ""
+        # self.preco.text = ""
+        # self.quant.text = ""
 
 
 class PreEstimativaScreen(Screen):
@@ -94,11 +94,11 @@ class EstimativaScreen(Screen):
     def envia(self):
         e = Estimativa(self.descr.text, int(self.quant.text), float(self.lucro.text), self.mes.text)
         e.relatorio()
-        self.descr.text = ""
-        self.quant.text = ""
-        self.lucro.text = ""
+        # self.descr.text = ""
+        # self.quant.text = ""
+        # self.lucro.text = ""
         self.mes.text = "-"
-        Estoque()
+        #Estoque()
 
 
 class CustosFixosScreen(Screen):
@@ -1127,6 +1127,7 @@ class RelEstoqueScreen(Screen):
     def on_enter(self):
         self.scrl.clear_widgets()
         gc.collect()
+        Estoque()
         self.title.text = 'Estoque'
         self.back.clear_widgets()
         self.back.add_widget(Label(text=""))
@@ -1149,7 +1150,7 @@ class RelEstoqueScreen(Screen):
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
         x = 1
         dados = Estoque.relatorio(Estoque, 'DISTINCT descricao, quant, custounit, custototal',
-                                     ' WHERE mes = "' + str(mes) + '"')
+                                     ' WHERE mes = "' + str(mes) + '"' + 'ORDER BY descricao')
 
         label = Label(text='')
         self.scrl.add_widget(label)
@@ -1164,6 +1165,8 @@ class RelEstoqueScreen(Screen):
 
         list = []
         prods = []
+        quant = 0
+        ctt = 0
         for prod in dados:
             print(prod)
             if prod[0] in prods:
@@ -1187,17 +1190,19 @@ class RelEstoqueScreen(Screen):
             self.scrl.add_widget(Label(text=str(prod['quant'])))
             self.scrl.add_widget(Label(text=str(prod['custounit'])))
             self.scrl.add_widget(Label(text=str(prod['custototal'])))
-
+            quant += prod['quant']
+            ctt += prod['custototal']
             x = x + 1
 
 
         self.scrl.add_widget(Label(text=' '))
         self.scrl.add_widget(Label(text='TOTAL'))
-        self.scrl.add_widget(Label(text=str(self.calculaTotal(Estoque, 'quant', ' WHERE mes = "' + str(mes) + '"'))))
+        #self.scrl.add_widget(Label(text=str(self.calculaTotal(Estoque, 'DISTINCT quant', ' WHERE mes = "' + str(mes) + '"'))))
+        self.scrl.add_widget(Label(text=(str(quant))))
         self.scrl.add_widget(Label(text=' '))
-        self.scrl.add_widget(
-            Label(text=str(self.calculaTotal(Estoque, 'custototal', ' WHERE mes = "' + str(mes) + '"'))))
-
+        #self.scrl.add_widget(
+         #   Label(text=str(self.calculaTotal(Estoque, 'DISTINCT custototal', ' WHERE mes = "' + str(mes) + '"'))))
+        self.scrl.add_widget(Label(text=str(ctt)))
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
         val = 0
@@ -1354,9 +1359,10 @@ class RelRateioFixoScreen(Screen):
     def on_enter(self):
         self.scrl.clear_widgets()
         gc.collect()
-
+        fin = Financeiro()
         total = self.calculaTotal(CustosFixos, 'total')
         dados = RateioFixos.relatorio(RateioFixos, 'produto, porc')
+        print(dados)
         totalt = 0
         totalporc = 0
 
@@ -1366,11 +1372,11 @@ class RelRateioFixoScreen(Screen):
 
         for rateio in dados:
             self.scrl.add_widget(Label(text=rateio[0]))
-            self.scrl.add_widget(Label(text=str(rateio[1])))
+            self.scrl.add_widget(Label(text=str(fin.dec(rateio[1]))))
             totalporc = totalporc + rateio[1]
             totalt = totalt + total*(rateio[1]/100)
-            self.scrl.add_widget(Label(text=str((total*rateio[1])/100)))
-
+            self.scrl.add_widget(Label(text=str((fin.dec(total*rateio[1])/100))))
+            print(rateio[0])
         if totalporc == 100:
             pass
         else:
@@ -1571,37 +1577,41 @@ class RelPrecoVendaScreen(Screen):
         self.back.add_widget(Label(text=""))
         self.back.add_widget(RelatorioBt())
         dados = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
-
+        print(dados)
         for prod in dados:
-
             for mp in prod:
-                bt = Button(text=mp)
-                bt.bind(on_release=lambda x: self.BtMes(mp))
-                self.scrl.add_widget(bt)
+                self.BtMes(mp)
+
 
     def BtMes(self, nome):
-        self.scrl.clear_widgets()
-        gc.collect()
         self.title.text = 'Preco de Venda'
-        self.back.clear_widgets()
-        self.back.add_widget(Label(text=""))
-        self.back.add_widget(RelatorioBt())
-        for mes in range(1,13):
-            bt = Button(text=str(mes)+' mes')
-            bt.bind(on_release=lambda x: self.preenche(nome, mes))
-            self.scrl.add_widget(bt)
+        bt = Button(text=nome)
+        bt.bind(on_release=lambda x: self.tryn(nome))
+        self.scrl.add_widget(bt)
 
     def returnMes(self, mes):
         return mes
 
+    def tryn(self, nome):
+        self.scrl.clear_widgets()
+        gc.collect()
+        for mes in range(1,13):
+            self.fim(nome,mes)
+
+    def fim(self, nome, mes):
+        bt = Button(text=str(mes) + ' mes')
+        bt.bind(on_release=lambda x: self.preenche(nome, mes))
+        self.scrl.add_widget(bt)
+
     def preenche(self, nome, mes):
+        print(mes)
         self.scrl.clear_widgets()
         self.back.clear_widgets()
         gc.collect()
         self.title.text = nome
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
         x = 1
-
+        fin = Financeiro()
         #Calculos
 
         mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
@@ -1650,35 +1660,35 @@ class RelPrecoVendaScreen(Screen):
 
         label = Label(text='CUSTO C/ MATERIA PRIMA (MAT. DIRETOS)')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(mat)))
+        self.scrl.add_widget(Label(text=str(fin.dec(mat))))
 
         label = Label(text='CUSTO DE PRODUCAO (OPERACIONAL)')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(cprod)))
+        self.scrl.add_widget(Label(text=str(fin.dec(cprod))))
 
         label = Label(text='OUTROS CUSTOS PRODUCAO (TERCEIROS)')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(outros)))
+        self.scrl.add_widget(Label(text=str(fin.dec(outros))))
 
         label = Label(text='CUSTO INDEPENDENTE DO PRECO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(cip)))
+        self.scrl.add_widget(Label(text=str(fin.dec(cip))))
 
         label = Label(text='CUSTO TRIBUTARIO DIRETO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(ctrib)))
+        self.scrl.add_widget(Label(text=str(fin.dec(ctrib))))
 
         label = Label(text='CUSTO FINANCEIRO DO GIRO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(cfgiro)))
+        self.scrl.add_widget(Label(text=str(fin.dec(cfgiro))))
 
         label = Label(text='CUSTO DIRETO COM VENDAS')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(cdirvendas)))
+        self.scrl.add_widget(Label(text=str(fin.dec(cdirvendas))))
 
         label = Label(text='CUSTO TOTAL')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(ctotal)))
+        self.scrl.add_widget(Label(text=str(fin.dec(ctotal))))
 
         label = Label(text='MARGEM DE CONTRIBUICAO')
         self.scrl.add_widget(label)
@@ -1686,17 +1696,17 @@ class RelPrecoVendaScreen(Screen):
 
         label = Label(text='CUSTO FIXO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(cfixo)))
+        self.scrl.add_widget(Label(text=str(fin.dec(cfixo))))
 
         label = Label(text='LUCRO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(lucro)))
+        self.scrl.add_widget(Label(text=str(fin.dec(lucro))))
 
 
         label = Label(text='PRECO DE VENDA')
         self.scrl.add_widget(label)
 
-        self.scrl.add_widget(Label(text=str(preco)))
+        self.scrl.add_widget(Label(text=str(fin.dec(preco))))
 
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)

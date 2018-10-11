@@ -10,8 +10,20 @@ class RateioOp:
         list = [self.produto, self.porc]
         str = 'rateiocustosop (produto, porc)'
 
-        Banco.delete(Banco, 'rateiocustosop')
-        Banco.insert(Banco, str, list)
+        prod = self.lista(RateioOp, 'produto', ' WHERE produto="' + self.produto + '"')
+        if self.produto in prod:
+            Banco.update(Banco, 'rateiocustosop', 'porc=' + self.porc, ' WHERE produto="' + self.produto + '"')
+        else:
+            Banco.insert(Banco, str, list)
 
     def relatorio(self, col=None, cond=None):
         return Banco.relatorio(Banco, 'rateiocustosop', col, cond)
+
+    def lista(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = []
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val.append(t)
+        return str(val)

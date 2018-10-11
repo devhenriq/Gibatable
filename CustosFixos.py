@@ -2,6 +2,7 @@ from Banco import Banco
 from Pessoa import Pessoa
 from InvestimentoFixo import InvestimentoFixo
 from decimal import Decimal, ROUND_HALF_UP
+from InvestimentoInicial import InvestimentoInicial
 
 class CustosFixos:
 
@@ -34,7 +35,8 @@ class CustosFixos:
                 t = str(t).replace(",", "").replace(")","").replace("(","")
                 self.dir = self.dir + float(t)
 
-        self.deprec = self.calculaDeprec('totalmes')
+        self.deprec = self.calculaDeprec('totalmes') + ((self.calculaTotal(InvestimentoInicial, 'legalizacao') + self.calculaTotal(InvestimentoInicial, 'divulgacao'))/12)
+        self.deprec = float(Decimal(self.deprec).quantize(Decimal('0.01'), ROUND_HALF_UP))
         Banco.delete(Banco, 'custosfixos')
         self.total = self.adm + self.dir + self.limpeza + self.cont + self.mat + self.agua + self.aluguel + self.manutencao + self.deprec + self.outros
         self.insereBanco()
@@ -79,3 +81,12 @@ class CustosFixos:
             return total
         if ret == 'totalmes':
             return totalmes
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val

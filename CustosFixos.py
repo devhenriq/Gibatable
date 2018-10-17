@@ -3,7 +3,6 @@ from Pessoa import Pessoa
 from InvestimentoFixo import InvestimentoFixo
 from decimal import Decimal, ROUND_HALF_UP
 from InvestimentoInicial import InvestimentoInicial
-
 class CustosFixos:
 
     def __init__(self, limpeza, cont, mat, agua, aluguel, manutencao, outros):
@@ -35,7 +34,7 @@ class CustosFixos:
                 t = str(t).replace(",", "").replace(")","").replace("(","")
                 self.dir = self.dir + float(t)
 
-        self.deprec = self.calculaDeprec('totalmes') + ((self.calculaTotal(InvestimentoInicial, 'legalizacao') + self.calculaTotal(InvestimentoInicial, 'divulgacao'))/12)
+        self.deprec = self.calculaDeprec('totalmes') + ((self.calculaTotal(InvestimentoInicial, 'legalizacao') + self.calculaTotal(InvestimentoInicial, 'divulgacao') + self.calculaTotal(InvestimentoInicial, 'outros'))/12)
         self.deprec = float(Decimal(self.deprec).quantize(Decimal('0.01'), ROUND_HALF_UP))
         Banco.delete(Banco, 'custosfixos')
         self.total = self.adm + self.dir + self.limpeza + self.cont + self.mat + self.agua + self.aluguel + self.manutencao + self.deprec + self.outros

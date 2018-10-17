@@ -66,6 +66,13 @@ Manager:
     RelBalancoIniScreen:
     RelBalancoProjScreen:
     RelRecursosScreen:
+    AltPessoaScreen:
+    AltInvFixoScreen:
+    AltMatPrimaScreen:
+    AltEstimativaScreen:
+    AltPrecoVendaScreen:
+    AltPosPessoaScreen:
+    AltPosInvFixoScreen:
 
 <StartScreen>:
     size_hint: 0.1, 0.1
@@ -113,14 +120,3 @@ Manager:
 
     Voltar:
         on_release: app.root.current = "start"
-
-<AlterarScreen>:
-    size_hint: 0.1,0.1
-    name: "alterar"
-    Label:
-        text: 'Selecione de qual sessao quer alterar os dados:'
-        font_size: 0.6*self.height
-        pos_hint: {'top':9,'right':5.5}
-        size_hint: 1, 1
-    Voltar:
-        on_release: app.root.current = "menu"

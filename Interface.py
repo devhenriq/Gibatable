@@ -1717,9 +1717,101 @@ class RelPrecoVendaScreen(Screen):
                 val = val + float(t)
         return val
 
+#Alterar
 class AlterarScreen(Screen):
     pass
 
+class AltPessoaScreen(Screen):
+    pass
+
+class AltPosPessoaScreen(Screen):
+    pass
+
+class AltEstimativaScreen(Screen):
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Estimativa de Vendas'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioBt())
+        for mes in range(1, 13):
+            self.criabotao(mes)
+
+    def criabotao(self, mes):
+        bt = Button(text = 'Mes ' + str(mes))
+        bt.bind(on_release=lambda x: self.preenche(mes))
+        self.scrl.add_widget(bt)
+
+    def preenche(self, mes):
+        pass
+
+class AltInvFixoScreen(Screen):
+    pass
+
+class AltPosInvFixoScreen(Screen):
+    pass
+
+class AltMatPrimaScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Materia Prima'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioBt())
+        dados = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
+
+        for prod in dados:
+            for mp in prod:
+                self.criabotao(mp)
+
+    def criabotao(self, nome):
+        bt = Button(text=nome)
+        bt.bind(on_release=lambda x: self.preenche(nome))
+        self.scrl.add_widget(bt)
+
+    def preenche(self, nome):
+        pass
+
+class AltPrecoVendaScreen(Screen):
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Preco de Venda'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(RelatorioBt())
+        dados = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
+        print(dados)
+        for prod in dados:
+            for mp in prod:
+                self.BtMes(mp)
+
+    def BtMes(self, nome):
+        self.title.text = 'Preco de Venda'
+        bt = Button(text=nome)
+        bt.bind(on_release=lambda x: self.tryn(nome))
+        self.scrl.add_widget(bt)
+
+    def returnMes(self, mes):
+        return mes
+
+    def tryn(self, nome):
+        self.scrl.clear_widgets()
+        gc.collect()
+        for mes in range(1, 13):
+            self.fim(nome, mes)
+
+    def fim(self, nome, mes):
+        bt = Button(text=str(mes) + ' mes')
+        bt.bind(on_release=lambda x: self.preenche(nome, mes))
+        self.scrl.add_widget(bt)
+
+    def preenche(self, nome, mes):
+        pass
 #Programação Financeira
 class RelPvUnMesScreen(Screen):
     @mainthread
@@ -3515,6 +3607,11 @@ for kv in listdir(kv_path):
         Builder.load_file(kv_path + kv)
 
 kv_path = './Interface/kv/Relatorios/'
+for kv in listdir(kv_path):
+    if kv.find('.kv') is not -1:
+        Builder.load_file(kv_path + kv)
+
+kv_path = './Interface/kv/Alterar/'
 for kv in listdir(kv_path):
     if kv.find('.kv') is not -1:
         Builder.load_file(kv_path + kv)

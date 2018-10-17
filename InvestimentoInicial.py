@@ -2,6 +2,7 @@ from Banco import Banco
 from InvestimentoFixo import InvestimentoFixo
 from Estoque import Estoque
 from decimal import Decimal, ROUND_HALF_UP
+
 class InvestimentoInicial:
 
     def __init__(self, invoutros, legal, divulg, outros, caixa, outrosg):
@@ -51,13 +52,58 @@ class InvestimentoInicial:
         return val
 
     def insereBanco(self):
-
+        Banco.delete(Banco, 'investimentoinicial')
         list = [self.totalfixo, self.movs, self.maqs, self.comps, self.veic, self.predios, self.terrenos, self.invoutros,
                 self.totaldesp, self.legal, self.divulg, self.outros, self.totalgiro, self.estoque, self.caixa, self.outrosg, self.total]
-        str = 'investimentoinicial (totalfixo, movs, maqs, comps, veic, predios, terrenos, invoutros, totaldesp, legalizacao, divulgacao, outros, totalgiro, estoque, caixa, outrosg, total)'
-
-        Banco.insert(Banco, str, list)
+        strg = 'investimentoinicial (totalfixo, movs, maqs, comps, veic, predios, terrenos, invoutros, totaldesp, legalizacao, divulgacao, outros, totalgiro, estoque, caixa, outrosg, total)'
+        deprec = self.calculaDeprec('totalmes') + ((self.legal + self.divulg + self.outros) / 12)
+        deprec = self.dec(deprec)
+        Banco.update(Banco, 'custosfixos', 'deprec =' + str(deprec))
+        Banco.insert(Banco, strg, list)
 
     def relatorio(self, col=None, cond=None):
         ret = Banco.relatorio(Banco, 'investimentoinicial', col, cond)
         return ret
+
+    def calculaTotal(self, table, col=None, cond=None):
+        list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
+
+    def dec(self, val):
+        v = float(Decimal(val).quantize(Decimal('0.01'),ROUND_HALF_UP))
+        return v
+
+    def calculaDeprec(self, ret):
+        contas = ['Moveis e Utensilios', 'Maquinas e Equipamentos', 'Computadores/Equipamentos de Informatica',
+                  'Fixos em Veiculos', 'Imoveis Predios', 'Imoveis Terrenos']
+        total = 0
+        totalmes = 0
+
+        for t in contas:
+
+            valor = self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "' + t + '"')
+
+            if t == 'Moveis e Utensilios' or t == 'Maquinas e Equipamentos':
+                taxa = 10
+            else:
+                if t == 'Computadores/Equipamentos de Informatica' or t == 'Fixos em Veiculos':
+                    taxa = 20
+                else:
+                    if t == 'Imoveis Predios':
+                        taxa = 4
+                    else:
+                        taxa = 0
+
+            mensal = float(Decimal(((valor * taxa) / 100) / 12).quantize(Decimal('0.01'), ROUND_HALF_UP))
+            total = float(Decimal(total + valor).quantize(Decimal('0.01'), ROUND_HALF_UP))
+            totalmes = float(Decimal(totalmes + mensal).quantize(Decimal('0.01'), ROUND_HALF_UP))
+
+        if ret == 'total':
+            return total
+        if ret == 'totalmes':
+            return totalmes

@@ -1,0 +1,98 @@
+<AltInvFixoScreen>:
+    id: altinvfixo
+    name: "altinvfixo"
+
+    GridLayout:
+        rows:3
+        height: self.minimum_height
+        row_default_height: 60
+        spacing: 50
+        Label:
+            text: 'Investimentos Fixos'
+            font_size: 0.6*self.height
+            size_hint: .1, .1
+        BoxLayout:
+            padding: 30
+            GridLayout:
+                cols: 3
+                spacing: 30
+                row_default_height: 60
+                height: self.minimum_height
+                Button:
+                    font_size: 0.2*self.height
+                    size_hint: .1,.1
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    text: 'Moveis e Utensilios'
+                    on_release: app.root.current = 'relmov'
+                Button:
+                    font_size: 0.2*self.height
+                    size_hint: .1,.1
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    text: 'Maquinas e Equipamentos'
+                    on_release: app.root.current = 'relmaq'
+                Button:
+                    font_size: 0.2*self.height
+                    size_hint: .1,.1
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    text: 'Computadores/Equipamentos de Informatica'
+                    on_release: app.root.current = 'relcomp'
+                Button:
+                    font_size: 0.2*self.height
+                    size_hint: .1,.1
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    text: 'Fixos em Veiculos'
+                    on_release: app.root.current = 'relveic'
+                Button:
+                    font_size: 0.2*self.height
+                    size_hint: .1,.1
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    text: 'Imoveis Predios'
+                    on_release: app.root.current = 'relpred'
+                Button:
+                    font_size: 0.2*self.height
+                    size_hint: .1,.1
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    text: 'Imoveis Terrenos'
+                    on_release: app.root.current = 'relterr'
+                Button:
+                    font_size: 0.2*self.height
+                    size_hint: .1,.1
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    text: 'Gastos com depreciacoes'
+                    on_release: app.root.current = 'reldeprec'
+        GridLayout:
+            cols: 2
+            height: self.minimum_height
+            padding: 50
+            size_hint: 0.1, 0.1
+            row_default_height: 60
+            col_default_width: 100
+            spacing: 500
+            Label:
+                text: ''
+            Voltar:
+                on_release:
+                    self.clear_widgets()
+                    gc.collect()
+                    app.root.current = "alterar"

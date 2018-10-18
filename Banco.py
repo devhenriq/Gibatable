@@ -26,6 +26,7 @@ class Banco:
                 query = query + "?)"
         cur.execute(query, (list))
         print(query)
+        print(list)
         conn.commit()
         conn.close()
 
@@ -39,7 +40,7 @@ class Banco:
             cond = ""
         query = "DELETE " + col + " FROM " + table + cond
         cur.execute(query)
-
+        print(query)
         conn.commit()
         conn.close()
 
@@ -68,7 +69,7 @@ class Banco:
         if cond is None:
             cond = ""
         query = "UPDATE " + table + " SET " + col + cond
-
+        print(query)
         cur.execute(query)
         ret = cur.fetchall()
         conn.commit()

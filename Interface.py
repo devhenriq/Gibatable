@@ -180,7 +180,8 @@ class RateioCustosFixosScreen(Screen):
             self.scrl.add_widget(label)
             lista.append(label)
 
-            textin = TextInput(font_size=32,multiline=False)
+            tx = RateioFixos.relatorio(RateioFixos, 'porc', ' WHERE produto = "' + str(e[0])+ '"')
+            textin = TextInput(text=str(tx[0][0]),font_size=32,multiline=False)
             self.scrl.add_widget(textin)
             lista.append(textin)
 
@@ -203,15 +204,10 @@ class RateioCustosOpScreen(Screen):
 
     @mainthread
     def on_enter(self):
-        # Clock.schedule_once(self.create_scrollview)
-
-        # def create_scrollview(self):
         for w in self.inputs:
             w[0].canvas.clear()
             w[1].canvas.clear()
             w[2].canvas.clear()
-
-        # scrollview = ScrollView(size_hint=(1, None), size=(Window.width, Window.height))
 
         list = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
 
@@ -223,7 +219,8 @@ class RateioCustosOpScreen(Screen):
             self.scrl.add_widget(label)
             lista.append(label)
 
-            textin = TextInput(font_size=32, multiline=False)
+            tx = RateioOp.relatorio(RateioOp, 'porc', ' WHERE produto = "' + str(e[0])+'"')
+            textin = TextInput(text=str(tx[0][0]),font_size=32, multiline=False)
             self.scrl.add_widget(textin)
             lista.append(textin)
 
@@ -1809,7 +1806,7 @@ class AltEstimativaScreen(Screen):
         self.title.text = 'Estimativa de Vendas'
         self.back.clear_widgets()
         self.back.add_widget(Label(text=""))
-        self.back.add_widget(RelatorioBt())
+        self.back.add_widget(MenuAltBt())
         for mes in range(1, 13):
             self.criabotao(mes)
 
@@ -1819,7 +1816,63 @@ class AltEstimativaScreen(Screen):
         self.scrl.add_widget(bt)
 
     def preenche(self, mes):
-        pass
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Estimativa de vendas do mes ' + str(mes)
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(Button(text='Voltar', on_release=lambda x: self.on_enter()))
+        dados = Estimativa.relatorio(Estimativa, None, ' WHERE mes = "' + str(mes) + '"')
+
+        self.scrl.add_widget(Label(text="PRODUTO"))
+        self.scrl.add_widget(Label(text="QUANTIDADE"))
+        self.scrl.add_widget(Label(text="LUCRO UNITARIO"))
+        self.scrl.add_widget(Label(text="ALTERAR - DELETAR"))
+
+        for row in dados:
+            self.scrl.add_widget(Label(text=str(row[0])))
+            self.scrl.add_widget(Label(text=str(row[1])))
+            self.scrl.add_widget(Label(text=str(row[2])))
+
+            self.scrl.add_widget(self.grid(row, mes))
+
+    def grid(self, row, cat):
+        gd = GridLayout(cols=2)
+        gd.add_widget(Button(text="A", on_release=lambda x: self.alterar(row, cat)))
+        gd.add_widget(Button(text="X", on_release=lambda x: self.deletar(row, cat)))
+        return gd
+
+    def alterar(self, row, cat):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Alterar estimativa do mes ' + str(cat)
+        self.back.clear_widgets()
+
+
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text='Produto'))
+        tx1 = TextInput(text=str(row[0]))
+        self.scrl.add_widget(tx1)
+        self.scrl.add_widget(Label(text=""))
+
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="Quantidade"))
+        tx2 = TextInput(text=str(row[1]))
+        self.scrl.add_widget(tx2)
+        self.scrl.add_widget(Label(text=""))
+
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="Lucro Unitario"))
+        tx3 = TextInput(text=str(row[2]))
+        self.scrl.add_widget(tx3)
+        self.scrl.add_widget(Label(text=""))
+
+        self.back.add_widget(Button(text="Atualizar", on_release=lambda x: (Estimativa(tx1.text, float(tx2.text), float(tx3.text), cat), self.deletar(row, cat))))
+        self.back.add_widget(Button(text='Voltar', on_release=lambda x: self.preenche(cat)))
+
+    def deletar(self, row, cat):
+        Banco.delete(Banco, 'estimativa', None, ' WHERE descricao = "'+ str(row[0]) + '" AND quant = ' + str(row[1]) + " AND lucrounitario = " + str(row[2]))
+        self.preenche(cat)
 
 class AltInvFixoScreen(Screen):
     @mainthread
@@ -1916,7 +1969,7 @@ class AltMatPrimaScreen(Screen):
         self.title.text = 'Materia Prima'
         self.back.clear_widgets()
         self.back.add_widget(Label(text=""))
-        self.back.add_widget(RelatorioBt())
+        self.back.add_widget(MenuAltBt())
         dados = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
 
         for prod in dados:
@@ -1929,7 +1982,80 @@ class AltMatPrimaScreen(Screen):
         self.scrl.add_widget(bt)
 
     def preenche(self, nome):
-        pass
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Materias primas do produto ' + str(nome)
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(Button(text='Voltar', on_release=lambda x: self.on_enter()))
+        dados = MateriaPrima.relatorio(MateriaPrima, None, ' WHERE produto = "' + str(nome) + '"')
+
+        self.scrl.add_widget(Label(text="DESCRICAO"))
+        self.scrl.add_widget(Label(text="UNIDADE DE MEDIDA"))
+        self.scrl.add_widget(Label(text="PRECO UNITARIO"))
+        self.scrl.add_widget(Label(text="QUANTIDADE"))
+        self.scrl.add_widget(Label(text="ALTERAR - DELETAR"))
+
+        for row in dados:
+            self.scrl.add_widget(Label(text=str(row[2])))
+            self.scrl.add_widget(Label(text=str(row[3])))
+            self.scrl.add_widget(Label(text=str(row[4])))
+            self.scrl.add_widget(Label(text=str(row[5])))
+            self.scrl.add_widget(self.grid(row, nome))
+
+    def grid(self, row, cat):
+        gd = GridLayout(cols=2)
+        gd.add_widget(Button(text="A", on_release=lambda x: self.alterar(row, cat)))
+        gd.add_widget(Button(text="X", on_release=lambda x: self.deletar(row, cat)))
+        return gd
+
+    def alterar(self, row, cat):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Alterar materia prima do produto ' + str(cat)
+        self.back.clear_widgets()
+
+
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text='DESCRICAO'))
+        tx1 = TextInput(text=str(row[2]))
+        self.scrl.add_widget(tx1)
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=""))
+
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="UN. MEDIDA"))
+        tx2 = TextInput(text=str(row[3]))
+        self.scrl.add_widget(tx2)
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=""))
+
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="PRECO UNITARIO"))
+        tx3 = TextInput(text=str(row[4]))
+        self.scrl.add_widget(tx3)
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=""))
+
+
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="QUANTIDADE"))
+        tx4 = TextInput(text=str(row[5]))
+        self.scrl.add_widget(tx4)
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=""))
+
+        self.back.add_widget(Button(text="Atualizar", on_release=lambda x: (self.parted(row, cat, tx1.text, tx2.text, tx3.text, tx4.text))))
+        self.back.add_widget(Button(text='Voltar', on_release=lambda x: self.preenche(cat)))
+
+    def parted(self,row, cat, p1, p2, p3, p4):
+        self.deletar(row, cat)
+        MateriaPrima(cat, p1, p2, float(p3), float(p4))
+        self.preenche(cat)
+
+    def deletar(self, row, cat):
+        Banco.delete(Banco, 'materiaprima', None, ' WHERE produto = "'+ cat + '" AND descricao = "' + str(row[2]) + '" AND unmedida = "' + str(row[3]) + '" AND precounitario = ' + str(row[4]) + " AND quant = " + str(row[5]))
+        self.preenche(cat)
 
 class AltPrecoVendaScreen(Screen):
     @mainthread
@@ -1939,7 +2065,7 @@ class AltPrecoVendaScreen(Screen):
         self.title.text = 'Preco de Venda'
         self.back.clear_widgets()
         self.back.add_widget(Label(text=""))
-        self.back.add_widget(RelatorioBt())
+        self.back.add_widget(MenuAltBt())
         dados = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
         print(dados)
         for prod in dados:

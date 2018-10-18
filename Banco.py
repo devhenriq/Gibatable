@@ -52,7 +52,7 @@ class Banco:
         if cond is None:
             cond = ""
         query = "SELECT " + col + " FROM " + table + cond
-
+        print(query)
         cur.execute(query)
         ret = cur.fetchall()
         conn.commit()

@@ -32,6 +32,7 @@ from functools import partial
 import gc
 from Financeiro import *
 from decimal import Decimal, ROUND_HALF_UP
+from Banco import Banco
 
 
 Window.fullscreen = False
@@ -1722,10 +1723,84 @@ class AlterarScreen(Screen):
     pass
 
 class AltPessoaScreen(Screen):
-    pass
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Categoria do cadastro de pessoa:'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(MenuAltBt())
+        categoria = ['Producao', 'Administrativo', 'Direcao']
+        for cg in categoria:
+            self.scrl.add_widget(Label(text=""))
+            self.scrl.add_widget(Label(text=""))
+            self.criabotao(cg)
+            self.scrl.add_widget(Label(text=""))
+            self.scrl.add_widget(Label(text=""))
 
-class AltPosPessoaScreen(Screen):
-    pass
+    def criabotao(self, cat):
+        bt = Button(text='Pessoal de ' + cat)
+        bt.bind(on_release=lambda x: self.preenche(cat))
+        self.scrl.add_widget(bt)
+
+    def preenche(self, cat):
+        print(cat)
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Alterar pessoal de ' + cat
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(Button(text='Voltar', on_release=lambda x: self.on_enter()))
+        dados = Pessoa.relatorio(Pessoa, None, ' WHERE categoria = "' + cat + '"')
+
+        self.scrl.add_widget(Label(text="CARGO"))
+        self.scrl.add_widget(Label(text="QUANTIDADE"))
+        self.scrl.add_widget(Label(text="SALARIO"))
+        self.scrl.add_widget(Label(text="ALTERAR"))
+        self.scrl.add_widget(Label(text="DELETAR"))
+
+        for row in dados:
+            self.scrl.add_widget(Label(text=str(row[1])))
+            self.scrl.add_widget(Label(text=str(row[2])))
+            self.scrl.add_widget(Label(text=str(row[3])))
+            self.scrl.add_widget(Button(text="A", on_release=lambda x: self.alterar(row, cat)))
+            self.scrl.add_widget(Button(text="X", on_release=lambda x: self.deletar(row, cat)))
+
+    def alterar(self, row, cat):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Alterar pessoal de ' + cat
+        self.back.clear_widgets()
+
+
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text='Descricao'))
+        tx1 = TextInput(text=str(row[1]))
+        self.scrl.add_widget(tx1)
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=""))
+
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="Quantidade"))
+        tx2 = TextInput(text=str(row[2]))
+        self.scrl.add_widget(tx2)
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=""))
+
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="Salario"))
+        tx3 = TextInput(text=str(row[3]))
+        self.scrl.add_widget(tx3)
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text=""))
+
+        self.back.add_widget(Button(text="Atualizar", on_release=lambda x: (Pessoa(tx1.text, float(tx2.text), float(tx3.text), cat), self.deletar(row, cat))))
+        self.back.add_widget(Button(text='Voltar', on_release=lambda x: self.preenche(cat)))
+
+    def deletar(self, row, cat):
+        Banco.delete(Banco, 'pessoa', None, ' WHERE id = '+ str(row[0]))
+        self.preenche(cat)
 
 class AltEstimativaScreen(Screen):
     def on_enter(self):
@@ -1747,10 +1822,91 @@ class AltEstimativaScreen(Screen):
         pass
 
 class AltInvFixoScreen(Screen):
-    pass
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Categoria do cadastro de investimento:'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(MenuAltBt())
+        categoria = ['Moveis e Utensilios', 'Maquinas e Equipamentos', 'Computadores/Equipamentos de Informatica', 'Fixos em Veiculos', 'Imoveis Predios', 'Imoveis Terrenos']
+        a = 1
+        for cg in categoria:
+            if a == 1:
+                self.scrl.add_widget(Label(text=""))
+                a = 0
+                self.criabotao(cg)
+            else:
+                self.criabotao(cg)
+                self.scrl.add_widget(Label(text=""))
+                a = 1
 
-class AltPosInvFixoScreen(Screen):
-    pass
+    def criabotao(self, cat):
+        bt = Button(text='Investimento Fixo de ' + cat)
+        bt.bind(on_release=lambda x: self.preenche(cat))
+        self.scrl.add_widget(bt)
+
+
+    def preenche(self, cat):
+        print(cat)
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Investimento Fixo de ' + cat
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(Button(text='Voltar', on_release=lambda x: self.on_enter()))
+        dados = InvestimentoFixo.relatorio(InvestimentoFixo, None, ' WHERE categoria = "' + cat + '"')
+        self.scrl.add_widget(Label(text="DESCRICAO"))
+        self.scrl.add_widget(Label(text="QUANTIDADE"))
+        self.scrl.add_widget(Label(text="VALOR"))
+        self.scrl.add_widget(Label(text="ALTERAR - DELETAR"))
+
+        for row in dados:
+            self.scrl.add_widget(Label(text=str(row[1])))
+            self.scrl.add_widget(Label(text=str(row[2])))
+            self.scrl.add_widget(Label(text=str(row[3])))
+
+            self.scrl.add_widget(self.grid(row,cat))
+
+    def grid(self, row, cat):
+        gd = GridLayout(cols=2)
+        gd.add_widget(Button(text="A", on_release=lambda x: self.alterar(row, cat)))
+        gd.add_widget(Button(text="X", on_release=lambda x: self.deletar(row, cat)))
+        return gd
+
+    def alterar(self, row, cat):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Alterar pessoal de ' + cat
+        self.back.clear_widgets()
+
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text='Descricao'))
+        tx1 = TextInput(text=str(row[1]))
+        self.scrl.add_widget(tx1)
+        self.scrl.add_widget(Label(text=""))
+
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="Quantidade"))
+        tx2 = TextInput(text=str(row[2]))
+        self.scrl.add_widget(tx2)
+        self.scrl.add_widget(Label(text=""))
+
+        self.scrl.add_widget(Label(text=""))
+        self.scrl.add_widget(Label(text="Salario"))
+        tx3 = TextInput(text=str(row[3]))
+        self.scrl.add_widget(tx3)
+        self.scrl.add_widget(Label(text=""))
+
+        self.back.add_widget(Button(text="Atualizar", on_release=lambda x: (
+        InvestimentoFixo(tx1.text, float(tx2.text), float(tx3.text), cat), self.deletar(row, cat))))
+        self.back.add_widget(Button(text='Voltar', on_release=lambda x: self.preenche(cat)))
+
+
+    def deletar(self, row, cat):
+        Banco.delete(Banco, 'investimentofixo', None, ' WHERE id = ' + str(row[0]))
+        self.preenche(cat)
 
 class AltMatPrimaScreen(Screen):
     @mainthread
@@ -1812,6 +1968,7 @@ class AltPrecoVendaScreen(Screen):
 
     def preenche(self, nome, mes):
         pass
+
 #Programação Financeira
 class RelPvUnMesScreen(Screen):
     @mainthread
@@ -3594,6 +3751,9 @@ class RelatorioFinBt(Button):
     pass
 
 class RelatorioGiroBt(Button):
+    pass
+
+class MenuAltBt(Button):
     pass
 
 kv_path = './Interface/kv/'

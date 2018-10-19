@@ -26,7 +26,7 @@ from Frete import Frete
 from CapGiro import CapGiro
 from kivy.clock import mainthread
 from kivy.clock import Clock
-from kivy.uix.slider import Slider
+from kivy.uix.spinner import Spinner
 from kivy.uix.scrollview import ScrollView
 from functools import partial
 import gc
@@ -233,12 +233,51 @@ class RateioCustosOpScreen(Screen):
 
 
 class PrecoVendaScreen(Screen):
-    def envia(self):
-        pv = PrecoVenda(self.outros.text, self.mes.text)
-        pv.relatorio()
-        self.outros.text = ""
-        self.mes.text = ""
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Preco de Venda'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(CadastroBt())
+        dados = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
 
+        for prod in dados:
+            for mp in prod:
+                self.criabotao(mp)
+
+    def criabotao(self, nome):
+        bt = Button(text=nome)
+        bt.bind(on_release=lambda x: self.preenche(nome))
+        self.scrl.add_widget(bt)
+
+    def preenche(self, nome):
+        print(nome)
+        self.scrl.clear_widgets()
+        self.back.clear_widgets()
+        gc.collect()
+        self.title.text = nome
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='Outros custos'))
+        tx1 = TextInput()
+        self.scrl.add_widget(tx1)
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='Mes'))
+        tx2 = Spinner(values=('1','2','3','4','5','6','7','8','9','10','11','12'))
+        self.scrl.add_widget(tx2)
+        self.scrl.add_widget(Label(text=''))
+
+
+        self.back.add_widget(SendButton(on_release=lambda x: (self.envia(tx1.text, tx2.text, nome))))
+        self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
+
+    def envia(self, val, mes, prod):
+        Banco.delete(Banco, 'precovenda', None, ' WHERE produto = "' + prod + '"' + ' AND mes = '+ mes)
+        pv = PrecoVenda(prod, val, mes)
+        p = pv.relatorio()
+        print(p)
 
 class FinFreteScreen(Screen):
     def envia(self):
@@ -259,14 +298,19 @@ class RelatorioScreen(Screen):
 class RelatoriosCustosScreen(Screen):
     pass
 
+
 class RelatoriosFinScreen(Screen):
     pass
 
+
 class RelGiroScreen(Screen):
     pass
+
+
 #Pessoas
 class RelPessoaScreen(Screen):
     pass
+
 
 class RelPessoaDirScreen(Screen):
     @mainthread
@@ -444,6 +488,7 @@ class RelPessoaAdmScreen(Screen):
 class RelInvFixoScreen(Screen):
     pass
 
+
 class RelCompScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -561,6 +606,7 @@ class RelDeprecScreen(Screen):
                 val = val + float(t)
         return val
 
+
 class RelMaqScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -656,6 +702,7 @@ class RelMovScreen(Screen):
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
         return str(val)
+
 
 class RelPredScreen(Screen):
     @mainthread
@@ -755,6 +802,7 @@ class RelTerrScreen(Screen):
                 val = val + float(t)
         return str(val)
 
+
 class RelVeicScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -802,6 +850,7 @@ class RelVeicScreen(Screen):
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
         return str(val)
+
 
 #Materia prima
 class RelMpScreen(Screen):
@@ -861,6 +910,7 @@ class RelMpScreen(Screen):
         self.scrl.add_widget(Label(text=''))
         self.scrl.add_widget(Label(text=''))
         self.scrl.add_widget(Label(text=str(fin.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "'+nome+'"'))))
+
 
 #Estimativa
 class RelEstimativaScreen(Screen):
@@ -924,6 +974,7 @@ class RelEstimativaScreen(Screen):
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
         return val
+
 
 #Custos Fixos Mensais
 class RelCustosFixosScreen(Screen):
@@ -1119,6 +1170,7 @@ class RelInvIniScreen(Screen):
                 val = val + float(t)
         return val
 
+
 #Estoque
 class RelEstoqueScreen(Screen):
     @mainthread
@@ -1210,6 +1262,7 @@ class RelEstoqueScreen(Screen):
                 val = val + float(t)
         return val
 
+
 #Custo Financeiro Mensal
 class RelCustoFinMenScreen(Screen):
     @mainthread
@@ -1251,6 +1304,7 @@ class RelCustoFinMenScreen(Screen):
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
         return val
+
 
 #Tributos
 class RelTribScreen(Screen):
@@ -1295,6 +1349,7 @@ class RelTribScreen(Screen):
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
         return val
+
 
 #Custo com Vendas
 class RelCustoVendasScreen(Screen):
@@ -1351,6 +1406,7 @@ class RelCustoVendasScreen(Screen):
                 val = val + float(t)
         return val
 
+
 #Rateio custos fixos
 class RelRateioFixoScreen(Screen):
     @mainthread
@@ -1395,6 +1451,7 @@ class RelRateioFixoScreen(Screen):
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
         return val
+
 
 #Ponto de Equilibrio
 class RelPontoEquilibrioScreen(Screen):
@@ -1522,6 +1579,7 @@ class RelPontoEquilibrioScreen(Screen):
                 val = val + float(t)
         return val
 
+
 #Rateio custos operacionais
 class RelRateioOpScreen(Screen):
     @mainthread
@@ -1563,6 +1621,7 @@ class RelRateioOpScreen(Screen):
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
         return val
+
 
 #Preço de venda
 class RelPrecoVendaScreen(Screen):
@@ -1715,9 +1774,11 @@ class RelPrecoVendaScreen(Screen):
                 val = val + float(t)
         return val
 
+
 #Alterar
 class AlterarScreen(Screen):
     pass
+
 
 class AltPessoaScreen(Screen):
     @mainthread
@@ -1799,6 +1860,7 @@ class AltPessoaScreen(Screen):
         Banco.delete(Banco, 'pessoa', None, ' WHERE id = '+ str(row[0]))
         self.preenche(cat)
 
+
 class AltEstimativaScreen(Screen):
     def on_enter(self):
         self.scrl.clear_widgets()
@@ -1873,6 +1935,7 @@ class AltEstimativaScreen(Screen):
     def deletar(self, row, cat):
         Banco.delete(Banco, 'estimativa', None, ' WHERE descricao = "'+ str(row[0]) + '" AND quant = ' + str(row[1]) + " AND lucrounitario = " + str(row[2]))
         self.preenche(cat)
+
 
 class AltInvFixoScreen(Screen):
     @mainthread
@@ -1960,6 +2023,7 @@ class AltInvFixoScreen(Screen):
     def deletar(self, row, cat):
         Banco.delete(Banco, 'investimentofixo', None, ' WHERE id = ' + str(row[0]))
         self.preenche(cat)
+
 
 class AltMatPrimaScreen(Screen):
     @mainthread
@@ -2057,6 +2121,7 @@ class AltMatPrimaScreen(Screen):
         Banco.delete(Banco, 'materiaprima', None, ' WHERE produto = "'+ cat + '" AND descricao = "' + str(row[2]) + '" AND unmedida = "' + str(row[3]) + '" AND precounitario = ' + str(row[4]) + " AND quant = " + str(row[5]))
         self.preenche(cat)
 
+
 class AltPrecoVendaScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -2091,9 +2156,47 @@ class AltPrecoVendaScreen(Screen):
         bt = Button(text=str(mes) + ' mes')
         bt.bind(on_release=lambda x: self.preenche(nome, mes))
         self.scrl.add_widget(bt)
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
 
     def preenche(self, nome, mes):
-        pass
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Preco de Venda'
+        self.back.clear_widgets()
+        fin = Financeiro()
+
+        self.scrl.add_widget(Label(text='Outros custos'))
+        tx1 = TextInput(text=str(fin.calculaTotal(PrecoVenda, 'outros', ' WHERE produto = "'+ nome + '" AND mes =' + str(mes))))
+        self.scrl.add_widget(tx1)
+        self.scrl.add_widget(Label(text=''))
+        self.scrl.add_widget(Label(text='Mes'))
+        tx2 = Spinner(text=str(mes),values=('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'))
+        self.scrl.add_widget(tx2)
+        self.scrl.add_widget(Label(text=''))
+
+        self.scrl.add_widget(Button(text='Deletar valores', on_release=lambda x: self.deletar(nome, tx2.text, tx1.text)))
+
+
+
+        self.back.add_widget(Button(text='Alterar', on_release=lambda x: (self.alterar(nome, tx2.text, tx1.text))))
+        self.back.add_widget(Voltar(on_release=lambda x: self.tryn(nome)))
+
+    def alterar(self, nome, mes, val):
+        self.deletar(nome,mes,val)
+        PrecoVenda(nome, val, mes)
+        self.tryn(nome)
+
+    def deletar(self, nome, mes, val):
+        Banco.delete(Banco, 'precovenda', None, ' WHERE produto = "' + nome + '" AND mes =' + str(mes))
+        self.preenche(nome, mes)
+
+    def grid(self, row, cat):
+        gd = GridLayout(cols=2)
+        gd.add_widget(Button(text="A", on_release=lambda x: self.alterar(row, cat)))
+        gd.add_widget(Button(text="X", on_release=lambda x: self.deletar(row, cat)))
+        return gd
 
 #Programação Financeira
 class RelPvUnMesScreen(Screen):
@@ -2184,6 +2287,7 @@ class RelPvUnMesScreen(Screen):
                 val = val + float(t)
         return val
 
+
 class RelProjecaoVendasScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -2230,6 +2334,7 @@ class RelProjecaoVendasScreen(Screen):
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
         return val
+
 
 class RelFaturamentoScreen(Screen):
     @mainthread
@@ -2326,6 +2431,7 @@ class RelFaturamentoScreen(Screen):
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
         return val
+
 
 class RelCTotalScreen(Screen):
     @mainthread
@@ -2514,6 +2620,7 @@ class RelCTotalScreen(Screen):
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
         return val
+
 
 class RelDemonstrativoScreen(Screen):
     @mainthread
@@ -2704,6 +2811,7 @@ class RelDemonstrativoScreen(Screen):
 
         return cvar
 
+
 class RelMargemContribScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -2847,6 +2955,7 @@ class RelMargemContribScreen(Screen):
         cvar = pd + imp + cvendas + etq + frete + ter + amort
 
         return cvar
+
 
 class RelPontoEqFinScreen(Screen):
     @mainthread
@@ -2993,6 +3102,7 @@ class RelPontoEqFinScreen(Screen):
         cvar = pd + imp + cvendas + etq + frete + ter + amort
 
         return cvar
+
 
 class RelRentScreen(Screen):
     @mainthread
@@ -3177,6 +3287,7 @@ class RelRentScreen(Screen):
 
         return cvar
 
+
 class RelTirScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -3241,6 +3352,7 @@ class RelTirScreen(Screen):
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
         return val
+
 
 class RelFluxoScreen(Screen):
     @mainthread
@@ -3341,6 +3453,7 @@ class RelFluxoScreen(Screen):
         self.scrl.add_widget(Label(text=str(saldofim)))
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
 
+
 class RelRecebimentosScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -3415,6 +3528,7 @@ class RelRecebimentosScreen(Screen):
     def total(self):
         pass
 
+
 class RelPagamentosScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -3488,6 +3602,7 @@ class RelPagamentosScreen(Screen):
     def total(self):
         pass
 
+
 class RelMinScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -3534,6 +3649,7 @@ class RelMinScreen(Screen):
         self.scrl.add_widget(Label(text='PMRE'))
         self.scrl.add_widget(Label(text=str(pmre) + ' DIAS'))
 
+
 class RelCapGiroScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -3554,6 +3670,7 @@ class RelCapGiroScreen(Screen):
         self.scrl.add_widget(Label(text='TOTAL'))
         self.scrl.add_widget(Label(text=str(fin.capGiro())))
 
+
 class RelInvPreOpScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -3573,6 +3690,7 @@ class RelInvPreOpScreen(Screen):
         self.scrl.add_widget(Label(text=str(fin.calculaTotal(InvestimentoInicial, 'outros'))))
         self.scrl.add_widget(Label(text='TOTAL'))
         self.scrl.add_widget(Label(text=str(fin.calculaInvPreOp())))
+
 
 class RelCalcScreen(Screen):
     @mainthread
@@ -3602,6 +3720,7 @@ class RelCalcScreen(Screen):
         self.scrl.add_widget(Label(text='NECESSIDADE LIQUIDA DE CAPITAL DE GIRO EM DIAS'))
         self.scrl.add_widget(Label(text=str(fin.necessidadeGiro('liq'))))
 
+
 class RelCaixaMinScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -3625,6 +3744,7 @@ class RelCaixaMinScreen(Screen):
         self.scrl.add_widget(Label(text=str(fin.caixaMin('need'))))
         self.scrl.add_widget(Label(text='TOTAL DE B-CAIXA MINIMO (ITEM 4X5)'))
         self.scrl.add_widget(Label(text=str(fin.caixaMin('total'))))
+
 
 class RelBalancoIniScreen(Screen):
     @mainthread
@@ -3709,6 +3829,7 @@ class RelBalancoIniScreen(Screen):
         self.scrl.add_widget(Label(text=str(fin.balancoIni('totalativo'))))
         self.scrl.add_widget(Label(text='TOTAL DO PASSIVO'))
         self.scrl.add_widget(Label(text=str(fin.balancoIni('totalpassivo'))))
+
 
 class RelBalancoProjScreen(Screen):
     def on_enter(self):
@@ -3817,6 +3938,7 @@ class RelBalancoProjScreen(Screen):
         self.scrl.add_widget(Label(text='TOTAL DO PASSIVO'))
         self.scrl.add_widget(Label(text=str(fin.balancoIni('totalpassivo'))))
 
+
 class RelRecursosScreen(Screen):
     def on_enter(self):
         self.scrl.clear_widgets()
@@ -3861,25 +3983,35 @@ class RelRecursosScreen(Screen):
 class StartButton(Button):
     pass
 
+
 class ScrollGridCustom(BoxLayout):
     pass
+
 
 class SendButton(Button):
     pass
 
+
 class Voltar(Button):
     pass
+
 
 class RelatorioBt(Button):
     pass
 
+
 class RelatorioFinBt(Button):
     pass
+
 
 class RelatorioGiroBt(Button):
     pass
 
+
 class MenuAltBt(Button):
+    pass
+
+class CadastroBt(Button):
     pass
 
 kv_path = './Interface/kv/'

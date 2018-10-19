@@ -115,11 +115,12 @@ class Financeiro:
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
         val = 0
+        print(list)
         if list is not None:
             for t in list:
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
-        return float(Decimal(val).quantize(Decimal('0.01', ROUND_HALF_UP)))
+        return float(Decimal(val).quantize(Decimal('0.01'), ROUND_HALF_UP))
 
     def custosVariaveis(self, mes):
 

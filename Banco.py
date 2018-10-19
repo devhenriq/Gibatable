@@ -39,8 +39,9 @@ class Banco:
         if cond is None:
             cond = ""
         query = "DELETE " + col + " FROM " + table + cond
-        cur.execute(query)
         print(query)
+        cur.execute(query)
+
         conn.commit()
         conn.close()
 

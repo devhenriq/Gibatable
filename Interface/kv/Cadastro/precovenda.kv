@@ -1,48 +1,43 @@
 <PrecoVendaScreen>:
     id: precovenda
     name: "precovenda"
-    size_hint: 0.1,0.1
-    outros: outros
-    mes: mes
-
-    Label:
-        text: 'Informacoes adicionais sobre preco de venda'
-        font_size: 0.6*self.height
-        pos_hint: {'top':9,'right':5.5}
+    scrl: scrl
+    title:title
+    back:back
+    GridLayout:
+        cols:1
+        rows:3
+        height: self.minimum_height
         size_hint: 1, 1
+        row_default_height: 60
+        Label:
+            id: title
+            name: "title"
+            font_size: 0.6*self.height
+            size_hint: 1,None
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 1,1
+            ScrollView:
+                height: root.height * 1.5
+                GridLayout:
+                    id: scrl
+                    name: "scrl"
+                    cols: 4
+                    height: self.minimum_height
+                    padding: 100
+                    spacing: 50
+                    row_default_height: 60
+                    col_default_width: 100
+                    size_hint: 1,None
 
-
-    Label:
-        text: 'Outros Custos Producao(TERCEIROS):'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 8, 'right': 1.8}
-        size_hint: 1,1
-
-    TextInput:
-        name: "outros"
-        id: outros
-        font_size: 0.6*self.height
-        pos_hint: {'top': 7.7, 'right': 3.7}
-        size_hint: 2,.45
-        multiline: False
-
-    Label:
-        text: 'Mes:'
-        font_size: 0.4*self.height
-        pos_hint: {'top': 7, 'right': 1.8}
-        size_hint: 1,1
-
-    Spinner:
-        name: "mes"
-        id: mes
-        font_size: 0.4*self.height
-        pos_hint: {'top': 6.7, 'right': 3}
-        size_hint: 1,.45
-        text: '-'
-        values: ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12')
-
-
-    SendButton:
-        on_release: precovenda.envia()
-    Voltar:
-        on_release: app.root.current = "cadastro"
+        GridLayout:
+            cols: 2
+            height: self.minimum_height
+            padding: 50
+            size_hint: 0.1, 0.1
+            row_default_height: 60
+            col_default_width: 100
+            spacing: 500
+            id: back
+            name: "back"

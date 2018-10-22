@@ -344,10 +344,10 @@ class RelPessoaDirScreen(Screen):
             x = x + 1
         self.scrl.add_widget(Label(text=""))
         self.scrl.add_widget(Label(text="TOTAL"))
-        self.scrl.add_widget(Label(text="%.2f" % self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Diretor"')))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'salario', ' WHERE categoria="Diretor"')))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'inss', ' WHERE categoria="Diretor"')))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'total', ' WHERE categoria="Diretor"')))
+        self.scrl.add_widget(Label(text="%.2f" % float(Decimal(self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Diretor"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
+        self.scrl.add_widget(Label(text="%.2f" %float(Decimal(self.calculaTotal(Pessoa, 'salario', ' WHERE categoria="Diretor"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
+        self.scrl.add_widget(Label(text="%.2f" %float(Decimal(self.calculaTotal(Pessoa, 'inss', ' WHERE categoria="Diretor"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
+        self.scrl.add_widget(Label(text="%.2f" %float(Decimal(self.calculaTotal(Pessoa, 'total', ' WHERE categoria="Diretor"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
 
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
@@ -402,12 +402,12 @@ class RelPessoaOpScreen(Screen):
         self.scrl.add_widget(Label(text=""))
         self.scrl.add_widget(Label(text="TOTAL"))
         self.scrl.add_widget(Label(text=str(self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Producao"'))))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'salario', ' WHERE categoria="Producao"')))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'ferias', ' WHERE categoria="Producao"')))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'decimo', ' WHERE categoria="Producao"')))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'fgts', ' WHERE categoria="Producao"')))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'inss', ' WHERE categoria="Producao"')))
-        self.scrl.add_widget(Label(text="%.2f" %self.calculaTotal(Pessoa, 'total', ' WHERE categoria="Producao"')))
+        self.scrl.add_widget(Label(text="%.2f" % self.calculaTotal(Pessoa, 'salario', ' WHERE categoria="Producao"')))
+        self.scrl.add_widget(Label(text="%.2f" % self.calculaTotal(Pessoa, 'ferias', ' WHERE categoria="Producao"')))
+        self.scrl.add_widget(Label(text="%.2f" % self.calculaTotal(Pessoa, 'decimo', ' WHERE categoria="Producao"')))
+        self.scrl.add_widget(Label(text="%.2f" % self.calculaTotal(Pessoa, 'fgts', ' WHERE categoria="Producao"')))
+        self.scrl.add_widget(Label(text="%.2f" % self.calculaTotal(Pessoa, 'inss', ' WHERE categoria="Producao"')))
+        self.scrl.add_widget(Label(text="%.2f" % self.calculaTotal(Pessoa, 'total', ' WHERE categoria="Producao"')))
 
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
@@ -462,13 +462,13 @@ class RelPessoaAdmScreen(Screen):
             x = x + 1
         self.scrl.add_widget(Label(text=""))
         self.scrl.add_widget(Label(text="TOTAL"))
-        self.scrl.add_widget(Label(text=self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Administrativo"')))
-        self.scrl.add_widget(Label(text=self.calculaTotal(Pessoa, 'salario', ' WHERE categoria="Administrativo"')))
-        self.scrl.add_widget(Label(text=self.calculaTotal(Pessoa, 'ferias', ' WHERE categoria="Administrativo"')))
-        self.scrl.add_widget(Label(text=self.calculaTotal(Pessoa, 'decimo', ' WHERE categoria="Administrativo"')))
-        self.scrl.add_widget(Label(text=self.calculaTotal(Pessoa, 'fgts', ' WHERE categoria="Administrativo"')))
-        self.scrl.add_widget(Label(text=self.calculaTotal(Pessoa, 'inss', ' WHERE categoria="Administrativo"')))
-        self.scrl.add_widget(Label(text=self.calculaTotal(Pessoa, 'total', ' WHERE categoria="Administrativo"')))
+        self.scrl.add_widget(Label(text="%.2f" % float(Decimal(self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Administrativo"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
+        self.scrl.add_widget(Label(text="%.2f" % float(Decimal(self.calculaTotal(Pessoa, 'salario', ' WHERE categoria="Administrativo"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
+        self.scrl.add_widget(Label(text="%.2f" % float(Decimal(self.calculaTotal(Pessoa, 'ferias', ' WHERE categoria="Administrativo"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
+        self.scrl.add_widget(Label(text="%.2f" % float(Decimal(self.calculaTotal(Pessoa, 'decimo', ' WHERE categoria="Administrativo"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
+        self.scrl.add_widget(Label(text="%.2f" % float(Decimal(self.calculaTotal(Pessoa, 'fgts', ' WHERE categoria="Administrativo"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
+        self.scrl.add_widget(Label(text="%.2f" % float(Decimal(self.calculaTotal(Pessoa, 'inss', ' WHERE categoria="Administrativo"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
+        self.scrl.add_widget(Label(text="%.2f" % float(Decimal(self.calculaTotal(Pessoa, 'total', ' WHERE categoria="Administrativo"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
 
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
@@ -512,9 +512,9 @@ class RelCompScreen(Screen):
                     label = Label(text=d, font_size=0.4 * self.height, size_hint=[1, 1])
                 else:
                     if isinstance(d, int):
-                        label = Label(text=str(d), font_size=0.4*self.height, size_hint=[1,1])
+                        label = Label(text=str('%.2f' % d), font_size=0.4*self.height, size_hint=[1,1])
                     else:
-                        label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
+                        label = Label(text="%.2f" % float(Decimal(d).quantize(Decimal('0.01'), ROUND_HALF_UP)), font_size=0.4 * self.height, size_hint=[1, 1])
                 self.scrl.add_widget(label)
             x = x + 1
         self.scrl.add_widget(Label(text=""))
@@ -530,7 +530,7 @@ class RelCompScreen(Screen):
             for t in list:
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
-        return str(val)
+        return str("%.2f" % val)
 
 
 class RelDeprecScreen(Screen):
@@ -560,7 +560,7 @@ class RelDeprecScreen(Screen):
             self.scrl.add_widget(label)
 
             valor=self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "' + t + '"')
-            label = Label(text=str(valor))
+            label = Label(text=str("%.2f" % valor))
             self.scrl.add_widget(label)
 
             if t == 'Moveis e Utensilios' or t == 'Maquinas e Equipamentos':
@@ -578,7 +578,7 @@ class RelDeprecScreen(Screen):
             self.scrl.add_widget(label)
 
             mensal = float(Decimal(((valor*taxa)/100)/12).quantize(Decimal('0.01'),ROUND_HALF_UP))
-            label = Label(text=str(mensal))
+            label = Label(text=str("%.2f" % mensal))
             self.scrl.add_widget(label)
 
             total = float(Decimal(total + valor).quantize(Decimal('0.01'),ROUND_HALF_UP))
@@ -586,11 +586,11 @@ class RelDeprecScreen(Screen):
 
         label = Label(text='Total')
         self.scrl.add_widget(label)
-        label = Label(text=str(total))
+        label = Label(text=str("%.2f" % total))
         self.scrl.add_widget(label)
         label = Label(text='-')
         self.scrl.add_widget(label)
-        label = Label(text=str(totalmes))
+        label = Label(text=str("%.2f" % totalmes))
         self.scrl.add_widget(label)
 
     def calculaTotal(self, table, col=None, cond=None):
@@ -632,7 +632,7 @@ class RelMaqScreen(Screen):
                     if isinstance(d, int):
                         label = Label(text=str(d), font_size=0.4*self.height, size_hint=[1,1])
                     else:
-                        label = Label(text="%.2f" % d, font_size=0.4 * self.height, size_hint=[1, 1])
+                        label = Label(text="%.2f" % float(Decimal(d).quantize(Decimal('0.01'), ROUND_HALF_UP)), font_size=0.4 * self.height, size_hint=[1, 1])
                 self.scrl.add_widget(label)
             x = x + 1
         self.scrl.add_widget(Label(text=""))
@@ -648,7 +648,7 @@ class RelMaqScreen(Screen):
             for t in list:
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
-        return str(val)
+        return str("%.2f" % val)
 
 
 class RelMovScreen(Screen):

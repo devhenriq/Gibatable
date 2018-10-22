@@ -58,7 +58,10 @@ class InvestimentoInicial:
         strg = 'investimentoinicial (totalfixo, movs, maqs, comps, veic, predios, terrenos, invoutros, totaldesp, legalizacao, divulgacao, outros, totalgiro, estoque, caixa, outrosg, total)'
         deprec = self.calculaDeprec('totalmes') + ((self.legal + self.divulg + self.outros) / 12)
         deprec = self.dec(deprec)
+
         Banco.update(Banco, 'custosfixos', 'deprec =' + str(deprec))
+        tt = self.calculaCF('maodeobra') + self.calculaCF('prolabore') + self.calculaCF('limpeza') + self.calculaCF('contador') + self.calculaCF('material') + self.calculaCF('agua') + self.calculaCF('aluguel') + self.calculaCF('manutencao') + deprec + self.calculaCF('outros')
+        Banco.update(Banco, 'custosfixos', 'total =' + str(tt))
         Banco.insert(Banco, strg, list)
 
     def relatorio(self, col=None, cond=None):
@@ -67,6 +70,15 @@ class InvestimentoInicial:
 
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
+        val = 0
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return val
+
+    def calculaCF(self, col=None, cond=None):
+        list = Banco.relatorio(Banco, 'custosfixos', col, cond)
         val = 0
         if list is not None:
             for t in list:

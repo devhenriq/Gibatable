@@ -25,15 +25,11 @@ from PrecoVenda import PrecoVenda
 from Frete import Frete
 from CapGiro import CapGiro
 from kivy.clock import mainthread
-from kivy.clock import Clock
 from kivy.uix.spinner import Spinner
-from kivy.uix.scrollview import ScrollView
-from functools import partial
 import gc
 from Financeiro import *
 from decimal import Decimal, ROUND_HALF_UP
 from Banco import Banco
-
 
 Window.fullscreen = False
 Config.set('graphics', 'resizable', True)
@@ -1040,7 +1036,7 @@ class RelCustosFixosScreen(Screen):
 
         label = Label(text='TOTAL')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(CustosFixos, 'total')))
+        label = Label(text=str(self.calculaTotal(CustosFixos)))
         self.scrl.add_widget(label)
 
     def calculaTotal(self, table, col=None, cond=None):
@@ -1175,9 +1171,13 @@ class RelInvIniScreen(Screen):
 class RelEstoqueScreen(Screen):
     @mainthread
     def on_enter(self):
+        Estoque()
+        self.secscreen()
+
+    def secscreen(self):
         self.scrl.clear_widgets()
         gc.collect()
-        Estoque()
+
         self.title.text = 'Estoque'
         self.back.clear_widgets()
         self.back.add_widget(Label(text=""))
@@ -1197,7 +1197,7 @@ class RelEstoqueScreen(Screen):
 
         self.title.text = str(mes) + ' Mes'
         self.back.add_widget(Label(text=""))
-        self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
+        self.back.add_widget(Voltar(on_release=lambda x: self.secscreen()))
         x = 1
         dados = Estoque.relatorio(Estoque, 'DISTINCT descricao, quant, custounit, custototal',
                                      ' WHERE mes = "' + str(mes) + '"' + 'ORDER BY descricao')

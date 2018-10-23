@@ -88,14 +88,52 @@ class PreEstimativaScreen(Screen):
 
 
 class EstimativaScreen(Screen):
-    def envia(self):
-        e = Estimativa(self.descr.text, int(self.quant.text), float(self.lucro.text), self.mes.text)
+    @mainthread
+    def on_enter(self):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Escolha o produto:'
+        self.back.clear_widgets()
+        self.back.add_widget(Label(text=""))
+        self.back.add_widget(CadastroBt())
+        dados = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
+
+        for prod in dados:
+            for mp in prod:
+                self.criabotao(mp)
+
+    def criabotao(self, nome):
+        bt = Button(text=nome)
+        bt.bind(on_release=lambda x: self.preenche(nome))
+        self.scrl.add_widget(bt)
+
+    def preenche(self, nome):
+        self.scrl.clear_widgets()
+        gc.collect()
+        self.title.text = 'Estimativa de Vendas'
+        self.back.clear_widgets()
+
+
+        self.scrl.add_widget(Label(text='Quantidade: '))
+        tx1 = TextInput()
+        self.scrl.add_widget(tx1)
+        self.scrl.add_widget(Label(text='Lucro Unitario: '))
+        tx2 = TextInput()
+        self.scrl.add_widget(tx2)
+        self.scrl.add_widget(Label(text='Mes: '))
+        tx3 = Spinner(values=('1','2','3','4','5','6','7','8','9','10','11','12'))
+        self.scrl.add_widget(tx3)
+
+        self.back.add_widget(Button(text="Enviar", on_release=lambda x: self.envia(nome, tx1,tx2,tx3)))
+        self.back.add_widget(CadastroBt())
+
+    def envia(self, nome, quant, lucro, mes):
+        e = Estimativa(nome, int(quant.text), float(lucro.text), mes.text)
         e.relatorio()
         # self.descr.text = ""
         # self.quant.text = ""
         # self.lucro.text = ""
-        self.mes.text = "-"
-        #Estoque()
+        Estoque(nome, mes.text)
 
 
 class CustosFixosScreen(Screen):
@@ -1171,7 +1209,6 @@ class RelInvIniScreen(Screen):
 class RelEstoqueScreen(Screen):
     @mainthread
     def on_enter(self):
-        Estoque()
         self.secscreen()
 
     def secscreen(self):
@@ -1929,11 +1966,12 @@ class AltEstimativaScreen(Screen):
         self.scrl.add_widget(tx3)
         self.scrl.add_widget(Label(text=""))
 
-        self.back.add_widget(Button(text="Atualizar", on_release=lambda x: (Estimativa(tx1.text, float(tx2.text), float(tx3.text), cat), self.deletar(row, cat))))
+        self.back.add_widget(Button(text="Atualizar", on_release=lambda x: (Estimativa(tx1.text, float(tx2.text), float(tx3.text), cat), Estoque(tx1.text, tx2.text),self.deletar(row, cat))))
         self.back.add_widget(Button(text='Voltar', on_release=lambda x: self.preenche(cat)))
 
     def deletar(self, row, cat):
         Banco.delete(Banco, 'estimativa', None, ' WHERE descricao = "'+ str(row[0]) + '" AND quant = ' + str(row[1]) + " AND lucrounitario = " + str(row[2]))
+        Banco.delete(Banco, 'estoque', None, ' WHERE descricao = "' + str(row[0]) + '" AND mes = ' + str(cat))
         self.preenche(cat)
 
 
@@ -4011,8 +4049,14 @@ class RelatorioGiroBt(Button):
 class MenuAltBt(Button):
     pass
 
+
 class CadastroBt(Button):
     pass
+
+
+class EnviaBt(Button):
+    pass
+
 
 kv_path = './Interface/kv/'
 for kv in listdir(kv_path):

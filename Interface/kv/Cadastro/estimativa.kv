@@ -1,10 +1,9 @@
 <EstimativaScreen>:
     id: estimativa
     name: "estimativa"
-    descr: descr
-    quant: quant
-    lucro: lucro
-    mes: mes
+    scrl: scrl
+    title:title
+    back:back
     GridLayout:
         cols:1
         rows:3
@@ -12,7 +11,8 @@
         size_hint: 1, 1
         row_default_height: 60
         Label:
-            text: 'Estimativa de Vendas'
+            id: title
+            name: "title"
             font_size: 0.6*self.height
             size_hint: 1,None
         BoxLayout:
@@ -21,6 +21,8 @@
             ScrollView:
                 height: root.height * 1.5
                 GridLayout:
+                    id: scrl
+                    name: "scrl"
                     cols: 2
                     height: self.minimum_height
                     padding: 100
@@ -28,74 +30,6 @@
                     row_default_height: 60
                     col_default_width: 100
                     size_hint: 1,None
-                    Label:
-                        text: 'Descricao'
-                        font_size: 0.4*self.height
-                        size_hint: 1,.1
-                    GridLayout:
-                        descr: descr
-                        cols: 2
-                        spacing: 40
-                        TextInput:
-                            name: "descr"
-                            id: descr
-                            font_size: 0.6*self.height
-                            size_hint: 2,.45
-                            multiline: False
-                        Label:
-                            text: ""
-                    Label:
-                        text: 'Quantidade:'
-                        font_size: 0.4*self.height
-                        size_hint: 1,1
-                    GridLayout:
-                        cols: 3
-                        spacing: 140
-                        TextInput:
-                            name: "quantidade"
-                            id: quant
-                            font_size: 0.6*self.height
-                            size_hint: .5,.45
-                            multiline: False
-                        Label:
-                            text: ""
-                        Label:
-                            text: ""
-                    Label:
-                        text: 'Lucro:'
-                        font_size: 0.4*self.height
-                        size_hint: 1,1
-                    GridLayout:
-                        cols: 3
-                        spacing: 80
-                        size_hint: 1,1
-                        TextInput:
-                            name: "lucro"
-                            id: lucro
-                            font_size: 0.6*self.height
-                            size_hint: .5,.45
-                            multiline: False
-                        Label:
-                            text: ""
-                        Label:
-                            text: ""
-                    Label:
-                        text: 'Mes:'
-                        font_size: 0.4*self.height
-                        size_hint: 1,1
-                    GridLayout:
-                        cols: 2
-                        spacing: 80
-                        size_hint: 1,1
-                        Spinner:
-                            name: "mes"
-                            id: mes
-                            font_size: 0.4*self.height
-                            pos_hint: {'top': 4.7, 'right': 3}
-                            size_hint: 2,.45
-                            text: '-'
-                            values: ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12')
-
 
         GridLayout:
             cols: 2
@@ -105,7 +39,5 @@
             row_default_height: 60
             col_default_width: 100
             spacing: 500
-            SendButton:
-                on_release: estimativa.envia()
-            Voltar:
-                on_release: app.root.current = "cadastro"
+            id: back
+            name: "back"

@@ -4,9 +4,9 @@ from Estimativa import Estimativa
 
 class Estoque:
 
-    def __init__(self):
+    def __init__(self, nome, mes):
 
-        list = Estimativa.relatorio('estimativa')
+        list = Estimativa.relatorio('estimativa', None, ' WHERE descricao = "'+nome+'" AND mes =' + str(mes) )
         if list is not None:
             for e in list:
                 self.descr = e[0]

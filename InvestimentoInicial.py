@@ -35,7 +35,9 @@ class InvestimentoInicial:
         self.terrenos = self.preenche(InvestimentoFixo, "total", " WHERE categoria = 'Imoveis Terrenos'")
         self.totalfixo = float(Decimal(self.movs + self.maqs + self.comps + self.veic + self.predios + self.terrenos + self.invoutros).quantize(Decimal('0.01'),ROUND_HALF_UP))
         self.totaldesp = float(Decimal(self.legal + self.divulg).quantize(Decimal('0.01'),ROUND_HALF_UP))
-        self.estoque = self.preenche(Estoque, "custototal") #total do estoque
+
+        self.estoque = self.preenche(Estoque, "custototal", ' WHERE mes = 1') #total do estoque
+
         self.totalgiro = float(Decimal(self.estoque + self.caixa + self.outrosg).quantize(Decimal('0.01'),ROUND_HALF_UP))
 
         self.total = float(Decimal(self.totalfixo + self.totaldesp + self.totalgiro).quantize(Decimal('0.01'),ROUND_HALF_UP))

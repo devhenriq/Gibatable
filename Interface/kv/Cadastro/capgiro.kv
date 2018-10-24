@@ -5,8 +5,7 @@
     tres: tres
     seis: seis
     nov: nov
-    capsocial: capsocial
-    reservas: reservas
+    categoria: categoria
     GridLayout:
         cols:1
         rows:3
@@ -14,7 +13,7 @@
         size_hint: 1, 1
         row_default_height: 60
         Label:
-            text: 'Outros cadastros necessarios'
+            text: 'Prazos'
             font_size: 0.6*self.height
             size_hint: 1,None
         BoxLayout:
@@ -30,22 +29,6 @@
                     row_default_height: 60
                     col_default_width: 100
                     size_hint: 1,None
-                    Label:
-                        text: 'Reservas %:'
-                        font_size: 0.4*self.height
-                        size_hint: 1,.1
-                    GridLayout:
-
-                        cols: 2
-                        spacing: 40
-                        TextInput:
-                            name: "reservas"
-                            id: reservas
-                            font_size: 0.6*self.height
-                            size_hint: 2,.45
-                            multiline: False
-                        Label:
-                            text: ""
                     Label:
                         text: 'Prazo a vista:'
                         font_size: 0.4*self.height
@@ -127,22 +110,6 @@
                             text: "-"
                             values: ('Recebimentos', 'Pagamentos')
 
-                        Label:
-                            text: ""
-                    Label:
-                        text: 'Capital Social:'
-                        font_size: 0.4*self.height
-                        size_hint: 1,.1
-                    GridLayout:
-
-                        cols: 2
-                        spacing: 40
-                        TextInput:
-                            name: "capsocial"
-                            id: capsocial
-                            font_size: 0.6*self.height
-                            size_hint: 2,.45
-                            multiline: False
                         Label:
                             text: ""
         GridLayout:

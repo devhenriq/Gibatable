@@ -1,12 +1,13 @@
 from Banco import Banco
-from InvestimentoInicial import InvestimentoInicial
+from Financeiro import Financeiro
 
 class CustoFinanceiroMensal:
     def __init__(self, custo):
         self.invest = 0
         self.custo = 0
         self.custo = custo
-        self.invest = self.calculaTotal(InvestimentoInicial, 'total')
+        fin = Financeiro()
+        self.invest = fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial')
         Banco.delete(Banco, 'custofinanceiro')
         self.insereBanco()
 

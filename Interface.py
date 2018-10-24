@@ -9,6 +9,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from os import listdir
+from Reservas import Reservas
 from Pessoa import Pessoa
 from InvestimentoFixo import InvestimentoFixo
 from MateriaPrima import MateriaPrima
@@ -147,6 +148,12 @@ class CustosFixosScreen(Screen):
         self.aluguel.text = ""
         self.man.text = ""
         self.outros.text = ""
+
+
+class ReservasScreen(Screen):
+    def envia(self):
+        pv = Reservas(self.res.text, self.capsocial.text)
+        pv.relatorio()
 
 
 class TributosScreen(Screen):
@@ -321,7 +328,7 @@ class FinFreteScreen(Screen):
 
 class CapGiroScreen(Screen):
     def envia(self):
-        pv = CapGiroScreen(self.reservas.text, self.avista.text, self.tres.text, self.seis.text, self.nov.text, self.categoria.text, self.capsocial.text)
+        pv = CapGiro(self.avista.text, self.tres.text, self.seis.text, self.nov.text, self.categoria.text)
         pv.relatorio()
 
 
@@ -382,7 +389,7 @@ class RelPessoaDirScreen(Screen):
             x = x + 1
         self.scrl.add_widget(Label(text=""))
         self.scrl.add_widget(Label(text="TOTAL"))
-        self.scrl.add_widget(Label(text="%.2f" % float(Decimal(self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Diretor"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
+        self.scrl.add_widget(Label(text=str(int(Decimal(self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Diretor"')).quantize(Decimal('0.01'),ROUND_HALF_UP)))))
         self.scrl.add_widget(Label(text="%.2f" %float(Decimal(self.calculaTotal(Pessoa, 'salario', ' WHERE categoria="Diretor"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
         self.scrl.add_widget(Label(text="%.2f" %float(Decimal(self.calculaTotal(Pessoa, 'inss', ' WHERE categoria="Diretor"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
         self.scrl.add_widget(Label(text="%.2f" %float(Decimal(self.calculaTotal(Pessoa, 'total', ' WHERE categoria="Diretor"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
@@ -439,7 +446,7 @@ class RelPessoaOpScreen(Screen):
             x = x + 1
         self.scrl.add_widget(Label(text=""))
         self.scrl.add_widget(Label(text="TOTAL"))
-        self.scrl.add_widget(Label(text=str(self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Producao"'))))
+        self.scrl.add_widget(Label(text=str(int(self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Producao"')))))
         self.scrl.add_widget(Label(text="%.2f" % self.calculaTotal(Pessoa, 'salario', ' WHERE categoria="Producao"')))
         self.scrl.add_widget(Label(text="%.2f" % self.calculaTotal(Pessoa, 'ferias', ' WHERE categoria="Producao"')))
         self.scrl.add_widget(Label(text="%.2f" % self.calculaTotal(Pessoa, 'decimo', ' WHERE categoria="Producao"')))
@@ -500,7 +507,7 @@ class RelPessoaAdmScreen(Screen):
             x = x + 1
         self.scrl.add_widget(Label(text=""))
         self.scrl.add_widget(Label(text="TOTAL"))
-        self.scrl.add_widget(Label(text="%.2f" % float(Decimal(self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Administrativo"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
+        self.scrl.add_widget(Label(text=str(int(Decimal(self.calculaTotal(Pessoa, 'quant', ' WHERE categoria="Administrativo"')).quantize(Decimal('0.01'),ROUND_HALF_UP)))))
         self.scrl.add_widget(Label(text="%.2f" % float(Decimal(self.calculaTotal(Pessoa, 'salario', ' WHERE categoria="Administrativo"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
         self.scrl.add_widget(Label(text="%.2f" % float(Decimal(self.calculaTotal(Pessoa, 'ferias', ' WHERE categoria="Administrativo"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
         self.scrl.add_widget(Label(text="%.2f" % float(Decimal(self.calculaTotal(Pessoa, 'decimo', ' WHERE categoria="Administrativo"')).quantize(Decimal('0.01'),ROUND_HALF_UP))))
@@ -735,7 +742,7 @@ class RelMovScreen(Screen):
             for t in list:
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
-        return str(val)
+        return str("%.2f" % val)
 
 
 class RelPredScreen(Screen):
@@ -785,7 +792,7 @@ class RelPredScreen(Screen):
             for t in list:
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
-        return str(val)
+        return str("%.2f" % val)
 
 
 class RelTerrScreen(Screen):
@@ -834,7 +841,7 @@ class RelTerrScreen(Screen):
             for t in list:
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
-        return str(val)
+        return str("%.2f" % val)
 
 
 class RelVeicScreen(Screen):
@@ -883,7 +890,7 @@ class RelVeicScreen(Screen):
             for t in list:
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
-        return str(val)
+        return str("%.2f" % val)
 
 
 #Materia prima
@@ -916,7 +923,7 @@ class RelMpScreen(Screen):
         self.title.text = nome
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
         x = 1
-        dados = MateriaPrima.relatorio(MateriaPrima, 'descricao, unmedida, precounitario, quant, total', ' WHERE produto = "'+nome+'"')
+        dados = MateriaPrima.relatorio(MateriaPrima, 'descricao, unmedida, precounitario, quant, total', ' WHERE produto = "'+nome+'" ORDER BY descricao')
 
         label = Label(text='')
         self.scrl.add_widget(label)
@@ -932,10 +939,12 @@ class RelMpScreen(Screen):
         self.scrl.add_widget(label)
 
         for prod in dados:
-            print(prod)
             self.scrl.add_widget(Label(text=str(x)))
             for p in prod:
-                self.scrl.add_widget(Label(text=str(p)))
+                if p == prod[3] or p == prod[0] or p == prod[1]:
+                    self.scrl.add_widget(Label(text=str(p)))
+                else:
+                    self.scrl.add_widget(Label(text="%.2f" % float(p)))
             x = x+1
 
         self.scrl.add_widget(Label(text=''))
@@ -943,7 +952,7 @@ class RelMpScreen(Screen):
         self.scrl.add_widget(Label(text=''))
         self.scrl.add_widget(Label(text=''))
         self.scrl.add_widget(Label(text=''))
-        self.scrl.add_widget(Label(text=str(fin.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "'+nome+'"'))))
+        self.scrl.add_widget(Label(text="%.2f" % fin.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "'+nome+'"')))
 
 
 #Estimativa
@@ -972,7 +981,7 @@ class RelEstimativaScreen(Screen):
         self.back.add_widget(Label(text=""))
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
         x = 1
-        dados = Estimativa.relatorio(Estimativa, 'descricao, quant, lucrounitario, lucrototal', ' WHERE mes = "'+str(mes)+'"')
+        dados = Estimativa.relatorio(Estimativa, 'descricao, quant, lucrounitario, lucrototal', ' WHERE mes = "'+str(mes)+'" ORDER BY descricao')
 
         label = Label(text='')
         self.scrl.add_widget(label)
@@ -989,14 +998,18 @@ class RelEstimativaScreen(Screen):
             print(prod)
             self.scrl.add_widget(Label(text=str(x)))
             for p in prod:
-                self.scrl.add_widget(Label(text=str(p)))
+                if p == prod[0] or p == prod[1]:
+                    self.scrl.add_widget(Label(text=str(p)))
+                else:
+                    self.scrl.add_widget(Label(text="%.2f" % p))
+                    print(p)
             x = x+1
 
         self.scrl.add_widget(Label(text=' '))
         self.scrl.add_widget(Label(text='TOTAL'))
-        self.scrl.add_widget(Label(text=str(self.calculaTotal(Estimativa, 'quant', ' WHERE mes = "'+str(mes)+'"'))))
+        self.scrl.add_widget(Label(text=str(int(self.calculaTotal(Estimativa, 'quant', ' WHERE mes = "'+str(mes)+'"')))))
         self.scrl.add_widget(Label(text=' '))
-        self.scrl.add_widget(Label(text=str(self.calculaTotal(Estimativa, 'lucrototal', ' WHERE mes = "' + str(mes) + '"'))))
+        self.scrl.add_widget(Label(text="%.2f" % self.calculaTotal(Estimativa, 'lucrototal', ' WHERE mes = "' + str(mes) + '"')))
 
 
 
@@ -1024,57 +1037,57 @@ class RelCustosFixosScreen(Screen):
 
         label = Label(text='MAO-DE-OBRA COM ENCARGOS(GASTO C/ PESSOAL ADMINISTRATIVO')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(CustosFixos, 'maodeobra')))
+        label = Label(text="%.2f" % (self.calculaTotal(CustosFixos, 'maodeobra')))
         self.scrl.add_widget(label)
 
         label = Label(text='PRÓ-LABORE COM ENCARGOS(GASTOS C/ DIREÇÃO)')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(CustosFixos, 'prolabore')))
+        label = Label(text="%.2f" % (self.calculaTotal(CustosFixos, 'prolabore')))
         self.scrl.add_widget(label)
 
         label = Label(text='MATERIAL DE LIMPEZA')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(CustosFixos, 'limpeza')))
+        label = Label(text="%.2f" % (self.calculaTotal(CustosFixos, 'limpeza')))
         self.scrl.add_widget(label)
 
         label = Label(text='HONORÁRIOS DO CONTADOR(SERV. TERC. DE CONTABILIDADE)')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(CustosFixos, 'contador')))
+        label = Label(text="%.2f" % (self.calculaTotal(CustosFixos, 'contador')))
         self.scrl.add_widget(label)
 
         label = Label(text='MATERIAL DE EXPEDIENTE')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(CustosFixos, 'material')))
+        label = Label(text="%.2f" % (self.calculaTotal(CustosFixos, 'material')))
         self.scrl.add_widget(label)
 
         label = Label(text='ÁGUA E LUZ')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(CustosFixos, 'agua')))
+        label = Label(text="%.2f" % (self.calculaTotal(CustosFixos, 'agua')))
         self.scrl.add_widget(label)
 
         label = Label(text='ALUGUEL')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(CustosFixos, 'aluguel')))
+        label = Label(text="%.2f" % (self.calculaTotal(CustosFixos, 'aluguel')))
         self.scrl.add_widget(label)
 
         label = Label(text='MANUTENÇÃO')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(CustosFixos, 'manutencao')))
+        label = Label(text="%.2f" % (self.calculaTotal(CustosFixos, 'manutencao')))
         self.scrl.add_widget(label)
 
         label = Label(text='DEPRECIAÇÕES/AMORTIZAÇÕES')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(CustosFixos, 'deprec')))
+        label = Label(text="%.2f" % (self.calculaTotal(CustosFixos, 'deprec')))
         self.scrl.add_widget(label)
 
         label = Label(text='OUTROS(OUTROS SERV. TERC., TELEFONE, VERBA P/ AÇÕES SOCIAIS ETC.)')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(CustosFixos, 'outros')))
+        label = Label(text="%.2f" % (self.calculaTotal(CustosFixos, 'outros')))
         self.scrl.add_widget(label)
 
         label = Label(text='TOTAL')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(CustosFixos)))
+        label = Label(text="%.2f" % (self.calculaTotal(CustosFixos, 'total')))
         self.scrl.add_widget(label)
 
     def calculaTotal(self, table, col=None, cond=None):
@@ -1103,42 +1116,42 @@ class RelInvIniScreen(Screen):
 
         label = Label(text='INVESTIMENTOS FIXOS')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'totalfixo')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'totalfixo')))
         self.scrl.add_widget(label)
 
         label = Label(text='MOVEIS E UTENSILIOS')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'movs')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'movs')))
         self.scrl.add_widget(label)
 
         label = Label(text='MAQUINAS E EQUIPAMENTOS')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'maqs')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'maqs')))
         self.scrl.add_widget(label)
 
         label = Label(text='COMPUTADORES E EQ. DE INFORMATICA')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'comps')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'comps')))
         self.scrl.add_widget(label)
 
         label = Label(text='VEICULOS')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'veic')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'veic')))
         self.scrl.add_widget(label)
 
         label = Label(text='IMOVEIS PREDIOS')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'predios')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'predios')))
         self.scrl.add_widget(label)
 
         label = Label(text='IMOVEIS E TERRENOS')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'terrenos')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'terrenos')))
         self.scrl.add_widget(label)
 
         label = Label(text='OUTROS')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'invoutros')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'invoutros')))
         self.scrl.add_widget(label)
 
         label = Label(text='-------------')
@@ -1148,22 +1161,22 @@ class RelInvIniScreen(Screen):
 
         label = Label(text='DESPESAS PRE-OPERACIONAIS')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'totaldesp')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'totaldesp')))
         self.scrl.add_widget(label)
 
         label = Label(text='DESPESAS COM LEGALIZACAO')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'legalizacao')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'legalizacao')))
         self.scrl.add_widget(label)
 
         label = Label(text='DESPESAS COM DIVULGACAO')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'divulgacao')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'divulgacao')))
         self.scrl.add_widget(label)
 
         label = Label(text='OUTROS')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'outros')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'outros')))
         self.scrl.add_widget(label)
 
         label = Label(text='-------------')
@@ -1173,26 +1186,26 @@ class RelInvIniScreen(Screen):
 
         label = Label(text='INVESTIMENTOS DE GIRO')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'totalgiro')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'totalgiro')))
         self.scrl.add_widget(label)
 
         label = Label(text='ESTOQUES (MATERIA PRIMA)')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'estoque')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'estoque')))
         self.scrl.add_widget(label)
 
         label = Label(text='CAIXA (RESERVA DE CAIXA)')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'caixa')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'caixa')))
         self.scrl.add_widget(label)
 
         label = Label(text='OUTROS')
         self.scrl.add_widget(label)
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'outrosg')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'outrosg')))
         self.scrl.add_widget(label)
 
         self.scrl.add_widget(Label(text="TOTAL"))
-        label = Label(text=str(self.calculaTotal(InvestimentoInicial, 'total')))
+        label = Label(text="%.2f" % (self.calculaTotal(InvestimentoInicial, 'total')))
         self.scrl.add_widget(label)
 
     def calculaTotal(self, table, col=None, cond=None):
@@ -1275,8 +1288,8 @@ class RelEstoqueScreen(Screen):
             self.scrl.add_widget(Label(text=str(x)))
             self.scrl.add_widget(Label(text=str(prod['descr'])))
             self.scrl.add_widget(Label(text=str(prod['quant'])))
-            self.scrl.add_widget(Label(text=str(prod['custounit'])))
-            self.scrl.add_widget(Label(text=str(prod['custototal'])))
+            self.scrl.add_widget(Label(text="%.2f" % (prod['custounit'])))
+            self.scrl.add_widget(Label(text="%.2f" % (prod['custototal'])))
             quant += prod['quant']
             ctt += prod['custototal']
             x = x + 1
@@ -1289,7 +1302,7 @@ class RelEstoqueScreen(Screen):
         self.scrl.add_widget(Label(text=' '))
         #self.scrl.add_widget(
          #   Label(text=str(self.calculaTotal(Estoque, 'DISTINCT custototal', ' WHERE mes = "' + str(mes) + '"'))))
-        self.scrl.add_widget(Label(text=str(ctt)))
+        self.scrl.add_widget(Label(text="%.2f" % (ctt)))
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
         val = 0
@@ -1374,7 +1387,7 @@ class RelTribScreen(Screen):
             label = Label(text=str(ali))
             self.scrl.add_widget(label)
 
-            label = Label(text=str(ali*0.01))
+            label = Label(text=str(float(Decimal(ali*0.01).quantize(Decimal('0.0001'), ROUND_HALF_UP))))
             self.scrl.add_widget(label)
 
     def preenche(self, table=None, col=None, cond=None):
@@ -1420,7 +1433,7 @@ class RelCustoVendasScreen(Screen):
         self.scrl.add_widget(label)
         label = Label(text=str(self.preenche(CustoVendas, 'porcentagem')))
         self.scrl.add_widget(label)
-        label = Label(text=str(self.preenche(CustoVendas, 'porcentagem')/100))
+        label = Label(text=str(float(Decimal(self.preenche(CustoVendas, 'porcentagem')/100).quantize(Decimal('0.0001'), ROUND_HALF_UP))))
         self.scrl.add_widget(label)
 
     def listastr(self, table=None, col=None, cond=None):
@@ -1921,7 +1934,7 @@ class AltEstimativaScreen(Screen):
         self.back.clear_widgets()
         self.back.add_widget(Label(text=""))
         self.back.add_widget(Button(text='Voltar', on_release=lambda x: self.on_enter()))
-        dados = Estimativa.relatorio(Estimativa, None, ' WHERE mes = "' + str(mes) + '"')
+        dados = Estimativa.relatorio(Estimativa, None, ' WHERE mes = "' + str(mes) + '" ORDER BY descricao')
 
         self.scrl.add_widget(Label(text="PRODUTO"))
         self.scrl.add_widget(Label(text="QUANTIDADE"))
@@ -1950,8 +1963,7 @@ class AltEstimativaScreen(Screen):
 
         self.scrl.add_widget(Label(text=""))
         self.scrl.add_widget(Label(text='Produto'))
-        tx1 = TextInput(text=str(row[0]))
-        self.scrl.add_widget(tx1)
+        self.scrl.add_widget(Label(text=row[0]))
         self.scrl.add_widget(Label(text=""))
 
         self.scrl.add_widget(Label(text=""))
@@ -1966,7 +1978,7 @@ class AltEstimativaScreen(Screen):
         self.scrl.add_widget(tx3)
         self.scrl.add_widget(Label(text=""))
 
-        self.back.add_widget(Button(text="Atualizar", on_release=lambda x: (Estimativa(tx1.text, float(tx2.text), float(tx3.text), cat), Estoque(tx1.text, tx2.text),self.deletar(row, cat))))
+        self.back.add_widget(Button(text="Atualizar", on_release=lambda x: (Estimativa(row[0], int(tx2.text), float(tx3.text), cat), Estoque(row[0], cat))))
         self.back.add_widget(Button(text='Voltar', on_release=lambda x: self.preenche(cat)))
 
     def deletar(self, row, cat):

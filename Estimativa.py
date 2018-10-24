@@ -12,9 +12,10 @@ class Estimativa:
 
     def insereBanco(self):
         list = [self.descricao, self.quant, self.lucro, self.mes, self.lucrott]
-        str = 'estimativa(descricao, quant, lucrounitario, mes, lucrototal)'
-
-        Banco.insert(Banco, str, list)
+        strg = 'estimativa(descricao, quant, lucrounitario, mes, lucrototal)'
+        Banco.delete(Banco, 'estimativa', None, ' WHERE descricao = "' + self.descricao + '" AND mes = ' + str(self.mes))
+        Banco.delete(Banco, 'estoque', None, ' WHERE descricao = "' + self.descricao + '" AND mes = ' + str(self.mes))
+        Banco.insert(Banco, strg, list)
 
     def relatorio(self, col = None, cond = None):
         ret = Banco.relatorio(Banco, 'estimativa', col, cond)

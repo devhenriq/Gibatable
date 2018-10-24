@@ -1,0 +1,72 @@
+<ReservasScreen>:
+    id: reservas
+    name: "reservas"
+    capsocial: capsocial
+    res: res
+    GridLayout:
+        cols:1
+        rows:3
+        height: self.minimum_height
+        size_hint: 1, 1
+        row_default_height: 60
+        Label:
+            text: 'Reservas e Capital Social'
+            font_size: 0.6*self.height
+            size_hint: 1,None
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 1,1
+            ScrollView:
+                height: root.height * 1.5
+                GridLayout:
+                    cols: 2
+                    height: self.minimum_height
+                    padding: 100
+                    spacing: 50
+                    row_default_height: 60
+                    col_default_width: 100
+                    size_hint: 1,None
+                    Label:
+                        text: 'Reservas %:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,.1
+                    GridLayout:
+
+                        cols: 2
+                        spacing: 40
+                        TextInput:
+                            name: "res"
+                            id: res
+                            font_size: 0.6*self.height
+                            size_hint: 2,.45
+                            multiline: False
+                        Label:
+                            text: ""
+                    Label:
+                        text: 'Capital Social:'
+                        font_size: 0.4*self.height
+                        size_hint: 1,.1
+                    GridLayout:
+
+                        cols: 2
+                        spacing: 40
+                        TextInput:
+                            name: "capsocial"
+                            id: capsocial
+                            font_size: 0.6*self.height
+                            size_hint: 2,.45
+                            multiline: False
+                        Label:
+                            text: ""
+        GridLayout:
+            cols: 2
+            height: self.minimum_height
+            padding: 50
+            size_hint: 0.1, 0.1
+            row_default_height: 60
+            col_default_width: 100
+            spacing: 500
+            SendButton:
+                on_release: reservas.envia()
+            Voltar:
+                on_release: app.root.current = "cadastro"

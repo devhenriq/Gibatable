@@ -1,18 +1,20 @@
 from Banco import Banco
 
 class CapGiro:
-    def __init__(self, fat, pag, cs, rsv):
-        self.faturamento = fat
-        self.pagamento = pag
-        self.capsocial = cs
-        self.reservas = rsv
-        Banco.delete(Banco, 'capgiro')
+    def __init__(self, fat, pag, cs, rsv, cat):
+        self.vista = fat
+        self.tres = pag
+        self.seis = cs
+        self.nove = rsv
+        self.categoria = cat
+
+        Banco.delete(Banco, 'capgiro', None, ' WHERE categoria = "' + cat + '"')
         self.insereBanco()
 
 
     def insereBanco(self):
-        list = [self.faturamento, self.pagamento, self.capsocial, self.reservas]
-        str = 'capgiro(faturamento, pagamento, capsocial, reservas)'
+        list = [self.vista, self.tres, self.seis, self.nove, self.categoria]
+        str = 'capgiro(avista, tres, seis, nov, categoria)'
         Banco.insert(Banco, str, list)
 
 

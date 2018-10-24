@@ -5,7 +5,6 @@ from RateioOp import RateioOp
 from RateioFixos import RateioFixos
 from CustosFixos import CustosFixos
 from PrecoVenda import PrecoVenda
-from CustoFinanceiroMensal import CustoFinanceiroMensal
 from CustoVendas import CustoVendas
 from Tributos import Tributos
 from Frete import Frete
@@ -14,6 +13,8 @@ from CapGiro import CapGiro
 from InvestimentoInicial import InvestimentoInicial
 from InvestimentoFixo import InvestimentoFixo
 from decimal import Decimal, ROUND_HALF_UP
+from Banco import Banco
+from Reservas import Reservas
 class Financeiro:
     def dec(self, var):
         return float(Decimal(var).quantize(Decimal('0.01'), ROUND_HALF_UP))
@@ -52,7 +53,7 @@ class Financeiro:
             pv = self.calculaPV(prod[0], mes, 'Preco')
             val = est * pv
             fat += val
-        return float(Decimal(fat).quantize(Decimal('0.01', ROUND_HALF_UP)))
+        return float(Decimal(fat).quantize(Decimal('0.01'), ROUND_HALF_UP))
 
     def calculaPV(self, nome, mes, retorno):
         mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
@@ -85,14 +86,14 @@ class Financeiro:
 
         if mes == " ":
             if self.calculaTotal(Estimativa, 'quant') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
+                cfgiro = (self.calculaTotalBD('custofinanceiro', 'custo') * self.calculaTotalBD('custofinanceiro',
                                                                                                 'invest')) / self.calculaTotal(
                     Estimativa, 'quant')
             else:
                 cfgiro = 0
         else:
             if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
+                cfgiro = (self.calculaTotalBD('custofinanceiro', 'custo') * self.calculaTotalBD('custofinanceiro',
                                                                                                 'invest')) / self.calculaTotal(
                     Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
             else:
@@ -110,10 +111,20 @@ class Financeiro:
         ctotal = cip + ctrib + cdirvendas
 
         if retorno == 'Preco':
-            return float(Decimal(preco).quantize(Decimal('0.01', ROUND_HALF_UP)))
+            return float(Decimal(preco).quantize(Decimal('0.01'), ROUND_HALF_UP))
 
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
+        val = 0
+        print(list)
+        if list is not None:
+            for t in list:
+                t = str(t).replace(",", "").replace(")", "").replace("(", "")
+                val = val + float(t)
+        return float(Decimal(val).quantize(Decimal('0.01'), ROUND_HALF_UP))
+
+    def calculaTotalBD(self, table, col=None, cond = None):
+        list = Banco.relatorio(Banco, table, col, cond)
         val = 0
         print(list)
         if list is not None:
@@ -155,8 +166,8 @@ class Financeiro:
             for proj in pj:
                 ter += proj[0] * outros[0]
 
-        inv = self.calculaTotal(CustoFinanceiroMensal, 'invest')
-        custo = self.calculaTotal(CustoFinanceiroMensal, 'custo')
+        inv = self.calculaTotalBD('custofinanceiro', 'invest')
+        custo = self.calculaTotalBD('custofinanceiro', 'custo')
         amort = inv * custo
 
         cvar = pd + imp + cvendas + etq + frete + ter + amort
@@ -293,39 +304,39 @@ class Financeiro:
         total = est + caixa + desp + terr + pred + veic + movs + maqs + comp
         forn = self.calculaPagRec(2, 'Pagamentos')+self.calculaPagRec(3, 'Pagamentos')+self.calculaPagRec(4, 'Pagamentos')
         emp = total - caixa - terr
-        cap = self.calculaTotal(CapGiro, 'capsocial')
+        cap = self.calculaTotal(Reservas, 'capsocial')
         totalp = forn + emp + cap
         outrosg = self.calculaTotal(InvestimentoInicial, 'outrosg')
         if ret == 'estoques':
-            return self.calculaMin(est)
+            return est
         if ret == 'caixa':
-            return self.calculaMin(caixa)
+            return caixa
         if ret == 'despesas':
-            return self.calculaMin(desp)
+            return desp
         if ret == 'terrenos':
-            return self.calculaMin(terr)
+            return terr
         if ret == 'predios':
-            return self.calculaMin(pred)
+            return pred
         if ret == 'veiculos':
-            return self.calculaMin(veic)
+            return veic
         if ret == 'moveis':
-            return self.calculaMin(movs)
+            return movs
         if ret == 'computador':
-            return self.calculaMin(comp)
+            return comp
         if ret == 'maquinas':
-            return self.calculaMin(maqs)
+            return maqs
         if ret == 'totalativo':
-            return self.calculaMin(total)
+            return total
         if ret == 'fornecedores':
-            return self.calculaMin(forn)
+            return forn
         if ret == 'emprestimos':
-            return self.calculaMin(emp)
+            return emp
         if ret == 'capsocial':
-            return self.calculaMin(cap)
+            return cap
         if ret == 'totalpassivo':
-            return self.calculaMin(totalp)
+            return totalp
         if ret == 'outrosest':
-            return self.calculaMin(outrosg)
+            return outrosg
 
     def balancoProj(self, ret):
 

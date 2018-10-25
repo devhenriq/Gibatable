@@ -212,7 +212,7 @@ class RateioCustosFixosScreen(Screen):
             w[2].canvas.clear()
 
         list = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
-
+        self.scrl.clear_widgets()
         x = 0
         for e in list:
             lista = []
@@ -222,7 +222,11 @@ class RateioCustosFixosScreen(Screen):
             lista.append(label)
 
             tx = RateioFixos.relatorio(RateioFixos, 'porc', ' WHERE produto = "' + str(e[0])+ '"')
-            textin = TextInput(text=str(tx[0][0]),font_size=32,multiline=False)
+            print(tx)
+            if tx.count(tx) is not 0:
+                textin = TextInput(text=str(tx[0][0]),font_size=32,multiline=False)
+            else:
+                textin = TextInput(font_size=32, multiline=False)
             self.scrl.add_widget(textin)
             lista.append(textin)
 
@@ -261,7 +265,10 @@ class RateioCustosOpScreen(Screen):
             lista.append(label)
 
             tx = RateioOp.relatorio(RateioOp, 'porc', ' WHERE produto = "' + str(e[0])+'"')
-            textin = TextInput(text=str(tx[0][0]),font_size=32, multiline=False)
+            if tx.count(tx) is not 0:
+                textin = TextInput(text=str(tx[0][0]),font_size=32,multiline=False)
+            else:
+                textin = TextInput(font_size=32, multiline=False)
             self.scrl.add_widget(textin)
             lista.append(textin)
 
@@ -1465,8 +1472,7 @@ class RelRateioFixoScreen(Screen):
         gc.collect()
         fin = Financeiro()
         total = self.calculaTotal(CustosFixos, 'total')
-        dados = RateioFixos.relatorio(RateioFixos, 'produto, porc')
-        print(dados)
+        dados = RateioFixos.relatorio(RateioFixos, 'produto, porc', ' ORDER BY produto')
         totalt = 0
         totalporc = 0
 
@@ -1479,7 +1485,7 @@ class RelRateioFixoScreen(Screen):
             self.scrl.add_widget(Label(text=str(fin.dec(rateio[1]))))
             totalporc = totalporc + rateio[1]
             totalt = totalt + total*(rateio[1]/100)
-            self.scrl.add_widget(Label(text=str((fin.dec(total*rateio[1])/100))))
+            self.scrl.add_widget(Label(text="%.2f" % ((fin.dec(total*rateio[1])/100))))
             print(rateio[0])
         if totalporc == 100:
             pass
@@ -1489,7 +1495,7 @@ class RelRateioFixoScreen(Screen):
 
         self.scrl.add_widget(Label(text="TOTAL"))
         self.scrl.add_widget(Label(text=str(totalporc)))
-        self.scrl.add_widget(Label(text=str(totalt)))
+        self.scrl.add_widget(Label(text="%.2f" % (totalt)))
 
 
 
@@ -1638,7 +1644,7 @@ class RelRateioOpScreen(Screen):
         gc.collect()
 
         total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
-        dados = RateioOp.relatorio(RateioOp, 'produto, porc')
+        dados = RateioOp.relatorio(RateioOp, 'produto, porc', ' ORDER BY produto')
         totalt = 0
         totalporc = 0
 
@@ -1651,7 +1657,7 @@ class RelRateioOpScreen(Screen):
             self.scrl.add_widget(Label(text=str(rateio[1])))
             totalporc = totalporc + rateio[1]
             totalt = totalt + total*(rateio[1]/100)
-            self.scrl.add_widget(Label(text=str((total*rateio[1])/100)))
+            self.scrl.add_widget(Label(text="%.2f" % ((total*rateio[1])/100)))
 
         if totalporc == 100:
             pass
@@ -1661,7 +1667,7 @@ class RelRateioOpScreen(Screen):
 
         self.scrl.add_widget(Label(text="TOTAL"))
         self.scrl.add_widget(Label(text=str(totalporc)))
-        self.scrl.add_widget(Label(text=str(totalt)))
+        self.scrl.add_widget(Label(text="%.2f" % (totalt)))
 
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
@@ -1726,34 +1732,33 @@ class RelPrecoVendaScreen(Screen):
         total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
         rateio = self.calculaTotal(RateioOp, 'porc', ' WHERE produto = "'+nome+'"')
         op = total * (rateio/100)
-        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
+        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '" AND mes = ' + str(mes))
         if quant != 0:
             cprod = op / quant
         else:
             cprod = 0
-
+        print(str(total) + " - " + str(op) + " - " + str(rateio) + " - " + str(quant))
         total = self.calculaTotal(CustosFixos, 'total')
         rateio = self.calculaTotal(RateioFixos, 'porc', ' WHERE produto = "' + nome + '"')
         op = total * (rateio / 100)
-        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
+        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"AND mes = ' + str(mes))
         if quant != 0:
             cfixo = op / quant
         else:
             cfixo = 0
-
+        print(str(total) + " - " + str(op) + " - " + str(rateio) + " - " + str(quant))
         outros = self.calculaTotal(PrecoVenda, 'outros', ' WHERE mes =' + str(mes) + ' AND produto = "' + nome + '"')
 
         cip = mat + cprod + outros
 
         if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-            cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
-                                                                                              'invest')) / self.calculaTotal(
+            cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
                   Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
         else:
             cfgiro = 0
 
 
-        lucro = self.calculaTotal(Estimativa, 'lucrounitario', ' WHERE descricao = "' + nome + '"')
+        lucro = self.calculaTotal(Estimativa, 'lucrounitario', ' WHERE descricao = "' + nome + '" AND mes = ' + str(mes))
 
         trib = self.calculaTotal(Tributos, 'total') * 0.01
         cvenda = self.calculaTotal(CustoVendas, 'porcentagem') * 0.01
@@ -1767,35 +1772,35 @@ class RelPrecoVendaScreen(Screen):
 
         label = Label(text='CUSTO C/ MATERIA PRIMA (MAT. DIRETOS)')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(fin.dec(mat))))
+        self.scrl.add_widget(Label(text="%.2f" % (fin.dec(mat))))
 
         label = Label(text='CUSTO DE PRODUCAO (OPERACIONAL)')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(fin.dec(cprod))))
+        self.scrl.add_widget(Label(text="%.2f" % (fin.dec(cprod))))
 
         label = Label(text='OUTROS CUSTOS PRODUCAO (TERCEIROS)')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(fin.dec(outros))))
+        self.scrl.add_widget(Label(text="%.2f" % (fin.dec(outros))))
 
         label = Label(text='CUSTO INDEPENDENTE DO PRECO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(fin.dec(cip))))
+        self.scrl.add_widget(Label(text="%.2f" % (fin.dec(cip))))
 
         label = Label(text='CUSTO TRIBUTARIO DIRETO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(fin.dec(ctrib))))
+        self.scrl.add_widget(Label(text="%.2f" % (fin.dec(ctrib))))
 
         label = Label(text='CUSTO FINANCEIRO DO GIRO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(fin.dec(cfgiro))))
+        self.scrl.add_widget(Label(text="%.2f" % (fin.dec(cfgiro))))
 
         label = Label(text='CUSTO DIRETO COM VENDAS')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(fin.dec(cdirvendas))))
+        self.scrl.add_widget(Label(text="%.2f" % (fin.dec(cdirvendas))))
 
         label = Label(text='CUSTO TOTAL')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(fin.dec(ctotal))))
+        self.scrl.add_widget(Label(text="%.2f" % (fin.dec(ctotal))))
 
         label = Label(text='MARGEM DE CONTRIBUICAO')
         self.scrl.add_widget(label)
@@ -1803,17 +1808,17 @@ class RelPrecoVendaScreen(Screen):
 
         label = Label(text='CUSTO FIXO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(fin.dec(cfixo))))
+        self.scrl.add_widget(Label(text="%.2f" % (fin.dec(cfixo))))
 
         label = Label(text='LUCRO')
         self.scrl.add_widget(label)
-        self.scrl.add_widget(Label(text=str(fin.dec(lucro))))
+        self.scrl.add_widget(Label(text="%.2f" % (fin.dec(lucro))))
 
 
         label = Label(text='PRECO DE VENDA')
         self.scrl.add_widget(label)
 
-        self.scrl.add_widget(Label(text=str(fin.dec(preco))))
+        self.scrl.add_widget(Label(text="%.2f" % (fin.dec(preco))))
 
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
@@ -2284,6 +2289,7 @@ class RelPvUnMesScreen(Screen):
 
 
     def calculaPV(self, nome, mes, retorno):
+        fin = Financeiro()
         mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
 
         total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
@@ -2309,8 +2315,7 @@ class RelPvUnMesScreen(Screen):
         cip = mat + cprod + outros
 
         if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-            cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
-                                                                                            'invest')) / self.calculaTotal(
+            cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
                 Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
         else:
             cfgiro = 0
@@ -2429,6 +2434,7 @@ class RelFaturamentoScreen(Screen):
 
 
     def calculaPV(self, nome, mes, retorno):
+        fin = Financeiro()
         mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
 
         total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
@@ -2454,8 +2460,7 @@ class RelFaturamentoScreen(Screen):
         cip = mat + cprod + outros
 
         if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-            cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
-                                                                                            'invest')) / self.calculaTotal(
+            cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
                 Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
         else:
             cfgiro = 0
@@ -2512,7 +2517,7 @@ class RelCTotalScreen(Screen):
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
 
     def desenhaTela(self, mes):
-
+        fin = Financeiro()
         self.scrl.add_widget(Label(text='CUSTOS C/ PESSOAL ADMINISTRATIVO'))
         adm = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Administrativo"')
         self.scrl.add_widget(Label(text=str(adm)))
@@ -2591,7 +2596,7 @@ class RelCTotalScreen(Screen):
         self.scrl.add_widget(Label(text=str(ter)))
 
         self.scrl.add_widget(Label(text='OUTROS (CUSTO FINANCEIRO, AMORT. etc.)'))
-        inv = self.calculaTotal(CustoFinanceiroMensal, 'invest')
+        inv = (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))
         custo = self.calculaTotal(CustoFinanceiroMensal, 'custo')
         amort = inv * custo
         self.scrl.add_widget(Label(text=str(amort)))
@@ -2617,6 +2622,7 @@ class RelCTotalScreen(Screen):
         return fat
 
     def calculaPV(self, nome, mes, retorno):
+        fin = Financeiro()
         mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
 
         total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
@@ -2642,8 +2648,7 @@ class RelCTotalScreen(Screen):
         cip = mat + cprod + outros
 
         if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-            cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
-                                                                                            'invest')) / self.calculaTotal(
+            cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
                 Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
         else:
             cfgiro = 0
@@ -2752,6 +2757,7 @@ class RelDemonstrativoScreen(Screen):
         return fat
 
     def calculaPV(self, nome, mes, retorno):
+        fin = Financeiro()
         mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
 
         total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
@@ -2782,15 +2788,13 @@ class RelDemonstrativoScreen(Screen):
 
         if mes == " ":
             if self.calculaTotal(Estimativa, 'quant') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
-                                                                                                'invest')) / self.calculaTotal(
+                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
                     Estimativa, 'quant')
             else:
                 cfgiro = 0
         else:
             if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
-                                                                                                'invest')) / self.calculaTotal(
+                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
                     Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
             else:
                 cfgiro = 0
@@ -2819,7 +2823,7 @@ class RelDemonstrativoScreen(Screen):
         return val
 
     def custosVariaveis(self, mes):
-
+        fin = Financeiro()
         pd = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
 
         trib = self.calculaTotal(Tributos, 'total')
@@ -2852,7 +2856,7 @@ class RelDemonstrativoScreen(Screen):
                 ter += proj[0] * outros[0]
 
 
-        inv = self.calculaTotal(CustoFinanceiroMensal, 'invest')
+        inv = fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial')
         custo = self.calculaTotal(CustoFinanceiroMensal, 'custo')
         amort = inv * custo
 
@@ -2897,6 +2901,7 @@ class RelMargemContribScreen(Screen):
         return fat
 
     def calculaPV(self, nome, mes, retorno):
+        fin = Financeiro()
         mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
 
         total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
@@ -2927,15 +2932,13 @@ class RelMargemContribScreen(Screen):
 
         if mes == " ":
             if self.calculaTotal(Estimativa, 'quant') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
-                                                                                                'invest')) / self.calculaTotal(
+                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
                     Estimativa, 'quant')
             else:
                 cfgiro = 0
         else:
             if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
-                                                                                                'invest')) / self.calculaTotal(
+                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
                     Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
             else:
                 cfgiro = 0
@@ -2964,7 +2967,7 @@ class RelMargemContribScreen(Screen):
         return val
 
     def custosVariaveis(self, mes):
-
+        fin = Financeiro()
         pd = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
 
         trib = self.calculaTotal(Tributos, 'total')
@@ -2997,7 +3000,7 @@ class RelMargemContribScreen(Screen):
                 ter += proj[0] * outros[0]
 
 
-        inv = self.calculaTotal(CustoFinanceiroMensal, 'invest')
+        inv = fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial')
         custo = self.calculaTotal(CustoFinanceiroMensal, 'custo')
         amort = inv * custo
 
@@ -3044,6 +3047,7 @@ class RelPontoEqFinScreen(Screen):
         return fat
 
     def calculaPV(self, nome, mes, retorno):
+        fin = Financeiro()
         mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
 
         total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
@@ -3074,15 +3078,13 @@ class RelPontoEqFinScreen(Screen):
 
         if mes == " ":
             if self.calculaTotal(Estimativa, 'quant') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
-                                                                                                'invest')) / self.calculaTotal(
+                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
                     Estimativa, 'quant')
             else:
                 cfgiro = 0
         else:
             if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
-                                                                                                'invest')) / self.calculaTotal(
+                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
                     Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
             else:
                 cfgiro = 0
@@ -3144,7 +3146,7 @@ class RelPontoEqFinScreen(Screen):
                 ter += proj[0] * outros[0]
 
 
-        inv = self.calculaTotal(CustoFinanceiroMensal, 'invest')
+        inv = fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial')
         custo = self.calculaTotal(CustoFinanceiroMensal, 'custo')
         amort = inv * custo
 
@@ -3230,6 +3232,7 @@ class RelRentScreen(Screen):
         return fat
 
     def calculaPV(self, nome, mes, retorno):
+        fin = Financeiro()
         mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
 
         total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
@@ -3260,15 +3263,13 @@ class RelRentScreen(Screen):
 
         if mes == " ":
             if self.calculaTotal(Estimativa, 'quant') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
-                                                                                                'invest')) / self.calculaTotal(
+                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
                     Estimativa, 'quant')
             else:
                 cfgiro = 0
         else:
             if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * self.calculaTotal(CustoFinanceiroMensal,
-                                                                                                'invest')) / self.calculaTotal(
+                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
                     Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
             else:
                 cfgiro = 0
@@ -3329,7 +3330,7 @@ class RelRentScreen(Screen):
             for proj in pj:
                 ter += proj[0] * outros[0]
 
-        inv = self.calculaTotal(CustoFinanceiroMensal, 'invest')
+        inv = fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial')
         custo = self.calculaTotal(CustoFinanceiroMensal, 'custo')
         amort = inv * custo
 

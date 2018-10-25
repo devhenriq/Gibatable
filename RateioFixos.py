@@ -9,11 +9,8 @@ class RateioFixos:
     def insereBanco(self):
         list = [self.produto, self.porc]
         str = 'rateiocustosfixos (produto, porc)'
-        prod = self.lista(RateioFixos, 'produto', ' WHERE produto="'+ self.produto +'"')
-        if self.produto == prod:
-            Banco.update(Banco, 'rateiocustosfixos', 'porc='+self.porc, ' WHERE produto="'+self.produto+'"')
-        else:
-            Banco.insert(Banco, str, list)
+        Banco.delete(Banco, 'rateiocustosfixos', None,' WHERE produto ="' + self.produto + '"')
+        Banco.insert(Banco, str, list)
 
     def relatorio(self, col=None, cond=None):
         return Banco.relatorio(Banco, 'rateiocustosfixos', col, cond)

@@ -114,8 +114,7 @@ try:
 
     table.append("""CREATE TABLE IF NOT EXISTS custofinanceiro (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        custo FLOAT,
-        invest FLOAT
+        custo FLOAT
     );""")
 
     table.append("""CREATE TABLE IF NOT EXISTS precovenda (

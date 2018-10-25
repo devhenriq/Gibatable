@@ -61,18 +61,18 @@ class Financeiro:
         total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
         rateio = self.calculaTotal(RateioOp, 'porc', ' WHERE produto = "' + nome + '"')
         op = total * (rateio / 100)
-        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
+        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '" AND mes = ' + str(mes))
         if quant != 0:
             cprod = op / quant
         else:
             cprod = 0
-
-        total = self.calculaTotal(CustosFixos, 'total')
-        rateio = self.calculaTotal(RateioFixos, 'porc', ' WHERE produto = "' + nome + '"')
-        op = total * (rateio / 100)
-        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
-        if quant != 0:
-            cfixo = op / quant
+        print(str(total) + str(rateio) + str(quant) + str(op))
+        totalf = self.calculaTotal(CustosFixos, 'total')
+        rateiof = self.calculaTotal(RateioFixos, 'porc', ' WHERE produto = "' + nome + '"')
+        opf = totalf * (rateiof / 100)
+        quantf = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '" AND mes = ' + str(mes))
+        if quantf != 0:
+            cfixo = opf / quantf
         else:
             cfixo = 0
         if mes == " ":
@@ -81,7 +81,7 @@ class Financeiro:
         else:
             outros = self.calculaTotal(PrecoVenda, 'outros',
                                        ' WHERE mes =' + str(mes) + ' AND produto = "' + nome + '"')
-
+        print(str(totalf) + str(rateiof) + str(quantf) + str(opf))
         cip = mat + cprod + outros
 
         if mes == " ":
@@ -99,7 +99,7 @@ class Financeiro:
             else:
                 cfgiro = 0
 
-        lucro = self.calculaTotal(Estimativa, 'lucrounitario', ' WHERE descricao = "' + nome + '"')
+        lucro = self.calculaTotal(Estimativa, 'lucrounitario', ' WHERE descricao = "' + nome + '" AND mes = ' + str(mes))
 
         trib = self.calculaTotal(Tributos, 'total') * 0.01
         cvenda = self.calculaTotal(CustoVendas, 'porcentagem') * 0.01

@@ -9,12 +9,8 @@ class RateioOp:
     def insereBanco(self):
         list = [self.produto, self.porc]
         str = 'rateiocustosop (produto, porc)'
-
-        prod = self.lista(RateioOp, 'produto', ' WHERE produto="' + self.produto + '"')
-        if self.produto in prod:
-            Banco.update(Banco, 'rateiocustosop', 'porc=' + self.porc, ' WHERE produto="' + self.produto + '"')
-        else:
-            Banco.insert(Banco, str, list)
+        Banco.delete(Banco, 'rateiocustosop', None, ' WHERE produto ="' + self.produto + '"')
+        Banco.insert(Banco, str, list)
 
     def relatorio(self, col=None, cond=None):
         return Banco.relatorio(Banco, 'rateiocustosop', col, cond)

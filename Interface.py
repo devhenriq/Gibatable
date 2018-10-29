@@ -152,7 +152,7 @@ class CustosFixosScreen(Screen):
 
 class ReservasScreen(Screen):
     def envia(self):
-        pv = Reservas(self.res.text, self.capsocial.text)
+        pv = Reservas(self.capsocial.text, self.res.text)
         pv.relatorio()
 
 
@@ -1326,7 +1326,7 @@ class RelCustoFinMenScreen(Screen):
     def on_enter(self):
         self.scrl.clear_widgets()
         gc.collect()
-
+        fin = Financeiro()
         total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
         print(total)
         self.scrl.add_widget(Label(text="CUSTO FINANCEIRO MENSAL POR UNIDADE"))
@@ -1335,19 +1335,19 @@ class RelCustoFinMenScreen(Screen):
         print(custo)
 
         self.scrl.add_widget(Label(text="INVESTIMENTO INICIAL"))
-        inv = self.calculaTotal(CustoFinanceiroMensal, 'invest')
-        self.scrl.add_widget(Label(text=str(inv)))
+        inv = (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))
+        self.scrl.add_widget(Label(text="%.2f" % (fin.dec(inv))))
         print(inv)
 
         self.scrl.add_widget(Label(text="VALOR/MES"))
         valormes = inv*custo
-        self.scrl.add_widget(Label(text=str(valormes)))
+        self.scrl.add_widget(Label(text="%.2f" % (fin.dec(valormes))))
         print(valormes)
 
         for mes in range(1,13):
             self.scrl.add_widget(Label(text=str(mes) + ' MES'))
             if(self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0):
-                val = valormes/self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
+                val = fin.dec(valormes)/self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
             else:
                 val = 'Erro'
             print(val)
@@ -2365,7 +2365,7 @@ class RelProjecaoVendasScreen(Screen):
         self.back.clear_widgets()
         gc.collect()
 
-        self.title.text = 'Preco de venda unitario mensal'
+        self.title.text = 'Projecao de vendas'
         self.scrl.add_widget(Label(text='PRODUTO'))
         self.scrl.add_widget(Label(text='VALOR'))
         produtos = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
@@ -2423,6 +2423,8 @@ class RelFaturamentoScreen(Screen):
             est = self.calculaTotal(Estimativa, 'DISTINCT quant',
                                     ' WHERE mes = ' + str(mes) + ' AND descricao = "' + prod[0] + '"')
             pv = self.calculaPV(prod[0], mes, 'Preco')
+            print(str(est) + " - " + str(pv))
+
             val = est*pv
             self.scrl.add_widget(Label(text=str(val)))
             total += val
@@ -3113,7 +3115,7 @@ class RelPontoEqFinScreen(Screen):
         return val
 
     def custosVariaveis(self, mes):
-
+        fin = Financeiro()
         pd = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
 
         trib = self.calculaTotal(Tributos, 'total')
@@ -3298,7 +3300,7 @@ class RelRentScreen(Screen):
         return val
 
     def custosVariaveis(self, mes):
-
+        fin = Financeiro()
         pd = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
 
         trib = self.calculaTotal(Tributos, 'total')
@@ -3606,17 +3608,26 @@ class RelPagamentosScreen(Screen):
         fin = Financeiro()
 
         var = 'Pagamentos'
-        fat = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
-        avista = self.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"')
-        tres = self.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"')
-        seis = self.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"')
-        nove = self.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"')
-        total = avista + tres + seis + nove
+        fat = fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
+        valv = fin.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"') * (fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes)) / 100)
+        if mes == 1:
+            valt = 0
+        else:
+            valt = fin.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"') * (fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 1))  / 100)
+        if mes == 1 or mes == 2:
+            vals = 0
+        else:
+            vals = fin.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"') * (fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 2))  / 100)
+        if mes == 1 or mes == 2 or mes == 3:
+            valn = 0
+        else:
+            valn = fin.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"') * (fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 3))  / 100)
 
-        valv = fat * (avista / 100)
-        valt = fat * (tres / 100)
-        vals = fat * (seis / 100)
-        valn = fat * (nove / 100)
+        avista = fin.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"')
+        tres = fin.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"')
+        seis = fin.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"')
+        nove = fin.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"')
+        total = avista + tres + seis + nove
         valtotal = valv + valt + vals + valn
 
         # Escreve na tela
@@ -3646,7 +3657,7 @@ class RelPagamentosScreen(Screen):
 
         self.scrl.add_widget(Label(text='TOTAL'))
         self.scrl.add_widget(Label(text=str(total)))
-        self.scrl.add_widget(Label(text=str(valt)))
+        self.scrl.add_widget(Label(text=str(valtotal)))
 
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
 

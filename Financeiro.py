@@ -86,15 +86,13 @@ class Financeiro:
 
         if mes == " ":
             if self.calculaTotal(Estimativa, 'quant') != 0:
-                cfgiro = (self.calculaTotalBD('custofinanceiro', 'custo') * self.calculaTotalBD('custofinanceiro',
-                                                                                                'invest')) / self.calculaTotal(
+                cfgiro = (self.calculaTotalBD('custofinanceiro', 'custo') * (self.balancoIni('emprestimos') + self.balancoIni( 'capsocial'))) / self.calculaTotal(
                     Estimativa, 'quant')
             else:
                 cfgiro = 0
         else:
             if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-                cfgiro = (self.calculaTotalBD('custofinanceiro', 'custo') * self.calculaTotalBD('custofinanceiro',
-                                                                                                'invest')) / self.calculaTotal(
+                cfgiro = (self.calculaTotalBD('custofinanceiro', 'custo') * (self.balancoIni('emprestimos') + self.balancoIni( 'capsocial'))) / self.calculaTotal(
                     Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
             else:
                 cfgiro = 0
@@ -166,7 +164,7 @@ class Financeiro:
             for proj in pj:
                 ter += proj[0] * outros[0]
 
-        inv = self.calculaTotalBD('custofinanceiro', 'invest')
+        inv = self.balancoIni('emprestimos') + self.balancoIni('capsocial')
         custo = self.calculaTotalBD('custofinanceiro', 'custo')
         amort = inv * custo
 
@@ -174,7 +172,7 @@ class Financeiro:
 
         return self.dec(cvar)
 
-    def calculaPagRec(self, mes, var):
+    def calculaPagRec(self, mes, var, ret):
 
         if mes == " ":
             vtt = 0
@@ -200,19 +198,42 @@ class Financeiro:
                 fat = self.calculaFaturamento(mes)
             else:
                 fat = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
+
+            valv = self.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"') * (
+                    self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes)) / 100)
+            if mes == 1:
+                valt = 0
+            else:
+                valt = self.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"') * (
+                        self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 1)) / 100)
+            if mes == 1 or mes == 2:
+                vals = 0
+            else:
+                vals = self.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"') * (
+                        self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 2)) / 100)
+            if mes == 1 or mes == 2 or mes == 3:
+                valn = 0
+            else:
+                valn = self.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"') * (
+                        self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 3)) / 100)
+
             avista = self.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"')
             tres = self.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"')
             seis = self.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"')
             nove = self.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"')
             total = avista + tres + seis + nove
 
-            valv = fat * (avista / 100)
-            valt = fat * (tres / 100)
-            vals = fat * (seis / 100)
-            valn = fat * (nove / 100)
-            vtt = valv + valt + vals + valn
-
-        return self.dec(vtt)
+            if ret == 'total':
+                vtt = valv + valt + vals + valn
+                return self.dec(vtt)
+            if ret == 'avista':
+                return self.dec(valv)
+            if ret == 'tres':
+                return self.dec(valt)
+            if ret == 'seis':
+                return self.dec(vals)
+            if ret == 'nove':
+                return self.dec(valn)
 
     def calculaMin(self, ret):
         receber = self.calculaPagRec(" ", 'Recebimentos')
@@ -302,9 +323,10 @@ class Financeiro:
         maqs = self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Maquinas e Equipamentos"')
         comp = self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Computadores/Equipamentos de Informatica"')
         total = est + caixa + desp + terr + pred + veic + movs + maqs + comp
-        forn = self.calculaPagRec(2, 'Pagamentos')+self.calculaPagRec(3, 'Pagamentos')+self.calculaPagRec(4, 'Pagamentos')
-        emp = total - caixa - terr
+        forn = self.calculaPagRec(2, 'Pagamentos','tres')+self.calculaPagRec(3, 'Pagamentos', 'seis')+self.calculaPagRec(4, 'Pagamentos', 'nove')
+        print(str(self.calculaPagRec(2, 'Pagamentos','tres')) + " - " + str(self.calculaPagRec(3, 'Pagamentos', 'seis')) + " - " + str(self.calculaPagRec(4, 'Pagamentos', 'nove')))
         cap = self.calculaTotal(Reservas, 'capsocial')
+        emp = total - forn - cap
         totalp = forn + emp + cap
         outrosg = self.calculaTotal(InvestimentoInicial, 'outrosg')
         if ret == 'estoques':

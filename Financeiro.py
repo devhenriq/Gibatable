@@ -66,7 +66,6 @@ class Financeiro:
             cprod = op / quant
         else:
             cprod = 0
-        print(str(total) + str(rateio) + str(quant) + str(op))
         totalf = self.calculaTotal(CustosFixos, 'total')
         rateiof = self.calculaTotal(RateioFixos, 'porc', ' WHERE produto = "' + nome + '"')
         opf = totalf * (rateiof / 100)
@@ -75,42 +74,36 @@ class Financeiro:
             cfixo = opf / quantf
         else:
             cfixo = 0
-        if mes == " ":
-            outros = self.calculaTotal(PrecoVenda, 'outros',
-                                       ' WHERE produto = "' + nome + '"')
-        else:
-            outros = self.calculaTotal(PrecoVenda, 'outros',
+        outros = self.calculaTotal(PrecoVenda, 'outros',
                                        ' WHERE mes =' + str(mes) + ' AND produto = "' + nome + '"')
-        print(str(totalf) + str(rateiof) + str(quantf) + str(opf))
-        cip = mat + cprod + outros
+        cip = self.dec(mat) + self.dec(cprod) + self.dec(outros)
 
-        if mes == " ":
-            if self.calculaTotal(Estimativa, 'quant') != 0:
-                cfgiro = (self.calculaTotalBD('custofinanceiro', 'custo') * (self.balancoIni('emprestimos') + self.balancoIni( 'capsocial'))) / self.calculaTotal(
-                    Estimativa, 'quant')
-            else:
-                cfgiro = 0
+        if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
+            cfgiro = (self.calculaTotalBD('custofinanceiro', 'custo') * (self.balancoIni('emprestimos') + self.balancoIni( 'capsocial'))) / self.calculaTotal(
+                Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
         else:
-            if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-                cfgiro = (self.calculaTotalBD('custofinanceiro', 'custo') * (self.balancoIni('emprestimos') + self.balancoIni( 'capsocial'))) / self.calculaTotal(
-                    Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
-            else:
-                cfgiro = 0
+            cfgiro = 0
 
         lucro = self.calculaTotal(Estimativa, 'lucrounitario', ' WHERE descricao = "' + nome + '" AND mes = ' + str(mes))
 
         trib = self.calculaTotal(Tributos, 'total') * 0.01
         cvenda = self.calculaTotal(CustoVendas, 'porcentagem') * 0.01
-        preco = (cip + cfixo + lucro + cfgiro) * (1 / (1 - (trib + cvenda)))
+        preco = (self.dec(cip) + self.dec(cfixo) + self.dec(lucro) + self.dec(cfgiro)) * (1 / (1 - (trib + self.dec(cvenda))))
 
         ctrib = preco * trib
         cdirvendas = preco * cvenda
 
-        ctotal = cip + ctrib + cdirvendas
-
+        ctotal = self.dec(cip + ctrib + cdirvendas + cfgiro)
+        print(str(cip) + " - " + str(cfixo) + " - " + str(lucro) + " - " + str(cfgiro) + " - " + str(
+            1 / (1 - (trib + self.dec(cvenda)))))
+        print(self.calculaTotalBD('custofinanceiro', 'custo'))
+        print((self.balancoIni('emprestimos') + self.balancoIni( 'capsocial')))
+        print(self.calculaTotal(
+                Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"'))
         if retorno == 'Preco':
             return float(Decimal(preco).quantize(Decimal('0.01'), ROUND_HALF_UP))
-
+        if retorno == 'CTotal':
+            return ctotal
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
         val = 0
@@ -124,12 +117,12 @@ class Financeiro:
     def calculaTotalBD(self, table, col=None, cond = None):
         list = Banco.relatorio(Banco, table, col, cond)
         val = 0
-        print(list)
+        #print(list)
         if list is not None:
             for t in list:
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
-        return float(Decimal(val).quantize(Decimal('0.01'), ROUND_HALF_UP))
+        return val
 
     def custosVariaveis(self, mes):
 
@@ -324,7 +317,7 @@ class Financeiro:
         comp = self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Computadores/Equipamentos de Informatica"')
         total = est + caixa + desp + terr + pred + veic + movs + maqs + comp
         forn = self.calculaPagRec(2, 'Pagamentos','tres')+self.calculaPagRec(3, 'Pagamentos', 'seis')+self.calculaPagRec(4, 'Pagamentos', 'nove')
-        print(str(self.calculaPagRec(2, 'Pagamentos','tres')) + " - " + str(self.calculaPagRec(3, 'Pagamentos', 'seis')) + " - " + str(self.calculaPagRec(4, 'Pagamentos', 'nove')))
+        #print(str(self.calculaPagRec(2, 'Pagamentos','tres')) + " - " + str(self.calculaPagRec(3, 'Pagamentos', 'seis')) + " - " + str(self.calculaPagRec(4, 'Pagamentos', 'nove')))
         cap = self.calculaTotal(Reservas, 'capsocial')
         emp = total - forn - cap
         totalp = forn + emp + cap

@@ -2487,168 +2487,55 @@ class RelDemonstrativoScreen(Screen):
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
 
     def desenhaTela(self, mes):
+        fin = Financeiro()
+        if mes == " ":
+            fat = 0
+            cv = 0
+            cf = 0
+            for m in range(1,13):
+                fat += fin.calculaFaturamento(m)
+                cv += fin.custosVariaveis(m)
+                cf += fin.calculaTotal(CustosFixos, 'total')
+        else:
+            fat = fin.calculaFaturamento(mes)
+            cv = fin.custosVariaveis(mes)
+            cf = fin.calculaTotal(CustosFixos, 'total')
+
+        mc = fat - cv
+        lucro = mc - cf
+        ipr = lucro * (fin.calculaTotal(Tributos, 'irpj') / 100)
+        reserv = fin.calculaTotal(Reservas, 'reservas')
+        rv = (lucro * reserv) / 100
+        liquido = lucro - ipr - rv
 
         self.scrl.add_widget(Label(text='RECEITA TOTAL'))
-        fat = self.calculaFaturamento(mes)
-        self.scrl.add_widget(Label(text=str(fat)))
+        self.scrl.add_widget(Label(text="%.2f"%(fat)))
 
         self.scrl.add_widget(Label(text='CUSTOS VARIAVEIS'))
-        cv = self.custosVariaveis(mes)
-        self.scrl.add_widget(Label(text=str(cv)))
+        self.scrl.add_widget(Label(text="%.2f"%(cv)))
 
         self.scrl.add_widget(Label(text='MARGEM DE CONTRIBUICAO'))
-        mc = fat - cv
-        self.scrl.add_widget(Label(text=str(mc)))
+        self.scrl.add_widget(Label(text="%.2f"%(mc)))
 
         self.scrl.add_widget(Label(text='CUSTOS FIXOS'))
-        cf = self.calculaTotal(CustosFixos, 'total')
-        self.scrl.add_widget(Label(text=str(cf)))
+        self.scrl.add_widget(Label(text="%.2f"%(cf)))
 
         self.scrl.add_widget(Label(text='LUCRO OPERACIONAL'))
-        lucro = mc - cf
-        self.scrl.add_widget(Label(text=str(lucro)))
+        self.scrl.add_widget(Label(text="%.2f"%(lucro)))
 
         self.scrl.add_widget(Label(text='IMPOSTO DE RENDA / CONTRIB. SOCIAL'))
-        ipr = lucro * (self.calculaTotal(Tributos, 'irpj')/100)
-        self.scrl.add_widget(Label(text=str(ipr)))
+        self.scrl.add_widget(Label(text="%.2f"%(ipr)))
 
-        reserv = self.calculaTotal(CapGiro, 'reservas')
         self.scrl.add_widget(Label(text='RESERVAS % ' + str(reserv)))
-        rv = (lucro*reserv)/100
-        self.scrl.add_widget(Label(text=str(rv)))
+        self.scrl.add_widget(Label(text="%.2f"%(rv)))
 
         self.scrl.add_widget(Label(text='LUCRO LIQUIDO'))
-        liquido = lucro - ipr - rv
-        self.scrl.add_widget(Label(text=str(liquido)))
-
-    def calculaFaturamento(self, mes):
-        produtos = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
-        fat = 0
-        for prod in produtos:
-            if mes == " ":
-                est = self.calculaTotal(Estimativa, 'DISTINCT quant',
-                                        ' WHERE descricao = "' + prod[0] + '"')
-            else:
-                est = self.calculaTotal(Estimativa, 'DISTINCT quant',
-                                    ' WHERE mes = ' + str(mes) + ' AND descricao = "' + prod[0] + '"')
-            pv = self.calculaPV(prod[0], mes, 'Preco')
-            val = est * pv
-            fat += val
-        return fat
-
-    def calculaPV(self, nome, mes, retorno):
-        fin = Financeiro()
-        mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
-
-        total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
-        rateio = self.calculaTotal(RateioOp, 'porc', ' WHERE produto = "' + nome + '"')
-        op = total * (rateio / 100)
-        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
-        if quant != 0:
-            cprod = op / quant
-        else:
-            cprod = 0
-
-        total = self.calculaTotal(CustosFixos, 'total')
-        rateio = self.calculaTotal(RateioFixos, 'porc', ' WHERE produto = "' + nome + '"')
-        op = total * (rateio / 100)
-        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
-        if quant != 0:
-            cfixo = op / quant
-        else:
-            cfixo = 0
-        if mes == " ":
-            outros = self.calculaTotal(PrecoVenda, 'outros',
-                                       ' WHERE produto = "' + nome + '"')
-        else:
-            outros = self.calculaTotal(PrecoVenda, 'outros',
-                                       ' WHERE mes =' + str(mes) + ' AND produto = "' + nome + '"')
-
-        cip = mat + cprod + outros
-
-        if mes == " ":
-            if self.calculaTotal(Estimativa, 'quant') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
-                    Estimativa, 'quant')
-            else:
-                cfgiro = 0
-        else:
-            if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
-                    Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
-            else:
-                cfgiro = 0
-
-        lucro = self.calculaTotal(Estimativa, 'lucrounitario', ' WHERE descricao = "' + nome + '"')
-
-        trib = self.calculaTotal(Tributos, 'total') * 0.01
-        cvenda = self.calculaTotal(CustoVendas, 'porcentagem') * 0.01
-        preco = (cip + cfixo + lucro + cfgiro) * (1 / (1 - (trib + cvenda)))
-
-        ctrib = preco * trib
-        cdirvendas = preco * cvenda
-
-        ctotal = cip + ctrib + cdirvendas
-
-        if retorno == 'Preco':
-            return preco
-
-    def calculaTotal(self, table, col=None, cond=None):
-        list = table.relatorio(table, col, cond)
-        val = 0
-        if list is not None:
-            for t in list:
-                t = str(t).replace(",", "").replace(")", "").replace("(", "")
-                val = val + float(t)
-        return val
-
-    def custosVariaveis(self, mes):
-        fin = Financeiro()
-        pd = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
-
-        trib = self.calculaTotal(Tributos, 'total')
-        ct = self.calculaFaturamento(mes)
-        imp = ct * trib
-
-        cv = self.calculaTotal(CustoVendas, 'porcentagem')
-        cvendas = ct * cv
-
-        if mes == " ":
-            etq = self.calculaTotal(Estoque, 'custototal')
-
-            frete = self.calculaTotal(Frete, 'frete')
-
-            pj = Estimativa.relatorio(Estimativa, 'DISTINCT quant')
-
-            opv = PrecoVenda.relatorio(PrecoVenda, 'outros')
-        else:
-            etq = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
-
-            frete = self.calculaTotal(Frete, 'frete', ' WHERE mes = ' + str(mes))
-
-            pj = Estimativa.relatorio(Estimativa, 'DISTINCT quant',
-                                  ' WHERE mes = ' + str(mes))
-
-            opv = PrecoVenda.relatorio(PrecoVenda, 'outros', ' WHERE mes = ' + str(mes))
-        ter = 0
-        for outros in opv:
-            for proj in pj:
-                ter += proj[0] * outros[0]
-
-
-        inv = fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial')
-        custo = self.calculaTotal(CustoFinanceiroMensal, 'custo')
-        amort = inv * custo
-
-
-        cvar = pd + imp + cvendas + etq + frete + ter + amort
-
-        return cvar
-
+        self.scrl.add_widget(Label(text="%.2f"%(liquido)))
 
 class RelMargemContribScreen(Screen):
     @mainthread
     def on_enter(self):
+        fin = Financeiro()
         self.scrl.clear_widgets()
         gc.collect()
         self.title.text = 'INDICE DE MARGEM DE CONTRIBUICAO'
@@ -2656,143 +2543,19 @@ class RelMargemContribScreen(Screen):
         self.back.add_widget(Label(text=""))
         self.back.add_widget(RelatorioFinBt())
         for mes in range(1, 13):
-            fat = self.calculaFaturamento(mes)
-            mc = self.custosVariaveis(mes) - fat
+            fat = fin.calculaFaturamento(mes)
+            mc = fat - fin.custosVariaveis(mes)
             if fat != 0:
                 idc = mc / fat
             else:
                 idc = 0
             self.scrl.add_widget(Label(text="MES 0" + str(mes)))
-            self.scrl.add_widget(Label(text=str(idc)))
-
-    def calculaFaturamento(self, mes):
-        produtos = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
-        fat = 0
-        for prod in produtos:
-            if mes == " ":
-                est = self.calculaTotal(Estimativa, 'DISTINCT quant',
-                                        ' WHERE descricao = "' + prod[0] + '"')
-            else:
-                est = self.calculaTotal(Estimativa, 'DISTINCT quant',
-                                    ' WHERE mes = ' + str(mes) + ' AND descricao = "' + prod[0] + '"')
-            pv = self.calculaPV(prod[0], mes, 'Preco')
-            val = est * pv
-            fat += val
-        return fat
-
-    def calculaPV(self, nome, mes, retorno):
-        fin = Financeiro()
-        mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
-
-        total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
-        rateio = self.calculaTotal(RateioOp, 'porc', ' WHERE produto = "' + nome + '"')
-        op = total * (rateio / 100)
-        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
-        if quant != 0:
-            cprod = op / quant
-        else:
-            cprod = 0
-
-        total = self.calculaTotal(CustosFixos, 'total')
-        rateio = self.calculaTotal(RateioFixos, 'porc', ' WHERE produto = "' + nome + '"')
-        op = total * (rateio / 100)
-        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
-        if quant != 0:
-            cfixo = op / quant
-        else:
-            cfixo = 0
-        if mes == " ":
-            outros = self.calculaTotal(PrecoVenda, 'outros',
-                                       ' WHERE produto = "' + nome + '"')
-        else:
-            outros = self.calculaTotal(PrecoVenda, 'outros',
-                                       ' WHERE mes =' + str(mes) + ' AND produto = "' + nome + '"')
-
-        cip = mat + cprod + outros
-
-        if mes == " ":
-            if self.calculaTotal(Estimativa, 'quant') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
-                    Estimativa, 'quant')
-            else:
-                cfgiro = 0
-        else:
-            if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
-                    Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
-            else:
-                cfgiro = 0
-
-        lucro = self.calculaTotal(Estimativa, 'lucrounitario', ' WHERE descricao = "' + nome + '"')
-
-        trib = self.calculaTotal(Tributos, 'total') * 0.01
-        cvenda = self.calculaTotal(CustoVendas, 'porcentagem') * 0.01
-        preco = (cip + cfixo + lucro + cfgiro) * (1 / (1 - (trib + cvenda)))
-
-        ctrib = preco * trib
-        cdirvendas = preco * cvenda
-
-        ctotal = cip + ctrib + cdirvendas
-
-        if retorno == 'Preco':
-            return preco
-
-    def calculaTotal(self, table, col=None, cond=None):
-        list = table.relatorio(table, col, cond)
-        val = 0
-        if list is not None:
-            for t in list:
-                t = str(t).replace(",", "").replace(")", "").replace("(", "")
-                val = val + float(t)
-        return val
-
-    def custosVariaveis(self, mes):
-        fin = Financeiro()
-        pd = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
-
-        trib = self.calculaTotal(Tributos, 'total')
-        ct = self.calculaFaturamento(mes)
-        imp = ct * trib
-
-        cv = self.calculaTotal(CustoVendas, 'porcentagem')
-        cvendas = ct * cv
-
-        if mes == " ":
-            etq = self.calculaTotal(Estoque, 'custototal')
-
-            frete = self.calculaTotal(Frete, 'frete')
-
-            pj = Estimativa.relatorio(Estimativa, 'DISTINCT quant')
-
-            opv = PrecoVenda.relatorio(PrecoVenda, 'outros')
-        else:
-            etq = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
-
-            frete = self.calculaTotal(Frete, 'frete', ' WHERE mes = ' + str(mes))
-
-            pj = Estimativa.relatorio(Estimativa, 'DISTINCT quant',
-                                  ' WHERE mes = ' + str(mes))
-
-            opv = PrecoVenda.relatorio(PrecoVenda, 'outros', ' WHERE mes = ' + str(mes))
-        ter = 0
-        for outros in opv:
-            for proj in pj:
-                ter += proj[0] * outros[0]
-
-
-        inv = fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial')
-        custo = self.calculaTotal(CustoFinanceiroMensal, 'custo')
-        amort = inv * custo
-
-
-        cvar = pd + imp + cvendas + etq + frete + ter + amort
-
-        return cvar
-
+            self.scrl.add_widget(Label(text="%.2f"%(idc)))
 
 class RelPontoEqFinScreen(Screen):
     @mainthread
     def on_enter(self):
+        fin = Financeiro()
         self.scrl.clear_widgets()
         gc.collect()
         self.title.text = 'INDICE DE MARGEM DE CONTRIBUICAO'
@@ -2800,169 +2563,52 @@ class RelPontoEqFinScreen(Screen):
         self.back.add_widget(Label(text=""))
         self.back.add_widget(RelatorioFinBt())
         for mes in range(1, 13):
-            fat = self.calculaFaturamento(mes)
-            mc = self.custosVariaveis(mes) - fat
+            fat = fin.calculaFaturamento(mes)
+            mc = fat - fin.custosVariaveis(mes)
             if fat != 0:
                 idc = mc / fat
-                peq = self.calculaTotal(CustosFixos, 'total', ' WHERE mes = ' + str(mes)) / idc
+                peq = fin.calculaTotal(CustosFixos, 'total') / idc
             else:
                 peq = 0
 
             self.scrl.add_widget(Label(text="MES 0" + str(mes)))
-            self.scrl.add_widget(Label(text=str(peq)))
-
-    def calculaFaturamento(self, mes):
-        produtos = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
-        fat = 0
-        for prod in produtos:
-            if mes == " ":
-                est = self.calculaTotal(Estimativa, 'DISTINCT quant',
-                                        ' WHERE descricao = "' + prod[0] + '"')
-            else:
-                est = self.calculaTotal(Estimativa, 'DISTINCT quant',
-                                    ' WHERE mes = ' + str(mes) + ' AND descricao = "' + prod[0] + '"')
-            pv = self.calculaPV(prod[0], mes, 'Preco')
-            val = est * pv
-            fat += val
-        return fat
-
-    def calculaPV(self, nome, mes, retorno):
-        fin = Financeiro()
-        mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
-
-        total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
-        rateio = self.calculaTotal(RateioOp, 'porc', ' WHERE produto = "' + nome + '"')
-        op = total * (rateio / 100)
-        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
-        if quant != 0:
-            cprod = op / quant
-        else:
-            cprod = 0
-
-        total = self.calculaTotal(CustosFixos, 'total')
-        rateio = self.calculaTotal(RateioFixos, 'porc', ' WHERE produto = "' + nome + '"')
-        op = total * (rateio / 100)
-        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
-        if quant != 0:
-            cfixo = op / quant
-        else:
-            cfixo = 0
-        if mes == " ":
-            outros = self.calculaTotal(PrecoVenda, 'outros',
-                                       ' WHERE produto = "' + nome + '"')
-        else:
-            outros = self.calculaTotal(PrecoVenda, 'outros',
-                                       ' WHERE mes =' + str(mes) + ' AND produto = "' + nome + '"')
-
-        cip = mat + cprod + outros
-
-        if mes == " ":
-            if self.calculaTotal(Estimativa, 'quant') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
-                    Estimativa, 'quant')
-            else:
-                cfgiro = 0
-        else:
-            if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
-                    Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
-            else:
-                cfgiro = 0
-
-        lucro = self.calculaTotal(Estimativa, 'lucrounitario', ' WHERE descricao = "' + nome + '"')
-
-        trib = self.calculaTotal(Tributos, 'total') * 0.01
-        cvenda = self.calculaTotal(CustoVendas, 'porcentagem') * 0.01
-        preco = (cip + cfixo + lucro + cfgiro) * (1 / (1 - (trib + cvenda)))
-
-        ctrib = preco * trib
-        cdirvendas = preco * cvenda
-
-        ctotal = cip + ctrib + cdirvendas
-
-        if retorno == 'Preco':
-            return preco
-
-    def calculaTotal(self, table, col=None, cond=None):
-        list = table.relatorio(table, col, cond)
-        val = 0
-        if list is not None:
-            for t in list:
-                t = str(t).replace(",", "").replace(")", "").replace("(", "")
-                val = val + float(t)
-        return val
-
-    def custosVariaveis(self, mes):
-        fin = Financeiro()
-        pd = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
-
-        trib = self.calculaTotal(Tributos, 'total')
-        ct = self.calculaFaturamento(mes)
-        imp = ct * trib
-
-        cv = self.calculaTotal(CustoVendas, 'porcentagem')
-        cvendas = ct * cv
-
-        if mes == " ":
-            etq = self.calculaTotal(Estoque, 'custototal')
-
-            frete = self.calculaTotal(Frete, 'frete')
-
-            pj = Estimativa.relatorio(Estimativa, 'DISTINCT quant')
-
-            opv = PrecoVenda.relatorio(PrecoVenda, 'outros')
-        else:
-            etq = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
-
-            frete = self.calculaTotal(Frete, 'frete', ' WHERE mes = ' + str(mes))
-
-            pj = Estimativa.relatorio(Estimativa, 'DISTINCT quant',
-                                  ' WHERE mes = ' + str(mes))
-
-            opv = PrecoVenda.relatorio(PrecoVenda, 'outros', ' WHERE mes = ' + str(mes))
-        ter = 0
-        for outros in opv:
-            for proj in pj:
-                ter += proj[0] * outros[0]
-
-
-        inv = fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial')
-        custo = self.calculaTotal(CustoFinanceiroMensal, 'custo')
-        amort = inv * custo
-
-
-        cvar = pd + imp + cvendas + etq + frete + ter + amort
-
-        return cvar
-
+            self.scrl.add_widget(Label(text="%.0f"%(peq)))
 
 class RelRentScreen(Screen):
     @mainthread
     def on_enter(self):
+        fin = Financeiro()
         self.scrl.clear_widgets()
         gc.collect()
         self.title.text = 'LUCRATIVIDADE, RENTABILIDADE E PRAZO DE RETORNO DE INVESTIMENTO'
         self.back.clear_widgets()
         self.back.add_widget(Label(text=""))
         self.back.add_widget(RelatorioFinBt())
-        if self.calculaFaturamento(" ") * 100 != 0:
-            lucro = self.demonstrativo(" ") / (self.calculaFaturamento(" ") * 100)
-        else:
-            lucro = 0
-        if self.calculaTotal(InvestimentoInicial, 'total') * 100 != 0:
-            rent = lucro / (self.calculaTotal(InvestimentoInicial, 'total') * 100)
+
+        fat = 0
+        ll = 0
+        for mes in range(1,13):
+            fat += fin.calculaFaturamento(mes)
+            ll += fin.demonstrativo(mes, 'liquido')
+
+        lucro = (ll / fat) * 100
+
+        if fin.calculaTotal(InvestimentoInicial, 'total') * 100 != 0:
+            rent = (ll / fin.calculaTotal(InvestimentoInicial, 'total')) * 100
         else:
             rent = 0
+
         if lucro != 0:
-            pri = self.calculaTotal(InvestimentoInicial, 'total') / lucro
+            pri = fin.calculaTotal(InvestimentoInicial, 'total') / ll
         else:
             pri = 0
+
         self.scrl.add_widget(Label(text=''))
         self.scrl.add_widget(Label(text='Lucratividade'))
         self.scrl.add_widget(Label(text=''))
 
         self.scrl.add_widget(Label(text='LUCRO LIQUIDO / RECEITA TOTAL * 100'))
-        self.scrl.add_widget(Label(text=str(lucro)))
+        self.scrl.add_widget(Label(text="%.2f"%(lucro)))
         self.scrl.add_widget(Label(text='%'))
 
         self.scrl.add_widget(Label(text=''))
@@ -2970,7 +2616,7 @@ class RelRentScreen(Screen):
         self.scrl.add_widget(Label(text=''))
 
         self.scrl.add_widget(Label(text='LUCRO LIQUIDO / INVESTIMENTO TOTAL * 100'))
-        self.scrl.add_widget(Label(text=str(rent)))
+        self.scrl.add_widget(Label(text="%.2f"%(rent)))
         self.scrl.add_widget(Label(text='%'))
 
         self.scrl.add_widget(Label(text=''))
@@ -2978,150 +2624,13 @@ class RelRentScreen(Screen):
         self.scrl.add_widget(Label(text=''))
 
         self.scrl.add_widget(Label(text='INVESTIMENTO TOTAL / LUCRO LIQUIDO'))
-        self.scrl.add_widget(Label(text=str(pri)))
-        self.scrl.add_widget(Label(text='%'))
-
-    def demonstrativo(self, mes):
-        fat = self.calculaFaturamento(mes)
-        cv = self.custosVariaveis(mes)
-        mc = fat - cv
-        cf = self.calculaTotal(CustosFixos, 'total')
-
-        lucro = mc - cf
-
-        ipr = lucro * (self.calculaTotal(Tributos, 'irpj') / 100)
-
-        reserv = self.calculaTotal(CapGiro, 'reservas')
-        rv = (lucro * reserv) / 100
-        liquido = lucro - ipr - rv
-
-        return liquido
-    def calculaFaturamento(self, mes):
-        produtos = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
-        fat = 0
-        for prod in produtos:
-            if mes == " ":
-                est = self.calculaTotal(Estimativa, 'DISTINCT quant',
-                                        ' WHERE descricao = "' + prod[0] + '"')
-            else:
-                est = self.calculaTotal(Estimativa, 'DISTINCT quant',
-                                        ' WHERE mes = ' + str(mes) + ' AND descricao = "' + prod[0] + '"')
-            pv = self.calculaPV(prod[0], mes, 'Preco')
-            val = est * pv
-            fat += val
-        return fat
-
-    def calculaPV(self, nome, mes, retorno):
-        fin = Financeiro()
-        mat = self.calculaTotal(MateriaPrima, 'total', ' WHERE produto = "' + nome + '"')
-
-        total = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
-        rateio = self.calculaTotal(RateioOp, 'porc', ' WHERE produto = "' + nome + '"')
-        op = total * (rateio / 100)
-        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
-        if quant != 0:
-            cprod = op / quant
-        else:
-            cprod = 0
-
-        total = self.calculaTotal(CustosFixos, 'total')
-        rateio = self.calculaTotal(RateioFixos, 'porc', ' WHERE produto = "' + nome + '"')
-        op = total * (rateio / 100)
-        quant = self.calculaTotal(Estimativa, 'quant', ' WHERE descricao = "' + nome + '"')
-        if quant != 0:
-            cfixo = op / quant
-        else:
-            cfixo = 0
-        if mes == " ":
-            outros = self.calculaTotal(PrecoVenda, 'outros',
-                                       ' WHERE produto = "' + nome + '"')
-        else:
-            outros = self.calculaTotal(PrecoVenda, 'outros',
-                                       ' WHERE mes =' + str(mes) + ' AND produto = "' + nome + '"')
-
-        cip = mat + cprod + outros
-
-        if mes == " ":
-            if self.calculaTotal(Estimativa, 'quant') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
-                    Estimativa, 'quant')
-            else:
-                cfgiro = 0
-        else:
-            if self.calculaTotal(Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"') != 0:
-                cfgiro = (self.calculaTotal(CustoFinanceiroMensal, 'custo') * (fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial'))) / self.calculaTotal(
-                    Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"')
-            else:
-                cfgiro = 0
-
-        lucro = self.calculaTotal(Estimativa, 'lucrounitario', ' WHERE descricao = "' + nome + '"')
-
-        trib = self.calculaTotal(Tributos, 'total') * 0.01
-        cvenda = self.calculaTotal(CustoVendas, 'porcentagem') * 0.01
-        preco = (cip + cfixo + lucro + cfgiro) * (1 / (1 - (trib + cvenda)))
-
-        ctrib = preco * trib
-        cdirvendas = preco * cvenda
-
-        ctotal = cip + ctrib + cdirvendas
-
-        if retorno == 'Preco':
-            return preco
-
-    def calculaTotal(self, table, col=None, cond=None):
-        list = table.relatorio(table, col, cond)
-        val = 0
-        if list is not None:
-            for t in list:
-                t = str(t).replace(",", "").replace(")", "").replace("(", "")
-                val = val + float(t)
-        return val
-
-    def custosVariaveis(self, mes):
-        fin = Financeiro()
-        pd = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
-
-        trib = self.calculaTotal(Tributos, 'total')
-        ct = self.calculaFaturamento(mes)
-        imp = ct * trib
-
-        cv = self.calculaTotal(CustoVendas, 'porcentagem')
-        cvendas = ct * cv
-
-        if mes == " ":
-            etq = self.calculaTotal(Estoque, 'custototal')
-
-            frete = self.calculaTotal(Frete, 'frete')
-
-            pj = Estimativa.relatorio(Estimativa, 'DISTINCT quant')
-
-            opv = PrecoVenda.relatorio(PrecoVenda, 'outros')
-        else:
-            etq = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
-
-            frete = self.calculaTotal(Frete, 'frete', ' WHERE mes = ' + str(mes))
-
-            pj = Estimativa.relatorio(Estimativa, 'DISTINCT quant',
-                                      ' WHERE mes = ' + str(mes))
-
-            opv = PrecoVenda.relatorio(PrecoVenda, 'outros', ' WHERE mes = ' + str(mes))
-        ter = 0
-        for outros in opv:
-            for proj in pj:
-                ter += proj[0] * outros[0]
-
-        inv = fin.balancoIni('emprestimos') + fin.balancoIni( 'capsocial')
-        custo = self.calculaTotal(CustoFinanceiroMensal, 'custo')
-        amort = inv * custo
-
-        cvar = pd + imp + cvendas + etq + frete + ter + amort
-
-        return cvar
-
+        self.scrl.add_widget(Label(text="%.2f"%(pri)))
+        self.scrl.add_widget(Label(text='ANOS'))
 
 class RelTirScreen(Screen):
     @mainthread
     def on_enter(self):
+        fin = Financeiro()
         self.scrl.clear_widgets()
         gc.collect()
         self.title.text = 'TIR E VPL'
@@ -3130,47 +2639,61 @@ class RelTirScreen(Screen):
         self.back.add_widget(RelatorioFinBt())
 
         self.scrl.add_widget(Label(text='TMA'))
-        self.scrl.add_widget(Label(text=str(self.calculaTotal(CustoFinanceiroMensal, 'custo')) + ' %'))
+        self.scrl.add_widget(Label(text=str(fin.calculaTotal(CustoFinanceiroMensal, 'custo')) + ' %'))
 
         self.scrl.add_widget(Label(text='INVESTIMENTOS'))
-        self.scrl.add_widget(Label(text='- ' + str(self.calculaTotal(InvestimentoInicial, 'total'))))
-
+        self.scrl.add_widget(Label(text='- ' + str(fin.calculaTotal(InvestimentoInicial, 'total'))))
+        ll = 0
         for mes in range(1,13):
             self.scrl.add_widget(Label(text='MES ' + str(mes)))
-            fin = Financeiro()
-            self.scrl.add_widget(Label(text=str(fin.demonstrativo(mes, 'liquido'))))
-
+            lla = fin.demonstrativo(mes, 'liquido')
+            ll += lla
+            self.scrl.add_widget(Label(text=str(lla)))
         self.scrl.add_widget(Label(text='TIR'))
-        self.scrl.add_widget(Label(text=str(self.calculaTir()*100) + ' %'))
+        self.scrl.add_widget(Label(text=str(self.calculaTir(ll)*100) + ' %'))
         self.scrl.add_widget(Label(text='VPL'))
-        self.scrl.add_widget(Label(text='R$: '+ str(self.calculaVpl())))
-    def calculaTir(self):
+        self.scrl.add_widget(Label(text='R$: '+ str(self.calculaVpl(ll))))
+
+    def calculaTir(self, ll):
         fin = Financeiro()
-        capital = 0 - self.calculaTotal(InvestimentoInicial, 'total')
+        capital = 0 - fin.calculaTotal(InvestimentoInicial, 'total')
         tir = 0- 0.0001
-        total = 1
-        while(total != 0):
+        total = 0-1
+        lucros = []
+
+        while(total <= 0 or total >= 100 ):
             ll = 0
-            tir += 0.0001
+            tir = tir + 0.0001
 
             for mes in range(1,13):
-                ll += fin.demonstrativo(mes, 'liquido')/((1+tir)**mes)
+                if tir == 0:
+                    lucros.append(fin.demonstrativo(mes, 'liquido'))
+                else:
+                    ll += lucros[mes-1]/((1+tir)**mes)
+                #lv = ll / ((1 + tir) ** mes)
+                #ll += fin.demonstrativo(mes, 'liquido')/((1+tir)**mes)
 
-            total = capital + ll
+                #print('TIR ->' + str(tir))
+                #print('MES >>> ' + str(mes))
+            print(ll)
+            total = fin.dec(capital + fin.dec(ll))
+            print('TOTAL ---->' + str(total) + " --- " + str(fin.dec(capital)) + " -- " + str(fin.dec(ll)))
+        return float(Decimal(tir).quantize(Decimal('0.0001'), ROUND_HALF_UP))
 
-        return tir
-
-    def calculaVpl(self):
+    def calculaVpl(self, ll):
         fin = Financeiro()
-        capital = 0 - self.calculaTotal(InvestimentoInicial, 'total')
-        tma = self.calculaTotal(CustoFinanceiroMensal, 'custo')
-
+        capital = 0 - fin.calculaTotal(InvestimentoInicial, 'total')
+        tma = fin.calculaTotal(CustoFinanceiroMensal, 'custo')
+        lucros = []
         ll = 0
 
         for mes in range(1, 13):
-            ll += fin.demonstrativo(mes, 'liquido') / ((1 + tma) ** mes)
+            if mes == 1:
+                ll += fin.demonstrativo(mes, 'liquido')
+            else:
+                ll += fin.demonstrativo(mes, 'liquido') / ((1 + tma) ** (mes))
 
-        vpl = capital + ll
+        vpl = ll + capital
 
         return vpl
 
@@ -3217,24 +2740,24 @@ class RelFluxoScreen(Screen):
 
         self.scrl.add_widget(Label(text='VENDAS'))
         vendas = fin.calculaFaturamento(mes)
-        self.scrl.add_widget(Label(text=str(vendas)))
+        self.scrl.add_widget(Label(text="%.2f"%(vendas)))
 
         self.scrl.add_widget(Label(text='(B) DESEMBOLSOS OPERACIONAIS'))
         self.scrl.add_widget(Label(text=''))
 
         self.scrl.add_widget(Label(text='CUSTOS FIXOS'))
         cf = fin.calculaTotal(CustosFixos, 'total')
-        self.scrl.add_widget(Label(text=str(cf)))
+        self.scrl.add_widget(Label(text="%.2f"%(cf)))
 
         self.scrl.add_widget(Label(text='CUSTOS VARIAVEIS (+ IRPJ/CSLL)'))
         cv = fin.custosVariaveis(mes)+fin.demonstrativo(mes,'imposto')
-        self.scrl.add_widget(Label(text=str(cv)))
+        self.scrl.add_widget(Label(text="%.2f"%(cv)))
 
         self.scrl.add_widget(Label(text='(C) FLUXO OPERACIONAL LIQUIDO'))
         fol = vendas - cf - cv
-        self.scrl.add_widget(Label(text=str(fol)))
+        self.scrl.add_widget(Label(text="%.2f"%(fol)))
 
-        self.scrl.add_widget(Label(text='ATIVIDADES DE FINANCIAMENTOS'))
+        self.scrl.add_widget(Label(text='ATIVIDADES DE INVESTIMENTOS'))
         self.scrl.add_widget(Label(text=''))
 
         if mes == 1:
@@ -3243,45 +2766,64 @@ class RelFluxoScreen(Screen):
 
             self.scrl.add_widget(Label(text='(E) DESEMBOLSOS PARA INVESTIMENTOS'))
             desinv = fin.calculaTotal(InvestimentoInicial, 'total')
-            self.scrl.add_widget(Label(text=str(desinv)))
+            self.scrl.add_widget(Label(text="%.2f"%(desinv)))
 
             self.scrl.add_widget(Label(text='(F) FLUXO DE INVESTIMENTO LIQUIDO'))
             invliq = 0 - desinv
-            self.scrl.add_widget(Label(text=str(invliq)))
+            self.scrl.add_widget(Label(text="%.2f"%(invliq)))
 
-        self.scrl.add_widget(Label(text='ATIVIDADES DE FINANCIAMENTOS'))
-        self.scrl.add_widget(Label(text=''))
+            self.scrl.add_widget(Label(text='ATIVIDADES DE FINANCIAMENTOS'))
+            self.scrl.add_widget(Label(text=''))
 
-        self.scrl.add_widget(Label(text='(G) EMBOLSOS DE FINANCIAMENTOS'))
-        self.scrl.add_widget(Label(text=''))
+            self.scrl.add_widget(Label(text='(G) EMBOLSOS DE FINANCIAMENTOS'))
+            self.scrl.add_widget(Label(text=''))
 
-        self.scrl.add_widget(Label(text='RECURSOS PROPRIOS'))
-        recp = desinv
-        self.scrl.add_widget(Label(text=str(recp)))
+            self.scrl.add_widget(Label(text='RECURSOS PROPRIOS'))
+            recp = desinv
+            self.scrl.add_widget(Label(text="%.2f"%(recp)))
 
-        self.scrl.add_widget(Label(text='(H) DESEMBOLSOS DE FINANCIAMENTOS'))
-        self.scrl.add_widget(Label(text=''))
+            self.scrl.add_widget(Label(text='(H) DESEMBOLSOS DE FINANCIAMENTOS'))
+            self.scrl.add_widget(Label(text=''))
 
-        self.scrl.add_widget(Label(text='(I) FLUXO DE FINANCIAMENTO LIQUIDO'))
-        fluxo = recp
-        self.scrl.add_widget(Label(text=str(fluxo - 0)))
+            self.scrl.add_widget(Label(text='(I) FLUXO DE FINANCIAMENTO LIQUIDO'))
+            fluxo = recp
+            self.scrl.add_widget(Label(text="%.2f"%(fluxo - 0)))
+
+            saldoini = 0
+        else:
+            invliq = 0
+            desinv = 0
+            fluxo = 0
+        caixa = fol + invliq + fluxo
+
+
+        if mes != 1:
+            vendas2 = fin.calculaFaturamento(mes-1)
+            cv2 = fin.custosVariaveis(mes-1)+fin.demonstrativo(mes-1, 'imposto')
+            caixa2 = vendas2 - cf - cv2
+
+            if mes == 2:
+                desinv2 = fin.calculaTotal(InvestimentoInicial, 'total')
+                invliq2 = 0 - desinv2
+                caixa2 = caixa2 + desinv2 + invliq2
+                saldoini = caixa2
+            else:
+                saldoini = caixa + caixa2
+        ## RESOLVER CRIAR UMA TABELA DE FLUXO DE CAIXA PARA GUARDAR OS SALDOS FINAIS -> USANDO MES E SALDO FIM
+
+        print(fol)
+        saldofim = caixa + saldoini
 
         self.scrl.add_widget(Label(text='(J) CAIXA LIQUIDO'))
-        caixa = fol + invliq + fluxo
-        self.scrl.add_widget(Label(text=str(caixa)))
-
-        if mes == 1:
-            saldoini = 0
-            saldofim = caixa + saldoini
+        self.scrl.add_widget(Label(text="%.2f"%(caixa)))
         if mes != 1:
-            saldoini = saldofim
             saldofim = caixa + saldoini
 
         self.scrl.add_widget(Label(text='(K) SALDO INICIAL DAS DISPONIBILIDADES'))
-        self.scrl.add_widget(Label(text=str(saldoini)))
+        self.scrl.add_widget(Label(text="%.2f"%(saldoini)))
 
         self.scrl.add_widget(Label(text='(L) SALDO FINAL DAS DISPONIBILIDADES'))
-        self.scrl.add_widget(Label(text=str(saldofim)))
+        self.scrl.add_widget(Label(text="%.2f"%(saldofim)))
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
 
 

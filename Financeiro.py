@@ -29,7 +29,7 @@ class Financeiro:
 
         ipr = lucro * (self.calculaTotal(Tributos, 'irpj') / 100)
 
-        reserv = self.calculaTotal(CapGiro, 'reservas')
+        reserv = self.calculaTotal(Reservas, 'reservas')
         rv = (lucro * reserv) / 100
         liquido = lucro - ipr - rv
 
@@ -94,12 +94,7 @@ class Financeiro:
         cdirvendas = preco * cvenda
 
         ctotal = self.dec(cip + ctrib + cdirvendas + cfgiro)
-        print(str(cip) + " - " + str(cfixo) + " - " + str(lucro) + " - " + str(cfgiro) + " - " + str(
-            1 / (1 - (trib + self.dec(cvenda)))))
-        print(self.calculaTotalBD('custofinanceiro', 'custo'))
-        print((self.balancoIni('emprestimos') + self.balancoIni( 'capsocial')))
-        print(self.calculaTotal(
-                Estimativa, 'quant', ' WHERE mes ="' + str(mes) + '"'))
+
         if retorno == 'Preco':
             return float(Decimal(preco).quantize(Decimal('0.01'), ROUND_HALF_UP))
         if retorno == 'CTotal':
@@ -107,12 +102,12 @@ class Financeiro:
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
         val = 0
-        print(list)
+        #print(list)
         if list is not None:
             for t in list:
                 t = str(t).replace(",", "").replace(")", "").replace("(", "")
                 val = val + float(t)
-        return float(Decimal(val).quantize(Decimal('0.01'), ROUND_HALF_UP))
+        return val
 
     def calculaTotalBD(self, table, col=None, cond = None):
         list = Banco.relatorio(Banco, table, col, cond)
@@ -130,10 +125,10 @@ class Financeiro:
 
         trib = self.calculaTotal(Tributos, 'total')
         ct = self.calculaFaturamento(mes)
-        imp = ct * trib
+        imp = ct * (trib/100)
 
         cv = self.calculaTotal(CustoVendas, 'porcentagem')
-        cvendas = ct * cv
+        cvendas = ct * (cv/100)
 
         if mes == " ":
             etq = self.calculaTotal(Estoque, 'custototal')

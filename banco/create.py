@@ -161,6 +161,11 @@ try:
             reservas FLOAT NOT NULL
         );""")
 
+    table.append("""CREATE TABLE IF NOT EXISTS fluxocaixa (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                saldofim FLOAT NOT NULL,
+                mes FLOAT NOT NULL
+            );""")
 
 
 except Error:

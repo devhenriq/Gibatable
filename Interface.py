@@ -2711,6 +2711,7 @@ class RelTirScreen(Screen):
 class RelFluxoScreen(Screen):
     @mainthread
     def on_enter(self):
+        fin = Financeiro()
         self.scrl.clear_widgets()
         gc.collect()
         self.title.text = 'FLUXO DE CAIXA'
@@ -2719,6 +2720,23 @@ class RelFluxoScreen(Screen):
         self.back.add_widget(RelatorioFinBt())
         for mes in range(1, 13):
             self.criabotao(mes)
+
+            vendas = fin.calculaFaturamento(mes)
+            cf = fin.calculaTotal(CustosFixos, 'total')
+            cv = fin.custosVariaveis(mes) + fin.demonstrativo(mes, 'imposto')
+            fol = vendas - cf - cv
+            desinv = fin.calculaTotal(InvestimentoInicial, 'total')
+            invliq = 0 - desinv
+            fluxo = desinv
+            caixa = fol + invliq + fluxo
+
+            if mes == 1:
+                saldoini = 0
+            else:
+                saldoini = fin.calculaTotalBD('fluxocaixa', ' WHERE mes = '+ str(mes-1))
+            saldofim = caixa + saldoini
+            list = [saldofim, mes]
+            Banco.insert(Banco, 'fluxocaixa', list)
 
     def criabotao(self, mes):
         bt = Button(text='Mes ' + str(mes))
@@ -2732,6 +2750,22 @@ class RelFluxoScreen(Screen):
         self.title.text = 'FLUXO DE CAIXA'
         fin = Financeiro()
 
+        #Variaveis
+        vendas = fin.calculaFaturamento(mes)
+        cf = fin.calculaTotal(CustosFixos, 'total')
+        cv = fin.custosVariaveis(mes)+fin.demonstrativo(mes,'imposto')
+        fol = vendas - cf - cv
+        desinv = fin.calculaTotal(InvestimentoInicial, 'total')
+        invliq = 0 - desinv
+        recp = desinv
+        fluxo = recp
+        caixa = fol + invliq + fluxo
+        if mes == 1:
+            saldoini = 0
+        else:
+            saldoini = fin.calculaTotalBD('fluxocaixa', ' WHERE mes = ' + str(mes - 1))
+        saldofim = caixa + saldoini
+
         self.scrl.add_widget(Label(text='ATIVIDADES OPERACIONAIS'))
         self.scrl.add_widget(Label(text=''))
 
@@ -2739,22 +2773,18 @@ class RelFluxoScreen(Screen):
         self.scrl.add_widget(Label(text=''))
 
         self.scrl.add_widget(Label(text='VENDAS'))
-        vendas = fin.calculaFaturamento(mes)
         self.scrl.add_widget(Label(text="%.2f"%(vendas)))
 
         self.scrl.add_widget(Label(text='(B) DESEMBOLSOS OPERACIONAIS'))
         self.scrl.add_widget(Label(text=''))
 
         self.scrl.add_widget(Label(text='CUSTOS FIXOS'))
-        cf = fin.calculaTotal(CustosFixos, 'total')
         self.scrl.add_widget(Label(text="%.2f"%(cf)))
 
         self.scrl.add_widget(Label(text='CUSTOS VARIAVEIS (+ IRPJ/CSLL)'))
-        cv = fin.custosVariaveis(mes)+fin.demonstrativo(mes,'imposto')
         self.scrl.add_widget(Label(text="%.2f"%(cv)))
 
         self.scrl.add_widget(Label(text='(C) FLUXO OPERACIONAL LIQUIDO'))
-        fol = vendas - cf - cv
         self.scrl.add_widget(Label(text="%.2f"%(fol)))
 
         self.scrl.add_widget(Label(text='ATIVIDADES DE INVESTIMENTOS'))
@@ -2765,11 +2795,11 @@ class RelFluxoScreen(Screen):
             self.scrl.add_widget(Label(text='0'))
 
             self.scrl.add_widget(Label(text='(E) DESEMBOLSOS PARA INVESTIMENTOS'))
-            desinv = fin.calculaTotal(InvestimentoInicial, 'total')
+
             self.scrl.add_widget(Label(text="%.2f"%(desinv)))
 
             self.scrl.add_widget(Label(text='(F) FLUXO DE INVESTIMENTO LIQUIDO'))
-            invliq = 0 - desinv
+
             self.scrl.add_widget(Label(text="%.2f"%(invliq)))
 
             self.scrl.add_widget(Label(text='ATIVIDADES DE FINANCIAMENTOS'))
@@ -2779,14 +2809,14 @@ class RelFluxoScreen(Screen):
             self.scrl.add_widget(Label(text=''))
 
             self.scrl.add_widget(Label(text='RECURSOS PROPRIOS'))
-            recp = desinv
+
             self.scrl.add_widget(Label(text="%.2f"%(recp)))
 
             self.scrl.add_widget(Label(text='(H) DESEMBOLSOS DE FINANCIAMENTOS'))
             self.scrl.add_widget(Label(text=''))
 
             self.scrl.add_widget(Label(text='(I) FLUXO DE FINANCIAMENTO LIQUIDO'))
-            fluxo = recp
+
             self.scrl.add_widget(Label(text="%.2f"%(fluxo - 0)))
 
             saldoini = 0
@@ -2794,25 +2824,10 @@ class RelFluxoScreen(Screen):
             invliq = 0
             desinv = 0
             fluxo = 0
-        caixa = fol + invliq + fluxo
 
-
-        if mes != 1:
-            vendas2 = fin.calculaFaturamento(mes-1)
-            cv2 = fin.custosVariaveis(mes-1)+fin.demonstrativo(mes-1, 'imposto')
-            caixa2 = vendas2 - cf - cv2
-
-            if mes == 2:
-                desinv2 = fin.calculaTotal(InvestimentoInicial, 'total')
-                invliq2 = 0 - desinv2
-                caixa2 = caixa2 + desinv2 + invliq2
-                saldoini = caixa2
-            else:
-                saldoini = caixa + caixa2
         ## RESOLVER CRIAR UMA TABELA DE FLUXO DE CAIXA PARA GUARDAR OS SALDOS FINAIS -> USANDO MES E SALDO FIM
 
-        print(fol)
-        saldofim = caixa + saldoini
+
 
         self.scrl.add_widget(Label(text='(J) CAIXA LIQUIDO'))
         self.scrl.add_widget(Label(text="%.2f"%(caixa)))
@@ -3031,7 +3046,7 @@ class RelMinScreen(Screen):
         self.scrl.add_widget(Label(text='PMRE'))
         self.scrl.add_widget(Label(text=str(pmre) + ' DIAS'))
 
-
+#CapGiro
 class RelCapGiroScreen(Screen):
     @mainthread
     def on_enter(self):

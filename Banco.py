@@ -24,7 +24,6 @@ class Banco:
                 query = query + "?,"
             else:
                 query = query + "?)"
-        print(query + str(list))
         cur.execute(query, (list))
 
         #print(list)

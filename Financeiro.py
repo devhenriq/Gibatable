@@ -43,14 +43,17 @@ class Financeiro:
     def calculaFaturamento(self, mes):
         produtos = MateriaPrima.relatorio(MateriaPrima, 'DISTINCT produto')
         fat = 0
+        pv = 0
         for prod in produtos:
-            if mes == " ":
+            if mes != ' ':
                 est = self.calculaTotal(Estimativa, 'DISTINCT quant',
-                                        ' WHERE descricao = "' + prod[0] + '"')
+                                    ' WHERE mes = ' + str(mes) + ' AND descricao = "' + prod[0] + '"')
+                pv = self.calculaPV(prod[0], mes, 'Preco')
             else:
                 est = self.calculaTotal(Estimativa, 'DISTINCT quant',
-                                        ' WHERE mes = ' + str(mes) + ' AND descricao = "' + prod[0] + '"')
-            pv = self.calculaPV(prod[0], mes, 'Preco')
+                                        ' WHERE descricao = "' + prod[0] + '"')
+                for m in range(1,13):
+                    pv += self.calculaPV(prod[0], m, 'Preco')
             val = est * pv
             fat += val
         return float(Decimal(fat).quantize(Decimal('0.01'), ROUND_HALF_UP))
@@ -99,6 +102,7 @@ class Financeiro:
             return float(Decimal(preco).quantize(Decimal('0.01'), ROUND_HALF_UP))
         if retorno == 'CTotal':
             return ctotal
+
     def calculaTotal(self, table, col=None, cond=None):
         list = table.relatorio(table, col, cond)
         val = 0
@@ -124,13 +128,12 @@ class Financeiro:
         pd = self.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Producao"')
 
         trib = self.calculaTotal(Tributos, 'total')
-        ct = self.calculaFaturamento(mes)
-        imp = ct * (trib/100)
-
-        cv = self.calculaTotal(CustoVendas, 'porcentagem')
-        cvendas = ct * (cv/100)
 
         if mes == " ":
+            ct = 0
+            ct += self.calculaFaturamento(' ')
+            imp = ct * (trib / 100)
+
             etq = self.calculaTotal(Estoque, 'custototal')
 
             frete = self.calculaTotal(Frete, 'frete')
@@ -139,6 +142,8 @@ class Financeiro:
 
             opv = PrecoVenda.relatorio(PrecoVenda, 'outros')
         else:
+            ct = self.calculaFaturamento(mes)
+            imp = ct * (trib / 100)
             etq = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
 
             frete = self.calculaTotal(Frete, 'frete', ' WHERE mes = ' + str(mes))
@@ -147,6 +152,10 @@ class Financeiro:
                                       ' WHERE mes = ' + str(mes))
 
             opv = PrecoVenda.relatorio(PrecoVenda, 'outros', ' WHERE mes = ' + str(mes))
+
+        cv = self.calculaTotal(CustoVendas, 'porcentagem')
+        cvendas = ct * (cv / 100)
+
         ter = 0
         for outros in opv:
             for proj in pj:
@@ -161,72 +170,88 @@ class Financeiro:
         return self.dec(cvar)
 
     def calculaPagRec(self, mes, var, ret):
+        avista = self.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"')
+        tres = self.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"')
+        seis = self.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"')
+        nove = self.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"')
+        total = avista + tres + seis + nove
 
-        if mes == " ":
-            vtt = 0
-            for mes in range(1,16):
-                if var == 'Recebimentos':
-                    fat = self.calculaFaturamento(mes)
-                else:
-                    fat = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
-                avista = self.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"')
-                tres = self.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"')
-                seis = self.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"')
-                nove = self.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"')
-                total = avista + tres + seis + nove
-
-                valv = fat * (avista / 100)
-                valt = fat * (tres / 100)
-                vals = fat * (seis / 100)
-                valn = fat * (nove / 100)
-                valtotal = valv + valt + vals + valn
-                vtt += valtotal
-        else:
-            if var == 'Recebimentos':
-                fat = self.calculaFaturamento(mes)
-            else:
-                fat = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
-
-            valv = self.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"') * (
-                    self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes)) / 100)
+        if mes != ' ':
             if mes == 1:
                 valt = 0
-            else:
-                valt = self.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"') * (
-                        self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 1)) / 100)
             if mes == 1 or mes == 2:
                 vals = 0
-            else:
-                vals = self.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"') * (
-                        self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 2)) / 100)
             if mes == 1 or mes == 2 or mes == 3:
                 valn = 0
+
+            if var == 'Recebimentos':
+                fat = self.calculaFaturamento(mes)
+                valv = self.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"') * (
+                            self.calculaFaturamento(mes) / 100)
+                if mes != 1:
+                    valt = self.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"') * (self.calculaFaturamento(mes) / 100)
+                if mes != 1 or mes != 2:
+                    vals = self.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"') * (
+                            self.calculaFaturamento(mes) / 100)
+                if mes != 1 or mes != 2 or mes != 3:
+                    valn = self.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"') * (
+                            self.calculaFaturamento(mes) / 100)
+
             else:
-                valn = self.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"') * (
-                        self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 3)) / 100)
+                fat = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
+                valv = self.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"') * (self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes)) / 100)
+                if mes != 1:
+                    valt = self.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"') * (self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 1))  / 100)
+                if mes != 1 or mes != 2:
+                    vals = self.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"') * (self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 2))  / 100)
+                if mes != 1 or mes != 2 or mes != 3:
+                    valn = self.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"') * (self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 3))  / 100)
+            valtotal = valv + valt + vals + valn
+        else:
+            valtotal = 0
+            for m in range(13,16):
 
-            avista = self.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"')
-            tres = self.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"')
-            seis = self.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"')
-            nove = self.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"')
-            total = avista + tres + seis + nove
+                if var == 'Recebimentos':
+                    valv = self.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"') * (
+                            self.calculaFaturamento(m) / 100)
+                    valt = self.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"') * (self.calculaFaturamento(m-1) / 100)
+                    vals = self.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"') * (
+                            self.calculaFaturamento(m-2) / 100)
+                    valn = self.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"') * (
+                            self.calculaFaturamento(m-3)/ 100)
+                else:
+                    valv = self.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"') * (
+                            self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(m)) / 100)
+                    valt = self.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"') * (
+                            self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(m - 1)) / 100)
+                    vals = self.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"') * (
+                            self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(m - 2)) / 100)
+                    valn = self.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"') * (
+                            self.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(m - 3)) / 100)
+                valtotal = valtotal + valv + valt + vals + valn
+                valv = 0
+                valt = 0
+                vals = 0
+                valn = 0
 
-            if ret == 'total':
-                vtt = valv + valt + vals + valn
-                return self.dec(vtt)
-            if ret == 'avista':
-                return self.dec(valv)
-            if ret == 'tres':
-                return self.dec(valt)
-            if ret == 'seis':
-                return self.dec(vals)
-            if ret == 'nove':
-                return self.dec(valn)
+
+        if ret == 'total':
+            return self.dec(valtotal)
+        if ret == 'avista':
+            return self.dec(valv)
+        if ret == 'tres':
+            return self.dec(valt)
+        if ret == 'seis':
+            return self.dec(vals)
+        if ret == 'nove':
+            return self.dec(valn)
 
     def calculaMin(self, ret):
-        receber = self.calculaPagRec(" ", 'Recebimentos')
-        pagar = self.calculaPagRec(" ", 'Pagamentos')
-        receita = self.calculaFaturamento(" ")
+        receber = self.calculaPagRec(" ", 'Recebimentos','total')
+        pagar = self.calculaPagRec(" ", 'Pagamentos','total')
+        receita = 0
+        for m in range(1,13):
+            receita += self.calculaFaturamento(m)
         canual = self.calculaTotal(Estoque, 'custototal')
         if receita != 0:
             pmrv = (receber / receita) * 360
@@ -236,8 +261,7 @@ class Financeiro:
             pmpc = (pagar / canual) * 360
         else:
             pmpc = 0
-        pmre = (self.calculaTotal(Estoque, 'custototal', ' WHERE mes = 1') + self.calculaTotal(Estoque, 'custototal',
-                                                                                             ' WHERE mes = 12') / 2) * 360
+        pmre = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = 12') / canual * 360
         if ret == 'pmrv':
             return self.dec(pmrv)
         if ret == 'pmpc':
@@ -275,7 +299,7 @@ class Financeiro:
 
     def caixaMin(self, ret):
         cf = self.calculaTotal(CustosFixos, 'total')
-        cv = self.custosVariaveis(" ")/12
+        cv = self.custosVariaveis(1)
         ct = cf + cv
         ctd = ct/30
         need = self.necessidadeGiro('liq')
@@ -350,117 +374,129 @@ class Financeiro:
 
     def balancoProj(self, ret):
 
-        terr = self.balancoIni('terrenos')
-        pred = self.balancoIni('predios')
-        deprimoveis = (self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Imoveis Predios"')*4)/100*(-1)
-
-        veic = self.balancoIni('veiculos')
-        mveic = (self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Fixos em Veiculos"')*20)/100*(-1)
-
-        movs = self.balancoIni('moveis')
-        mmovs = (self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Moveis e Utensilios"')*10)/100*(-1)
-
-        comp = self.balancoIni('computadores')
-        mcomp = (self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Computadores/Equipamentos de Informatica"')*20)/100*(-1)
-
-        maqs = self.balancoIni('maquinas')
-        mmaqs = (self.calculaTotal(InvestimentoFixo, 'total', ' WHERE categoria = "Maquinas e Equipamentos"')*10)/100*(-1)
 
 
-        desp = self.balancoIni('despesas')
-        est = self.balancoIni('estoques')
-        mdesp = desp/10*-1
 
-        cli = 0
-        for i in range(1,13):
-            cli += self.calculaPagRec(i, 'Recebimentos')
 
-        caixa = 0
-        for i in range(1,13):
-            caixa += self.calculaFaturamento(i)
-            caixa -= self.custosVariaveis(i)
-            caixa -= self.calculaTotal(CustosFixos, 'total')
-            caixa += self.calculaPagRec(i)
-            caixa -= self.calculaPagRec(i, 'Recebimentos')
-            caixa += self.calculaPagRec(i, 'Pagamentos')
 
-        caixa += self.balancoIni('caixa')
-        caixa -= self.balancoIni('fornecedores')
-        caixa -= mdesp
-        caixa -= deprimoveis
-        caixa -= mveic
-        caixa -= mmovs
-        caixa -= mcomp
-        caixa -= mmaqs
 
-        forn = self.balancoIni('fornecedores')
 
-        irpj = 0
-        for i in range(1,13):
-            irpj += self.demonstrativo(i, 'irpj')
-
-        emp = self.balancoIni('emprestimos')
-        cap = self.balancoIni('capsocial')
-
-        lucro = 0
-        for i in range(1,13):
-            lucro += self.demonstrativo('lucro')
-
-        res = 0
-        for i in range(1,13):
-            res += self.demonstrativo('reserva')
-
-        totala = caixa + cli + est + desp - mdesp + terr - deprimoveis + veic - mveic + movs - mmovs + comp - mcomp + maqs - mmaqs
-        totalp = forn + irpj + emp + cap + lucro + res
 
         if ret == 'caixa':
-            return self.calculaMin(caixa)
+            caixa = 0
+            for i in range(1, 13):
+                caixa += self.calculaFaturamento(i)
+                caixa -= self.calculaTotal(CustosFixos, 'total')
+                caixa -= self.custosVariaveis(i)
+
+            caixa += self.calculaPagRec(" ", 'Pagamentos', 'total')
+            caixa -= self.calculaPagRec(" ", 'Recebimentos', 'total')
+            caixa += self.balancoIni('caixa')
+            caixa -= self.balancoIni('fornecedores')
+
+            desp = self.balancoIni('despesas')
+            mdesp = desp / 10 * -1
+            deprimoveis = (self.calculaTotal(InvestimentoFixo, 'total',
+                                             ' WHERE categoria = "Imoveis Predios"') * 4) / 100 * (-1)
+            mveic = (self.calculaTotal(InvestimentoFixo, 'total',
+                                       ' WHERE categoria = "Fixos em Veiculos"') * 20) / 100 * (-1)
+            mmovs = (self.calculaTotal(InvestimentoFixo, 'total',
+                                       ' WHERE categoria = "Moveis e Utensilios"') * 10) / 100 * (-1)
+            mcomp = (self.calculaTotal(InvestimentoFixo, 'total',
+                                       ' WHERE categoria = "Computadores/Equipamentos de Informatica"') * 20) / 100 * (
+                        -1)
+            mmaqs = (self.calculaTotal(InvestimentoFixo, 'total',
+                                       ' WHERE categoria = "Maquinas e Equipamentos"') * 10) / 100 * (-1)
+
+            caixa -= mdesp
+            caixa -= deprimoveis
+            caixa -= mveic
+            caixa -= mmovs
+            caixa -= mcomp
+            caixa -= mmaqs
+            return self.dec(caixa)
         if ret == 'clientes':
-            return self.calculaMin(cli)
+            cli = 0
+            cli += self.calculaPagRec(" ", 'Recebimentos', 'total')
+            return self.dec(cli)
         if ret == 'estoques':
-            return self.calculaMin(est)
+            est = self.balancoIni('estoques')
+            return self.dec(est)
         if ret == 'despesas':
-            return self.calculaMin(desp)
+            desp = self.balancoIni('despesas')
+            return self.dec(desp)
         if ret == '-despesas':
-            return self.calculaMin(mdesp)
+            desp = self.balancoIni('despesas')
+
+            mdesp = desp / 10 * -1
+            return self.dec(mdesp)
         if ret == 'terrenos':
-            return self.calculaMin(terr)
+            terr = self.balancoIni('terrenos')
+            return self.dec(terr)
         if ret == 'predios':
-            return self.calculaMin(pred)
+            pred = self.balancoIni('predios')
+            return self.dec(pred)
         if ret == '-imoveis':
-            return self.calculaMin(deprimoveis)
+            deprimoveis = (self.calculaTotal(InvestimentoFixo, 'total',
+                                             ' WHERE categoria = "Imoveis Predios"') * 4) / 100 * (-1)
+            return self.dec(deprimoveis)
         if ret == 'veiculos':
-            return self.calculaMin(veic)
+            veic = self.balancoIni('veiculos')
+            return self.dec(veic)
         if ret == '-veiculos':
-            return self.calculaMin(mveic)
+            mveic = (self.calculaTotal(InvestimentoFixo, 'total',
+                                       ' WHERE categoria = "Fixos em Veiculos"') * 20) / 100 * (-1)
+
+            return self.dec(mveic)
         if ret == 'moveis':
-            return self.calculaMin(movs)
+            movs = self.balancoIni('moveis')
+            return self.dec(movs)
         if ret == '-moveis':
-            return self.calculaMin(mmovs)
+            mmovs = (self.calculaTotal(InvestimentoFixo, 'total',
+                                       ' WHERE categoria = "Moveis e Utensilios"') * 10) / 100 * (-1)
+
+            return self.dec(mmovs)
         if ret == 'computadores':
-            return self.calculaMin(comp)
+            comp = self.balancoIni('computadores')
+            return self.dec(comp)
         if ret == '-computadores':
-            return self.calculaMin(mcomp)
+            mcomp = (self.calculaTotal(InvestimentoFixo, 'total',
+                                       ' WHERE categoria = "Computadores/Equipamentos de Informatica"') * 20) / 100 * (
+                        -1)
+            return self.dec(mcomp)
         if ret == 'maquinas':
-            return self.calculaMin(maqs)
+            maqs = self.balancoIni('maquinas')
+            return self.dec(maqs)
         if ret == '-maquinas':
-            return self.calculaMin(mmaqs)
+            mmaqs = (self.calculaTotal(InvestimentoFixo, 'total',
+                                       ' WHERE categoria = "Maquinas e Equipamentos"') * 10) / 100 * (-1)
+
+            return self.dec(mmaqs)
         if ret == 'fornecedores':
-            return self.calculaMin(forn)
+            forn = self.balancoIni('fornecedores')
+            return self.dec(forn)
         if ret == 'irpj':
-            return self.calculaMin(irpj)
+            irpj = 0
+            for i in range(1, 13):
+                irpj += self.demonstrativo(i, 'imposto')
+            return self.dec(irpj)
         if ret == 'emprestimos':
-            return self.calculaMin(emp)
+            emp = self.balancoIni('emprestimos')
+            return self.dec(emp)
         if ret == 'capsocial':
-            return self.calculaMin(cap)
+            cap = self.balancoIni('capsocial')
+            return self.dec(cap)
         if ret == 'lucro':
-            return self.calculaMin(lucro)
+            lucro = 0
+            for i in range(1, 13):
+                lucro += self.demonstrativo(i, 'liquido')
+
+            return self.dec(lucro)
         if ret == 'reservas':
-            return self.calculaMin(res)
-        if ret == 'totalativo':
-            return self.calculaMin(totala)
-        if ret == 'totalpassivo':
-            return self.calculaMin(totalp)
+            res = 0
+            for i in range(1, 13):
+                res += self.demonstrativo(i, 'reserva')
+            return self.dec(res)
 
     def calculaDeprec(self, ret):
         contas = ['Moveis e Utensilios', 'Maquinas e Equipamentos', 'Computadores/Equipamentos de Informatica',

@@ -2717,26 +2717,38 @@ class RelFluxoScreen(Screen):
         self.title.text = 'FLUXO DE CAIXA'
         self.back.clear_widgets()
         self.back.add_widget(Label(text=""))
-        self.back.add_widget(RelatorioFinBt())
-        for mes in range(1, 13):
-            self.criabotao(mes)
+        self.back.add_widget(Button(text="Voltar", on_release=lambda x: self.limpa()))
 
-            vendas = fin.calculaFaturamento(mes)
-            cf = fin.calculaTotal(CustosFixos, 'total')
-            cv = fin.custosVariaveis(mes) + fin.demonstrativo(mes, 'imposto')
-            fol = vendas - cf - cv
-            desinv = fin.calculaTotal(InvestimentoInicial, 'total')
-            invliq = 0 - desinv
-            fluxo = desinv
-            caixa = fol + invliq + fluxo
+        if fin.calculaTotalBD('fluxocaixa','saldofim') == 0:
+            Banco.delete(Banco, 'fluxocaixa')
+            for mes in range(1, 13):
+                self.criabotao(mes)
 
-            if mes == 1:
-                saldoini = 0
-            else:
-                saldoini = fin.calculaTotalBD('fluxocaixa', ' WHERE mes = '+ str(mes-1))
-            saldofim = caixa + saldoini
-            list = [saldofim, mes]
-            Banco.insert(Banco, 'fluxocaixa', list)
+                vendas = fin.calculaFaturamento(mes)
+                cf = fin.calculaTotal(CustosFixos, 'total')
+                cv = fin.custosVariaveis(mes) + fin.demonstrativo(mes, 'imposto')
+                fol = vendas - cf - cv
+                desinv = fin.calculaTotal(InvestimentoInicial, 'total')
+                invliq = 0 - desinv
+                fluxo = desinv
+                caixa = fol + invliq + fluxo
+
+                if mes == 1:
+                    saldoini = 0
+                else:
+                    saldoini = fin.calculaTotalBD('fluxocaixa','saldofim', ' WHERE mes = '+ str(mes-1))
+                saldofim = caixa + saldoini
+                list = [saldofim, mes]
+                Banco.insert(Banco, 'fluxocaixa(saldofim,mes)', list)
+        else:
+            for mes in range(1, 13):
+                self.criabotao(mes)
+    def limpa(self):
+        fin = Financeiro()
+        self.scrl.clear_widgets()
+        self.parent.current = 'relatoriosfin'
+        Banco.delete(Banco, 'fluxocaixa')
+        print(fin.calculaTotalBD('fluxocaixa','saldofim'))
 
     def criabotao(self, mes):
         bt = Button(text='Mes ' + str(mes))
@@ -2763,7 +2775,7 @@ class RelFluxoScreen(Screen):
         if mes == 1:
             saldoini = 0
         else:
-            saldoini = fin.calculaTotalBD('fluxocaixa', ' WHERE mes = ' + str(mes - 1))
+            saldoini = fin.calculaTotalBD('fluxocaixa','saldofim', ' WHERE mes = ' + str(mes - 1))
         saldofim = caixa + saldoini
 
         self.scrl.add_widget(Label(text='ATIVIDADES OPERACIONAIS'))
@@ -2790,44 +2802,37 @@ class RelFluxoScreen(Screen):
         self.scrl.add_widget(Label(text='ATIVIDADES DE INVESTIMENTOS'))
         self.scrl.add_widget(Label(text=''))
 
-        if mes == 1:
-            self.scrl.add_widget(Label(text='(D) EMBOLSOS DE INVESTIMENTOS'))
-            self.scrl.add_widget(Label(text='0'))
-
-            self.scrl.add_widget(Label(text='(E) DESEMBOLSOS PARA INVESTIMENTOS'))
-
-            self.scrl.add_widget(Label(text="%.2f"%(desinv)))
-
-            self.scrl.add_widget(Label(text='(F) FLUXO DE INVESTIMENTO LIQUIDO'))
-
-            self.scrl.add_widget(Label(text="%.2f"%(invliq)))
-
-            self.scrl.add_widget(Label(text='ATIVIDADES DE FINANCIAMENTOS'))
-            self.scrl.add_widget(Label(text=''))
-
-            self.scrl.add_widget(Label(text='(G) EMBOLSOS DE FINANCIAMENTOS'))
-            self.scrl.add_widget(Label(text=''))
-
-            self.scrl.add_widget(Label(text='RECURSOS PROPRIOS'))
-
-            self.scrl.add_widget(Label(text="%.2f"%(recp)))
-
-            self.scrl.add_widget(Label(text='(H) DESEMBOLSOS DE FINANCIAMENTOS'))
-            self.scrl.add_widget(Label(text=''))
-
-            self.scrl.add_widget(Label(text='(I) FLUXO DE FINANCIAMENTO LIQUIDO'))
-
-            self.scrl.add_widget(Label(text="%.2f"%(fluxo - 0)))
-
-            saldoini = 0
-        else:
+        if mes != 1:
             invliq = 0
             desinv = 0
             fluxo = 0
+        self.scrl.add_widget(Label(text='(D) EMBOLSOS DE INVESTIMENTOS'))
+        self.scrl.add_widget(Label(text='0'))
 
-        ## RESOLVER CRIAR UMA TABELA DE FLUXO DE CAIXA PARA GUARDAR OS SALDOS FINAIS -> USANDO MES E SALDO FIM
+        self.scrl.add_widget(Label(text='(E) DESEMBOLSOS PARA INVESTIMENTOS'))
 
+        self.scrl.add_widget(Label(text="%.2f"%(desinv)))
 
+        self.scrl.add_widget(Label(text='(F) FLUXO DE INVESTIMENTO LIQUIDO'))
+
+        self.scrl.add_widget(Label(text="%.2f"%(invliq)))
+
+        self.scrl.add_widget(Label(text='ATIVIDADES DE FINANCIAMENTOS'))
+        self.scrl.add_widget(Label(text=''))
+
+        self.scrl.add_widget(Label(text='(G) EMBOLSOS DE FINANCIAMENTOS'))
+        self.scrl.add_widget(Label(text=''))
+
+        self.scrl.add_widget(Label(text='RECURSOS PROPRIOS'))
+
+        self.scrl.add_widget(Label(text="%.2f"%(recp)))
+
+        self.scrl.add_widget(Label(text='(H) DESEMBOLSOS DE FINANCIAMENTOS'))
+        self.scrl.add_widget(Label(text=''))
+
+        self.scrl.add_widget(Label(text='(I) FLUXO DE FINANCIAMENTO LIQUIDO'))
+
+        self.scrl.add_widget(Label(text="%.2f"%(fluxo - 0)))
 
         self.scrl.add_widget(Label(text='(J) CAIXA LIQUIDO'))
         self.scrl.add_widget(Label(text="%.2f"%(caixa)))
@@ -2841,7 +2846,7 @@ class RelFluxoScreen(Screen):
         self.scrl.add_widget(Label(text="%.2f"%(saldofim)))
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
 
-
+#CapGiro
 class RelRecebimentosScreen(Screen):
     @mainthread
     def on_enter(self):
@@ -2853,7 +2858,7 @@ class RelRecebimentosScreen(Screen):
         self.back.add_widget(RelatorioGiroBt())
         for mes in range(1, 16):
             self.criabotao(mes)
-        self.back.add_widget(Button(text='Total', on_release=lambda x: self.total()))
+        self.scrl.add_widget(Button(text='Total', on_release=lambda x: self.preenche(' ')))
 
     def criabotao(self, mes):
         bt = Button(text='Mes ' + str(mes))
@@ -2869,24 +2874,33 @@ class RelRecebimentosScreen(Screen):
 
         #calculos
         var = 'Recebimentos'
-        fat = fin.calculaFaturamento(mes)
+
         avista = fin.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"')
         tres = fin.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"')
         seis = fin.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"')
         nove = fin.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"')
         total = avista + tres + seis + nove
-
-        valv = fat * (avista/100)
-        valt = fin.calculaFaturamento(mes-1) * (tres/100)
-        vals = fin.calculaFaturamento(mes-2) * (seis/100)
-        valn = fin.calculaFaturamento(mes-3) * (nove/100)
-        valtotal = valv + valt + vals + valn
-
+        if mes != ' ':
+            fat = fin.calculaFaturamento(mes)
+            valv = fat * (avista/100)
+            valt = fin.calculaFaturamento(mes-1) * (tres/100)
+            vals = fin.calculaFaturamento(mes-2) * (seis/100)
+            valn = fin.calculaFaturamento(mes-3) * (nove/100)
+            valtotal = valv + valt + vals + valn
+        else:
+            valtotal = 0
+            for m in range(13,16):
+                fat = fin.calculaFaturamento(m)
+                valv = fat * (avista / 100)
+                valt = fin.calculaFaturamento(m - 1) * (tres / 100)
+                vals = fin.calculaFaturamento(m - 2) * (seis / 100)
+                valn = fin.calculaFaturamento(m - 3) * (nove / 100)
+                valtotal += valv + valt + vals + valn
 
         #Escreve na tela
         self.scrl.add_widget(Label(text='FATURAMENTO MENSAL'))
         self.scrl.add_widget(Label(text=''))
-        self.scrl.add_widget(Label(text=str(fat)))
+        self.scrl.add_widget(Label(text="%.2f"%(fat)))
 
         self.scrl.add_widget(Label(text='PRAZO'))
         self.scrl.add_widget(Label(text='%'))
@@ -2894,23 +2908,23 @@ class RelRecebimentosScreen(Screen):
 
         self.scrl.add_widget(Label(text='A VISTA'))
         self.scrl.add_widget(Label(text=str(avista)))
-        self.scrl.add_widget(Label(text=str(valv)))
+        self.scrl.add_widget(Label(text="%.2f"%(valv)))
 
         self.scrl.add_widget(Label(text='30 DIAS'))
         self.scrl.add_widget(Label(text=str(tres)))
-        self.scrl.add_widget(Label(text=str(valt)))
+        self.scrl.add_widget(Label(text="%.2f"%(valt)))
 
         self.scrl.add_widget(Label(text='60 DIAS'))
         self.scrl.add_widget(Label(text=str(seis)))
-        self.scrl.add_widget(Label(text=str(vals)))
+        self.scrl.add_widget(Label(text="%.2f"%(vals)))
 
         self.scrl.add_widget(Label(text='90 DIAS'))
         self.scrl.add_widget(Label(text=str(nove)))
-        self.scrl.add_widget(Label(text=str(valn)))
+        self.scrl.add_widget(Label(text="%.2f"%(valn)))
 
         self.scrl.add_widget(Label(text='TOTAL'))
         self.scrl.add_widget(Label(text=str(total)))
-        self.scrl.add_widget(Label(text=str(valt)))
+        self.scrl.add_widget(Label(text="%.2f"%(valtotal)))
 
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
     def total(self):
@@ -2928,7 +2942,7 @@ class RelPagamentosScreen(Screen):
         self.back.add_widget(RelatorioGiroBt())
         for mes in range(1, 16):
             self.criabotao(mes)
-        self.back.add_widget(Button(text='Total', on_release=lambda x: self.total()))
+        self.scrl.add_widget(Button(text='Total', on_release=lambda x: self.preenche(' ')))
 
     def criabotao(self, mes):
         bt = Button(text='Mes ' + str(mes))
@@ -2943,27 +2957,56 @@ class RelPagamentosScreen(Screen):
         fin = Financeiro()
 
         var = 'Pagamentos'
-        fat = fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
-        valv = fin.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"') * (fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes)) / 100)
-        if mes == 1:
-            valt = 0
+        if mes != ' ':
+            fat = fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes))
+            valv = fin.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"') * (fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes)) / 100)
+            if mes == 1:
+                valt = 0
+            else:
+                valt = fin.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"') * (fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 1))  / 100)
+            if mes == 1 or mes == 2:
+                vals = 0
+            else:
+                vals = fin.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"') * (fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 2))  / 100)
+            if mes == 1 or mes == 2 or mes == 3:
+                valn = 0
+            else:
+                valn = fin.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"') * (fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 3))  / 100)
+            valtotal = valv + valt + vals + valn
         else:
-            valt = fin.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"') * (fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 1))  / 100)
-        if mes == 1 or mes == 2:
-            vals = 0
-        else:
-            vals = fin.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"') * (fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 2))  / 100)
-        if mes == 1 or mes == 2 or mes == 3:
-            valn = 0
-        else:
-            valn = fin.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"') * (fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(mes - 3))  / 100)
+            valtotal = 0
+            for m in range(13,16):
+                fat = fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(m))
+                valv = fin.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"') * (
+                            fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(m)) / 100)
+                if m == 1:
+                    valt = 0
+                else:
+                    valt = fin.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"') * (
+                                fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(m - 1)) / 100)
+                if m == 1 or m == 2:
+                    vals = 0
+                else:
+                    vals = fin.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"') * (
+                                fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(m - 2)) / 100)
+                if m == 1 or m == 2 or m == 3:
+                    valn = 0
+                else:
+                    valn = fin.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"') * (
+                                fin.calculaTotal(Estoque, 'custototal', ' WHERE mes = ' + str(m - 3)) / 100)
+                valtotal = valtotal + valv + valt + vals + valn
+                valv = 0
+                valt = 0
+                vals = 0
+                valn = 0
+                print(valtotal)
 
         avista = fin.calculaTotal(CapGiro, 'avista', ' WHERE categoria = "' + var + '"')
         tres = fin.calculaTotal(CapGiro, 'tres', ' WHERE categoria = "' + var + '"')
         seis = fin.calculaTotal(CapGiro, 'seis', ' WHERE categoria = "' + var + '"')
         nove = fin.calculaTotal(CapGiro, 'nov', ' WHERE categoria = "' + var + '"')
         total = avista + tres + seis + nove
-        valtotal = valv + valt + vals + valn
+
 
         # Escreve na tela
         self.scrl.add_widget(Label(text='PAGAMENTO MENSAL'))
@@ -2976,23 +3019,23 @@ class RelPagamentosScreen(Screen):
 
         self.scrl.add_widget(Label(text='A VISTA'))
         self.scrl.add_widget(Label(text=str(avista)))
-        self.scrl.add_widget(Label(text=str(valv)))
+        self.scrl.add_widget(Label(text="%.2f"%(valv)))
 
         self.scrl.add_widget(Label(text='30 DIAS'))
         self.scrl.add_widget(Label(text=str(tres)))
-        self.scrl.add_widget(Label(text=str(valt)))
+        self.scrl.add_widget(Label(text="%.2f"%(valt)))
 
         self.scrl.add_widget(Label(text='60 DIAS'))
         self.scrl.add_widget(Label(text=str(seis)))
-        self.scrl.add_widget(Label(text=str(vals)))
+        self.scrl.add_widget(Label(text="%.2f"%(vals)))
 
         self.scrl.add_widget(Label(text='90 DIAS'))
         self.scrl.add_widget(Label(text=str(nove)))
-        self.scrl.add_widget(Label(text=str(valn)))
+        self.scrl.add_widget(Label(text="%.2f"%(valn)))
 
         self.scrl.add_widget(Label(text='TOTAL'))
         self.scrl.add_widget(Label(text=str(total)))
-        self.scrl.add_widget(Label(text=str(valtotal)))
+        self.scrl.add_widget(Label(text="%.2f"%(valtotal)))
 
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
 
@@ -3046,7 +3089,7 @@ class RelMinScreen(Screen):
         self.scrl.add_widget(Label(text='PMRE'))
         self.scrl.add_widget(Label(text=str(pmre) + ' DIAS'))
 
-#CapGiro
+
 class RelCapGiroScreen(Screen):
     @mainthread
     def on_enter(self):

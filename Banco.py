@@ -24,8 +24,9 @@ class Banco:
                 query = query + "?,"
             else:
                 query = query + "?)"
+        print(query + str(list))
         cur.execute(query, (list))
-        #print(query)
+
         #print(list)
         conn.commit()
         conn.close()

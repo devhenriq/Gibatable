@@ -5,130 +5,141 @@
         rows:3
         height: self.minimum_height
         size_hint: 1, 1
-        row_default_height: 60
-        spacing: 50
+        row_default_height: 120
+        spacing: 0
         Label:
             text: 'Relatorios'
             font_size: 0.6*self.height
             size_hint: 0.1, 0.1
+            padding_y: 150
+            halign: 'center'
+            valign: 'center'
         BoxLayout:
             padding: 30
-            GridLayout:
-                cols: 3
-                spacing: 25
-                height: self.minimum_height
-                size_hint: 1, 1
-                row_default_height: 60
-                font_size: 0.2 * self.height
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Preco de venda unitario mensal"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relpvunmes"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Projecao de vendas p/ produto p/ mes"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relprojecao"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Faturamento bruto de vendas p/ produto p/ mes"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relfaturamento"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Planilha de custos totais"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relctotal"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Demonstrativo de resultados"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "reldemonstrativo"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Indice de margem de contribuicao (margem de contribuicao / faturamento bruto)"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relmargemcontrib"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Ponto de equilibrio (EM REAIS)"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relpontoequilibriofin"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Lucratividade, Rentabilidade e Prazo de Retorno de investimento"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relrent"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"TIR e VPL"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "reltir"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Fluxo de caixa projetado para o primeiro ano"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relfluxo"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Calculos para capital de giro"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relgiro"
+            size_hint: 1,1
+            ScrollView:
+                height: root.height * 1.5
+                GridLayout:
+                    id: scrl
+                    name: "scrl"
+                    cols: 3
+                    height: self.minimum_height
+                    padding: 100
+                    spacing: 25
+                    row_default_height: 100
+                    col_default_width: 100
+                    size_hint: 1,None
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Preco de venda unitario mensal"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relpvunmes"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Projecao de vendas p/ produto p/ mes"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relprojecao"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Faturamento bruto de vendas p/ produto p/ mes"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relfaturamento"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Planilha de custos totais"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relctotal"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Demonstrativo de resultados"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "reldemonstrativo"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Indice de margem de contribuicao (margem de contribuicao / faturamento bruto)"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relmargemcontrib"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Ponto de equilibrio (EM REAIS)"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relpontoequilibriofin"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Lucratividade, Rentabilidade e Prazo de Retorno de investimento"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relrent"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"TIR e VPL"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "reltir"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Fluxo de caixa projetado para o primeiro ano"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relfluxo"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Calculos para capital de giro"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relgiro"
         GridLayout:
             cols: 2
-            height: self.minimum_height
             size_hint: .1, .1
-            row_default_height: 20
+            row_default_height: 5
+            col_default_width: 120
             font_size: 0.2 * self.height
+            spacing:
             Label:
                 text: ""
             Voltar:
-                size_hint: 0.1, 0.1
+                font_size: 0.3*self.height
+                size_hint: 0.1, None
                 text_size: self.size
                 halign: 'center'
                 valign: 'center'

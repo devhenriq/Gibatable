@@ -5,159 +5,170 @@
         rows:3
         height: self.minimum_height
         size_hint: 1, 1
-        row_default_height: 60
-        spacing: 50
+        row_default_height: 120
+        spacing: 0
         Label:
             text: 'Relatorios'
             font_size: 0.6*self.height
             size_hint: 0.1, 0.1
+            padding_y: 150
+            halign: 'center'
+            valign: 'center'
         BoxLayout:
             padding: 30
-            GridLayout:
-                cols: 3
-                spacing: 25
-                height: self.minimum_height
-                size_hint: 1, 1
-                row_default_height: 60
-                font_size: 0.2 * self.height
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Investimentos Fixos"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relinvfixo"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Pessoas"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current = "relpessoa"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Materia Prima"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relmp"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Estimativa de Vendas"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relestimativa"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Custos Fixos Mensais"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relcustofixo"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Investimentos Iniciais"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relinvini"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Custo Financeiro Mensal"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relcustofinmen"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Estoque"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relestoque"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Rateio de Custos Fixos"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relrateiofixo"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Rateio de Custos Operacionais"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relrateioop"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Tributos"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "reltrib"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Custo com vendas"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relcustovendas"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Ponto de equilibrio em unidade"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relpontoeq"
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text:"Calculo do preco de venda"
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    on_release: app.root.current= "relprecovenda"
+            size_hint: 1,1
+            ScrollView:
+                height: root.height * 1.5
+                GridLayout:
+                    id: scrl
+                    name: "scrl"
+                    cols: 3
+                    height: self.minimum_height
+                    padding: 100
+                    spacing: 25
+                    row_default_height: 100
+                    col_default_width: 100
+                    size_hint: 1,None
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Investimentos Fixos"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relinvfixo"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Pessoas"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current = "relpessoa"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Materia Prima"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relmp"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Estimativa de Vendas"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relestimativa"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Custos Fixos Mensais"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relcustofixo"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Investimentos Iniciais"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relinvini"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Custo Financeiro Mensal"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relcustofinmen"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Estoque"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relestoque"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Rateio de Custos Fixos"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relrateiofixo"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Rateio de Custos Operacionais"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relrateioop"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Tributos"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "reltrib"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Custo com vendas"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relcustovendas"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Ponto de equilibrio em unidade"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relpontoeq"
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text:"Calculo do preco de venda"
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        on_release: app.root.current= "relprecovenda"
 
 
         GridLayout:
             cols: 2
-            height: self.minimum_height
             size_hint: .1, .1
-            row_default_height: 20
+            row_default_height: 5
+            col_default_width: 120
             font_size: 0.2 * self.height
+            spacing:
             Label:
                 text: ""
             Voltar:
-                size_hint: 0.1, 0.1
+                font_size: 0.3*self.height
+                size_hint: 0.1, None
                 text_size: self.size
                 halign: 'center'
                 valign: 'center'

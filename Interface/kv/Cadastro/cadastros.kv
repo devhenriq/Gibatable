@@ -1,125 +1,139 @@
 <CadastroScreen>:
     name: "cadastro"
     GridLayout:
-        rows: 3
-        spacing: 30
-        row_default_height: 60
+        rows:3
         height: self.minimum_height
+        size_hint: 1, 1
+        row_default_height: 120
+        spacing: 0
         Label:
             text: 'Cadastros'
             font_size: 0.6*self.height
-            pos_hint: {'top':9,'right':5.5}
             size_hint: 0.1, 0.1
+            padding_y: 150
+            halign: 'center'
+            valign: 'center'
         BoxLayout:
             padding: 30
-            GridLayout:
-                cols:2
-                spacing: 30
-                row_default_height: 60
-                height: self.minimum_height
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Pessoa'
-                    pos_hint: {'top':7, 'right': 5}
-                    on_release: app.root.current = "pessoa"
-                    size_hint: 2, .8
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Investimentos Fixos'
-                    pos_hint: {'top':7, 'right': 7}
-                    on_release: app.root.current = "investimento"
-                    size_hint: 2, .8
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Materia Prima'
-                    pos_hint: {'top':6, 'right': 5}
-                    on_release: app.root.current = "matprima"
-                    size_hint: 2, .8
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Estimativa de Vendas'
-                    pos_hint: {'top':6, 'right': 7}
-                    on_release: app.root.current = "estimativa"
-                    size_hint: 2, .8
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Custos Fixos Mensais'
-                    pos_hint: {'top':5, 'right': 7}
-                    on_release: app.root.current = "custofixo"
-                    size_hint: 2, .8
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Tributos'
-                    pos_hint: {'top':5, 'right': 5}
-                    on_release: app.root.current = "tributo"
-                    size_hint: 2, .8
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Custo com Vendas'
-                    pos_hint: {'top':4, 'right': 5}
-                    on_release: app.root.current = "custovendas"
-                    size_hint: 2, .8
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Investimento Inicial'
-                    pos_hint: {'top':4, 'right': 7}
-                    on_release: app.root.current = "investimentoinicial"
-                    size_hint: 2, .8
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Custo Financeiro Mensal'
-                    pos_hint: {'top':3, 'right': 5}
-                    on_release: app.root.current = "custofinmen"
-                    size_hint: 2, .8
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Rateio dos Custos Fixos'
-                    pos_hint: {'top':3, 'right': 7}
-                    on_release: app.root.current = "rateiocustosfixos"
-                    size_hint: 2, .8
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Rateio dos Custos Operacionais'
-                    pos_hint: {'top':2, 'right': 5}
-                    on_release: app.root.current = "rateiocustosop"
-                    size_hint: 2, .8
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Preco de Venda'
-                    pos_hint: {'top':2, 'right': 7}
-                    on_release: app.root.current = "precovenda"
-                    size_hint: 2, .8
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Custos Totais'
-                    pos_hint: {'top':2, 'right': 7}
-                    on_release: app.root.current = "finfrete"
-                    size_hint: 2, .8
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Prazos'
-                    pos_hint: {'top':2, 'right': 7}
-                    on_release: app.root.current = "capgiro"
-                    size_hint: 2, .8
+            size_hint: 1,1
+            ScrollView:
+                height: root.height * 1.5
+                GridLayout:
+                    id: scrl
+                    name: "scrl"
+                    cols: 3
+                    height: self.minimum_height
+                    padding: 100
+                    spacing: 25
+                    row_default_height: 100
+                    col_default_width: 100
+                    size_hint: 1,None
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Pessoa'
+                        pos_hint: {'top':7, 'right': 5}
+                        on_release: app.root.current = "pessoa"
+                        size_hint: 2, .8
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Investimentos Fixos'
+                        pos_hint: {'top':7, 'right': 7}
+                        on_release: app.root.current = "investimento"
+                        size_hint: 2, .8
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Materia Prima'
+                        pos_hint: {'top':6, 'right': 5}
+                        on_release: app.root.current = "matprima"
+                        size_hint: 2, .8
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Estimativa de Vendas'
+                        pos_hint: {'top':6, 'right': 7}
+                        on_release: app.root.current = "estimativa"
+                        size_hint: 2, .8
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Custos Fixos Mensais'
+                        pos_hint: {'top':5, 'right': 7}
+                        on_release: app.root.current = "custofixo"
+                        size_hint: 2, .8
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Tributos'
+                        pos_hint: {'top':5, 'right': 5}
+                        on_release: app.root.current = "tributo"
+                        size_hint: 2, .8
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Custo com Vendas'
+                        pos_hint: {'top':4, 'right': 5}
+                        on_release: app.root.current = "custovendas"
+                        size_hint: 2, .8
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Investimento Inicial'
+                        pos_hint: {'top':4, 'right': 7}
+                        on_release: app.root.current = "investimentoinicial"
+                        size_hint: 2, .8
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Custo Financeiro Mensal'
+                        pos_hint: {'top':3, 'right': 5}
+                        on_release: app.root.current = "custofinmen"
+                        size_hint: 2, .8
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Rateio dos Custos Fixos'
+                        pos_hint: {'top':3, 'right': 7}
+                        on_release: app.root.current = "rateiocustosfixos"
+                        size_hint: 2, .8
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Rateio dos Custos Operacionais'
+                        pos_hint: {'top':2, 'right': 5}
+                        on_release: app.root.current = "rateiocustosop"
+                        size_hint: 2, .8
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Preco de Venda'
+                        pos_hint: {'top':2, 'right': 7}
+                        on_release: app.root.current = "precovenda"
+                        size_hint: 2, .8
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Custos Totais'
+                        pos_hint: {'top':2, 'right': 7}
+                        on_release: app.root.current = "finfrete"
+                        size_hint: 2, .8
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Prazos'
+                        pos_hint: {'top':2, 'right': 7}
+                        on_release: app.root.current = "capgiro"
+                        size_hint: 2, .8
 
-                Button:
-                    font_size: 0.4*self.height
-                    text:'Reservas e Cap Social'
-                    pos_hint: {'top':2, 'right': 7}
-                    on_release: app.root.current = "reservas"
-                    size_hint: 2, .8
+                    Button:
+                        font_size: 0.3*self.height
+                        text:'Reservas e Cap Social'
+                        pos_hint: {'top':2, 'right': 7}
+                        on_release: app.root.current = "reservas"
+                        size_hint: 2, .8
 
         GridLayout:
             cols: 2
-            height: self.minimum_height
             size_hint: .1, .1
-            row_default_height: 60
-            spacing: 50
+            row_default_height: 5
+            col_default_width: 120
+            font_size: 0.2 * self.height
+            spacing:
             Label:
                 text: ""
             Voltar:
-                size_hint: 0.3, 0.1
+                font_size: 0.3*self.height
+                size_hint: 0.1, None
                 text_size: self.size
                 halign: 'center'
                 valign: 'center'
-                on_release: app.root.current= "menu"
+                padding_y: 10
+                on_release: app.root.current = "menu"

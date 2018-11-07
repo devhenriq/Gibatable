@@ -5,13 +5,17 @@
         rows:3
         height: self.minimum_height
         size_hint: 1, 1
-        row_default_height: 60
+        row_default_height: 120
+        spacing: 0
         Label:
-            text: 'Calculo para capital de giro'
+            text: 'Calculos para capital de giro'
             font_size: 0.6*self.height
             size_hint: 0.1, 0.1
+            padding_y: 150
+            halign: 'center'
+            valign: 'center'
         BoxLayout:
-            orientation: 'vertical'
+            padding: 30
             size_hint: 1,1
             ScrollView:
                 height: root.height * 1.5
@@ -22,7 +26,7 @@
                     height: self.minimum_height
                     padding: 100
                     spacing: 25
-                    row_default_height: 60
+                    row_default_height: 100
                     col_default_width: 100
                     size_hint: 1,None
                     Button:
@@ -117,14 +121,16 @@
                         on_release: app.root.current = "relrecursos"
         GridLayout:
             cols: 2
-            height: self.minimum_height
             size_hint: .1, .1
-            row_default_height: 20
+            row_default_height: 5
+            col_default_width: 120
             font_size: 0.2 * self.height
+            spacing:
             Label:
                 text: ""
             Voltar:
-                size_hint: 0.1, 0.1
+                font_size: 0.3*self.height
+                size_hint: 0.1, None
                 text_size: self.size
                 halign: 'center'
                 valign: 'center'

@@ -26,14 +26,13 @@ class Financeiro:
         cf = self.calculaTotal(CustosFixos, 'total')
 
         lucro = mc - cf
-
         ipr = lucro * (self.calculaTotal(Tributos, 'irpj') / 100)
-
         reserv = self.calculaTotal(Reservas, 'reservas')
         rv = (lucro * reserv) / 100
         liquido = lucro - ipr - rv
-
+        print(str(lucro) + " ---- " + str(reserv))
         if ret == 'liquido':
+            print(liquido)
             return self.dec(liquido)
         if ret == 'imposto':
             return self.dec(ipr)

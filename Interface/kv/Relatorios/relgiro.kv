@@ -18,102 +18,102 @@
                 GridLayout:
                     id: scrl
                     name: "scrl"
-                    cols: 2
+                    cols: 3
                     height: self.minimum_height
                     padding: 100
-                    spacing: 50
+                    spacing: 25
                     row_default_height: 60
                     col_default_width: 100
                     size_hint: 1,None
                     Button:
-                        font_size: 0.2*self.height
+                        font_size: 0.3*self.height
                         size_hint: .1,.1
                         text:"Recebimentos"
                         text_size: self.size
                         halign: 'center'
                         valign: 'center'
-                        padding_y: 10
+                        padding_y: 80
                         on_release: app.root.current= "relrecebimentos"
                     Button:
-                        font_size: 0.2*self.height
+                        font_size: 0.3*self.height
                         size_hint: .1,.1
                         text:"Pagamentos"
                         text_size: self.size
                         halign: 'center'
                         valign: 'center'
-                        padding_y: 10
+                        padding_y: 80
                         on_release: app.root.current = "relpagamentos"
                     Button:
-                        font_size: 0.2*self.height
+                        font_size: 0.3*self.height
                         size_hint: .1,.1
                         text:"Contas a receber e a pagar apos 12 mes, receita anual, custo anual com material direto, pmrv, pmpc, pmre"
                         text_size: self.size
                         halign: 'center'
                         valign: 'center'
-                        padding_y: 10
+                        padding_y: 80
                         on_release: app.root.current = "relmin"
                     Button:
-                        font_size: 0.2*self.height
+                        font_size: 0.3*self.height
                         size_hint: .1,.1
                         text:"Capital de giro"
                         text_size: self.size
                         halign: 'center'
                         valign: 'center'
-                        padding_y: 10
+                        padding_y: 80
                         on_release: app.root.current = "relcapgiro"
                     Button:
-                        font_size: 0.2*self.height
+                        font_size: 0.3*self.height
                         size_hint: .1,.1
                         text:"Investimentos pre-operacionais"
                         text_size: self.size
                         halign: 'center'
                         valign: 'center'
-                        padding_y: 10
+                        padding_y: 40
                         on_release: app.root.current = "relinvpreop"
                     Button:
-                        font_size: 0.2*self.height
+                        font_size: 0.3*self.height
                         size_hint: .1,.1
                         text:"Calculo da necessidade de capital de giro em dias"
                         text_size: self.size
                         halign: 'center'
                         valign: 'center'
-                        padding_y: 10
+                        padding_y: 40
                         on_release: app.root.current = "relcalc"
                     Button:
-                        font_size: 0.2*self.height
+                        font_size: 0.3*self.height
                         size_hint: .1,.1
                         text:"Caixa Minimo"
                         text_size: self.size
                         halign: 'center'
                         valign: 'center'
-                        padding_y: 10
+                        padding_y: 40
                         on_release: app.root.current = "relcaixamin"
                     Button:
-                        font_size: 0.2*self.height
+                        font_size: 0.3*self.height
                         size_hint: .1,.1
                         text:"Balanco inicial"
                         text_size: self.size
                         halign: 'center'
                         valign: 'center'
-                        padding_y: 10
+                        padding_y: 40
                         on_release: app.root.current = "relbalancoini"
                     Button:
-                        font_size: 0.2*self.height
+                        font_size: 0.3*self.height
                         size_hint: .1,.1
                         text:"Balanco projetado"
                         text_size: self.size
                         halign: 'center'
                         valign: 'center'
-                        padding_y: 10
+                        padding_y: 40
                         on_release: app.root.current = "relbalancoproj"
                     Button:
-                        font_size: 0.2*self.height
+                        font_size: 0.3*self.height
                         size_hint: .1,.1
                         text:"Origem e fonte dos recursos"
                         text_size: self.size
                         halign: 'center'
                         valign: 'center'
-                        padding_y: 10
+                        padding_y: 40
                         on_release: app.root.current = "relrecursos"
         GridLayout:
             cols: 2

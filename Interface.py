@@ -2708,14 +2708,15 @@ class RelTirScreen(Screen):
                     lucros.append(fin.demonstrativo(mes, 'liquido'))
                 else:
                     ll += lucros[mes-1]/((1+tir)**mes)
+                    print(lucros[mes-1])
                 #lv = ll / ((1 + tir) ** mes)
                 #ll += fin.demonstrativo(mes, 'liquido')/((1+tir)**mes)
 
                 #print('TIR ->' + str(tir))
                 #print('MES >>> ' + str(mes))
-            print(ll)
             total = fin.dec(capital + fin.dec(ll))
-            print('TOTAL ---->' + str(total) + " --- " + str(fin.dec(capital)) + " -- " + str(fin.dec(ll)))
+            #print('TOTAL ---->' + str(total) + " --- " + str(fin.dec(capital)) + " -- " + str(fin.dec(ll)))
+            print(tir)
         return float(Decimal(tir).quantize(Decimal('0.0001'), ROUND_HALF_UP))
 
     def calculaVpl(self, ll):

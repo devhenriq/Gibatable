@@ -10,8 +10,8 @@ class Reservas:
 
 
     def insereBanco(self):
-        list = [self.reservas, self.capsocial]
-        str = 'reservas(reservas, capsocial)'
+        list = [self.capsocial, self.reservas]
+        str = 'reservas(capsocial, reservas)'
         Banco.insert(Banco, str, list)
 
 

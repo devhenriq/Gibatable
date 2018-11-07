@@ -55,6 +55,7 @@ class CadastroScreen(Screen):
 # Cadastro
 class PessoaScreen(Screen):
     def envia(self):
+        self.salario.text = self.salario.text.replace(",",".")
         p = Pessoa(self.cargo.text, int(self.quant.text), float(self.salario.text), self.categoria.text)
         p.relatorio()
         self.cargo.text = ""
@@ -65,6 +66,7 @@ class PessoaScreen(Screen):
 
 class InvestimentoScreen(Screen):
     def envia(self):
+        self.vunit.text = self.vunit.text.replace(",", ".")
         i = InvestimentoFixo(self.descr.text, int(self.quant.text), float(self.vunit.text), self.categoria.text)
         i.relatorio()
         self.descr.text = ""
@@ -75,6 +77,7 @@ class InvestimentoScreen(Screen):
 
 class MateriaPrimaScreen(Screen):
     def envia(self):
+        self.preco.text = self.preco.text.replace(",", ".")
         m = MateriaPrima(self.nome.text, self.materia.text, self.medida.text, float(self.preco.text), float(self.quant.text))
         m.relatorio()
         # self.nome.text = ""
@@ -82,10 +85,6 @@ class MateriaPrimaScreen(Screen):
         # self.medida.text = ""
         # self.preco.text = ""
         # self.quant.text = ""
-
-
-class PreEstimativaScreen(Screen):
-    pass
 
 
 class EstimativaScreen(Screen):
@@ -129,6 +128,7 @@ class EstimativaScreen(Screen):
         self.back.add_widget(CadastroBt())
 
     def envia(self, nome, quant, lucro, mes):
+        lucro.text = lucro.text.replace(",", ".")
         e = Estimativa(nome, int(quant.text), float(lucro.text), mes.text)
         e.relatorio()
         # self.descr.text = ""
@@ -139,6 +139,14 @@ class EstimativaScreen(Screen):
 
 class CustosFixosScreen(Screen):
     def envia(self):
+        self.limp.text = self.limp.text.replace(",", ".")
+        self.cont.text = self.cont.text.replace(",", ".")
+        self.mat.text = self.mat.text.replace(",", ".")
+        self.agua.text = self.agua.text.replace(",", ".")
+        self.aluguel.text = self.aluguel.text.replace(",", ".")
+        self.man.text = self.man.text.replace(",", ".")
+        self.outros.text = self.outros.text.replace(",", ".")
+
         c = CustosFixos(float(self.limp.text), float(self.cont.text), float(self.mat.text), float(self.agua.text), float(self.aluguel.text), float(self.man.text), float(self.outros.text))
         c.relatorio()
         self.limp.text = ""
@@ -152,12 +160,22 @@ class CustosFixosScreen(Screen):
 
 class ReservasScreen(Screen):
     def envia(self):
+        self.capsocial.text = self.capsocial.text.replace(",", ".")
+        self.res.text = self.res.text.replace(",", ".")
         pv = Reservas(self.capsocial.text, self.res.text)
         pv.relatorio()
 
 
 class TributosScreen(Screen):
     def envia(self):
+        self.simples.text = self.simples.text.replace(",", ".")
+        self.icms.text = self.icms.text.replace(",", ".")
+        self.pis.text = self.pis.text.replace(",", ".")
+        self.cofins.text = self.cofins.text.replace(",", ".")
+        self.ipi.text = self.ipi.text.replace(",", ".")
+        self.iss.text = self.iss.text.replace(",", ".")
+        self.irpj.text = self.irpj.text.replace(",", ".")
+
         t = Tributos(float(self.simples.text), float(self.icms.text), float(self.pis.text), float(self.cofins.text), float(self.ipi.text), float(self.iss.text), float(self.irpj.text))
         t.relatorio()
         self.simples.text = ""
@@ -171,6 +189,7 @@ class TributosScreen(Screen):
 
 class CustoVendasScreen(Screen):
     def envia(self):
+        self.porc.text = self.porc.text.replace(",",".")
         cv = CustoVendas(self.descricao.text, float(self.porc.text))
         cv.relatorio()
         self.descricao.text = ""
@@ -179,6 +198,12 @@ class CustoVendasScreen(Screen):
 
 class InvestimentoInicialScreen(Screen):
     def envia(self):
+        self.invoutros.text = self.invoutros.text.replace(",",".")
+        self.legal.text = self.legal.text.replace(",",".")
+        self.divulg.text = self.divulg.text.replace(",",".")
+        self.outros.text = self.outros.text.replace(",",".")
+        self.caixa.text = self.caixa.text.replace(",",".")
+        self.outrosg.text = self.outrosg.text.replace(",",".")
         ii = InvestimentoInicial(float(self.invoutros.text), float(self.legal.text), float(self.divulg.text), float(self.outros.text), float(self.caixa.text), float(self.outrosg.text))
         ii.relatorio()
         self.invoutros.text = ""
@@ -191,6 +216,7 @@ class InvestimentoInicialScreen(Screen):
 
 class CustoFinanceiroMensalScreen(Screen):
     def envia(self):
+        self.custo.text = self.custo.text.replace(",",".")
         cfm = CustoFinanceiroMensal(float(self.custo.text))
         cfm.relatorio()
         self.custo.text = ""
@@ -201,7 +227,8 @@ class RateioCustosFixosScreen(Screen):
 
     def envia(self):
         for w in self.inputs:
-            rto = RateioFixos(w) #adicionar na lista os inputs criado na linha 160 dos text input. (15 linhas abaixo)k
+            w = w.replace(",",".")
+            rto = RateioFixos(w) #adicionar na lista os inputs criado na linha dos text input. (15 linhas abaixo)k
             rto.relatorio()
 
     @mainthread
@@ -244,6 +271,7 @@ class RateioCustosOpScreen(Screen):
 
     def envia(self):
         for w in self.inputs:
+            w = w.replace(",",".")
             rto = RateioOp(w)  # adicionar na lista os inputs criado na linha 160 dos text input. (15 linhas abaixo)k
             rto.relatorio()
 
@@ -323,18 +351,24 @@ class PrecoVendaScreen(Screen):
 
     def envia(self, val, mes, prod):
         Banco.delete(Banco, 'precovenda', None, ' WHERE produto = "' + prod + '"' + ' AND mes = '+ mes)
+        val = val.replace(",",".")
         pv = PrecoVenda(prod, val, mes)
         p = pv.relatorio()
         print(p)
 
 class FinFreteScreen(Screen):
     def envia(self):
+        self.frete.text = self.frete.text.replace(",",".")
         pv = FinFreteScreen(self.frete.text, self.mes.text)
         pv.relatorio()
 
 
 class CapGiroScreen(Screen):
     def envia(self):
+        self.avista.text = self.avista.text.replace(",",".")
+        self.tres.text = self.tres.text.replace(",",".")
+        self.seis.text = self.seis.text.replace(",",".")
+        self.nov.text = self.nov.text.replace(",",".")
         pv = CapGiro(self.avista.text, self.tres.text, self.seis.text, self.nov.text, self.categoria.text)
         pv.relatorio()
 
@@ -1846,7 +1880,7 @@ class AltPessoaScreen(Screen):
         self.scrl.add_widget(tx3)
         self.scrl.add_widget(Label(text=""))
         self.scrl.add_widget(Label(text=""))
-
+        tx3.text = tx3.text.replace(",",".")
         self.back.add_widget(Button(text="Atualizar", on_release=lambda x: (Pessoa(tx1.text, float(tx2.text), float(tx3.text), cat), self.deletar(row, cat))))
         self.back.add_widget(Button(text='Voltar', on_release=lambda x: self.preenche(cat)))
 
@@ -1919,6 +1953,7 @@ class AltEstimativaScreen(Screen):
         self.scrl.add_widget(Label(text=""))
         self.scrl.add_widget(Label(text="Lucro Unitario"))
         tx3 = TextInput(text=str(row[2]))
+        tx3.text = tx3.text.replace(",",".")
         self.scrl.add_widget(tx3)
         self.scrl.add_widget(Label(text=""))
 
@@ -2004,8 +2039,9 @@ class AltInvFixoScreen(Screen):
         self.scrl.add_widget(Label(text=""))
 
         self.scrl.add_widget(Label(text=""))
-        self.scrl.add_widget(Label(text="Salario"))
+        self.scrl.add_widget(Label(text="Valor Unitario"))
         tx3 = TextInput(text=str(row[3]))
+        tx3.text = tx3.text.replace(",", ".")
         self.scrl.add_widget(tx3)
         self.scrl.add_widget(Label(text=""))
 
@@ -2091,6 +2127,7 @@ class AltMatPrimaScreen(Screen):
         self.scrl.add_widget(Label(text=""))
         self.scrl.add_widget(Label(text="PRECO UNITARIO"))
         tx3 = TextInput(text=str(row[4]))
+        tx3.text = tx3.text.replace(",",".")
         self.scrl.add_widget(tx3)
         self.scrl.add_widget(Label(text=""))
         self.scrl.add_widget(Label(text=""))
@@ -2163,6 +2200,7 @@ class AltPrecoVendaScreen(Screen):
 
         self.scrl.add_widget(Label(text='Outros custos'))
         tx1 = TextInput(text=str(fin.calculaTotal(PrecoVenda, 'outros', ' WHERE produto = "'+ nome + '" AND mes =' + str(mes))))
+        tx1.text=tx1.text.replace(",",".")
         self.scrl.add_widget(tx1)
         self.scrl.add_widget(Label(text=''))
         self.scrl.add_widget(Label(text='Mes'))

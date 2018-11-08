@@ -78,6 +78,7 @@ class InvestimentoScreen(Screen):
 class MateriaPrimaScreen(Screen):
     def envia(self):
         self.preco.text = self.preco.text.replace(",", ".")
+        self.quant.text = self.quant.text.replace(",", ".")
         m = MateriaPrima(self.nome.text, self.materia.text, self.medida.text, float(self.preco.text), float(self.quant.text))
         m.relatorio()
         # self.nome.text = ""

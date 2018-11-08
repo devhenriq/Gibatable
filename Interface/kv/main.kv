@@ -88,101 +88,129 @@ Manager:
 
 <MenuScreen>:
     name: "menu"
-    GridLayout:
-        rows:3
-        height: self.minimum_height
-        size_hint: 1, 1
-        row_default_height: 120
-        spacing: 0
-        Label:
-            text: 'Menu'
-            font_size: 0.6*self.height
-            size_hint: 0.1, 0.1
-            padding_y: 150
-            halign: 'center'
-            valign: 'center'
+    BoxLayout:
+        orientation: 'vertical'
+        ActionBar:
+            pos_hint: {'top':1}
+            ActionView:
+                use_separator: True
 
-        BoxLayout:
-            padding: 30
-            size_hint: 1,1
-            ScrollView:
-                height: root.height * 1.5
-                GridLayout:
-                    id: scrl
-                    name: "scrl"
-                    rows: 3
-                    height: self.minimum_height
-                    padding: 100
-                    spacing: 50
-                    row_default_height: 100
-                    col_default_width: 100
-                    size_hint: 1,None
-                    GridLayout:
-                        cols: 3
-                        height: self.minimum_height
-                        spacing: 0
-                        row_default_height: 100
-                        col_default_width: 400
-                        size_hint: 1,None
-                        Label:
-                            text: " "
-                        Button:
-                            font_size: 0.4*self.height
-                            text:'Cadastros'
-                            pos_hint: {'top':8, 'right': 4}
-                            on_release: app.root.current = "cadastro"
-                            size_hint: 2, .8
-                        Label:
-                            text: " "
-
-                    GridLayout:
-                        cols: 3
-                        height: self.minimum_height
-                        spacing: 0
-                        row_default_height: 100
-                        col_default_width: 400
-                        size_hint: 1,None
-                        Label:
-                            text: " "
-                        Button:
-                            font_size: 0.4*self.height
-                            text:'Relatorios'
-                            pos_hint: {'top':8, 'right': 8}
-                            on_release: app.root.current = "relatorioscustos"
-                            size_hint: 2, .8
-                        Label:
-                            text: " "
-                    GridLayout:
-                        cols: 3
-                        height: self.minimum_height
-                        spacing: 0
-                        row_default_height: 100
-                        col_default_width: 400
-                        size_hint: 1,None
-                        Label:
-                            text: " "
-                        Button:
-                            font_size: 0.4*self.height
-                            text:'Alterar'
-                            pos_hint: {'top':7, 'right': 6}
-                            on_release: app.root.current = "alterar"
-                            size_hint: 2, .8
-                        Label:
-                            text: " "
+                ActionPrevious:
+                    title: 'Example App'
+                    with_previous: False
+                    allign: 'left'
+                ActionButton:
+                    text: 'File'
+                ActionButton:
+                    text: 'Edit'
+                ActionGroup:
+                    text: 'Tools'
+                    mode: 'spinner'
+                    ActionButton:
+                        text: 'Tool1'
+                    ActionButton:
+                        text: 'Tool2'
+                    ActionButton:
+                        text: 'Tool3'
+                    ActionButton:
+                        text: 'Tool4'
+                        on_release: app.root.current = "start"
         GridLayout:
-            cols: 2
-            size_hint: .1, .1
-            row_default_height: 5
-            col_default_width: 120
-            font_size: 0.2 * self.height
-            spacing:
+            rows: 3
+            height: self.minimum_height
+            size_hint: 1, 1
+            row_default_height: 120
+            spacing: 0
+
             Label:
-                text: ""
-            Voltar:
-                font_size: 0.3*self.height
-                size_hint: 0.1, None
-                text_size: self.size
+                text: 'Menu'
+                font_size: 0.6*self.height
+                size_hint: 0.1, 0.1
+                padding_y: 150
                 halign: 'center'
                 valign: 'center'
-                padding_y: 10
-                on_release: app.root.current = "start"
+
+            BoxLayout:
+                padding: 30
+                size_hint: 1,1
+                ScrollView:
+                    height: root.height * 1.5
+                    GridLayout:
+                        id: scrl
+                        name: "scrl"
+                        rows: 3
+                        height: self.minimum_height
+                        padding: 100
+                        spacing: 50
+                        row_default_height: 100
+                        col_default_width: 100
+                        size_hint: 1,None
+                        GridLayout:
+                            cols: 3
+                            height: self.minimum_height
+                            spacing: 0
+                            row_default_height: 100
+                            col_default_width: 400
+                            size_hint: 1,None
+                            Label:
+                                text: " "
+                            Button:
+                                font_size: 0.4*self.height
+                                text:'Cadastros'
+                                pos_hint: {'top':8, 'right': 4}
+                                on_release: app.root.current = "cadastro"
+                                size_hint: 2, .8
+                            Label:
+                                text: " "
+
+                        GridLayout:
+                            cols: 3
+                            height: self.minimum_height
+                            spacing: 0
+                            row_default_height: 100
+                            col_default_width: 400
+                            size_hint: 1,None
+                            Label:
+                                text: " "
+                            Button:
+                                font_size: 0.4*self.height
+                                text:'Relatorios'
+                                pos_hint: {'top':8, 'right': 8}
+                                on_release: app.root.current = "relatorioscustos"
+                                size_hint: 2, .8
+                            Label:
+                                text: " "
+                        GridLayout:
+                            cols: 3
+                            height: self.minimum_height
+                            spacing: 0
+                            row_default_height: 100
+                            col_default_width: 400
+                            size_hint: 1,None
+                            Label:
+                                text: " "
+                            Button:
+                                font_size: 0.4*self.height
+                                text:'Alterar'
+                                pos_hint: {'top':7, 'right': 6}
+                                on_release: app.root.current = "alterar"
+                                size_hint: 2, .8
+                            Label:
+                                text: " "
+            GridLayout:
+                cols: 2
+                size_hint: .1, .1
+                row_default_height: 5
+                col_default_width: 120
+                font_size: 0.2 * self.height
+                spacing:
+                Label:
+                    text: ""
+                Voltar:
+                    font_size: 0.3*self.height
+                    size_hint: 0.1, None
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    padding_y: 10
+                    on_release: app.root.current = "start"

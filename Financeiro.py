@@ -30,9 +30,8 @@ class Financeiro:
         reserv = self.calculaTotal(Reservas, 'reservas')
         rv = (lucro * reserv) / 100
         liquido = lucro - ipr - rv
-        print(str(lucro) + " ---- " + str(reserv))
+        print(str(lucro) + " ---- " + str(reserv) + " ---- " + str(ipr) + " ->>>> " +str(liquido))
         if ret == 'liquido':
-            print(liquido)
             return self.dec(liquido)
         if ret == 'imposto':
             return self.dec(ipr)

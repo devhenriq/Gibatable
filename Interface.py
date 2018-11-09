@@ -1694,6 +1694,7 @@ class RelPrecoVendaScreen(Screen):
         self.back.clear_widgets()
         gc.collect()
         self.title.text = nome
+        self.back.add_widget(Label(text=''))
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
         x = 1
         fin = Financeiro()
@@ -2669,9 +2670,15 @@ class RelRentScreen(Screen):
 class RelTirScreen(Screen):
     @mainthread
     def on_enter(self):
-        fin = Financeiro()
         self.scrl.clear_widgets()
         gc.collect()
+        self.scrl.add_widget(Label(text='CARREGANDO ...'))
+        self.preenche()
+
+    def preenche(self):
+        fin = Financeiro()
+        self.scrl.add_widget(Label(text='CARREGANDO ...'))
+
         self.title.text = 'TIR E VPL'
         self.back.clear_widgets()
         self.back.add_widget(Label(text=""))
@@ -2697,26 +2704,22 @@ class RelTirScreen(Screen):
         fin = Financeiro()
         capital = 0 - fin.calculaTotal(InvestimentoInicial, 'total')
         tir = 0- 0.0001
-        total = 0-1
+        total = 0-1000000000
         lucros = []
-
-        while(total <= 0 or total >= 100 ):
+        c = 0
+        while(total <= -100 or total >= 100 ):
             ll = 0
             tir = tir + 0.0001
 
             for mes in range(1,13):
                 if tir == 0:
                     lucros.append(fin.demonstrativo(mes, 'liquido'))
-                else:
-                    ll += lucros[mes-1]/((1+tir)**mes)
-                    print(lucros[mes-1])
-                #lv = ll / ((1 + tir) ** mes)
-                #ll += fin.demonstrativo(mes, 'liquido')/((1+tir)**mes)
 
-                #print('TIR ->' + str(tir))
-                #print('MES >>> ' + str(mes))
+                else:
+                    ll = ll + lucros[mes-1]/((1+tir)**mes)
+
             total = fin.dec(capital + fin.dec(ll))
-            #print('TOTAL ---->' + str(total) + " --- " + str(fin.dec(capital)) + " -- " + str(fin.dec(ll)))
+            print('TOTAL ---->' + str(total) + " --- " + str(fin.dec(capital)) + " -- " + str(fin.dec(tir)))
             print(tir)
         return float(Decimal(tir).quantize(Decimal('0.0001'), ROUND_HALF_UP))
 

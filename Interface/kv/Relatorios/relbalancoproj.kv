@@ -16,20 +16,18 @@
             font_size: 0.6*self.height
             size_hint: 1,None
         BoxLayout:
-            orientation: 'vertical'
+            height: self.minimum_height
             size_hint: 1,None
-            ScrollView:
-                height: root.height * 1.5
-                GridLayout:
-                    id: scrl
-                    name: "scrl"
-                    cols: 4
-                    height: self.minimum_height
-                    padding: 100
-                    spacing: 0,-10
-                    row_default_height: 35
-                    col_default_width: 100
-                    size_hint: 1,None
+
+            GridLayout:
+                id: scrl
+                name: "scrl"
+                cols: 4
+                height: self.minimum_height
+                spacing: 0,-10
+                row_default_height: 35
+                col_default_width: 100
+                size_hint: 1,None
 
         GridLayout:
             cols: 2

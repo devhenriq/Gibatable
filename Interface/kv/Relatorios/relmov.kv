@@ -13,7 +13,6 @@
             font_size: 0.6*self.height
             size_hint: 1,None
         BoxLayout:
-            orientation: 'vertical'
             scrl: scrl
 
             ScrollView:
@@ -25,7 +24,7 @@
                     id: scrl
                     height: self.minimum_height
                     padding: 100
-                    spacing: 10
+                    spacing: 0,-10
                     row_default_height: 50
                     col_default_width: 100
                     size_hint: 1,None

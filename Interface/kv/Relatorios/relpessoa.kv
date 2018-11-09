@@ -3,30 +3,45 @@
     name: "relpessoa"
 
     GridLayout:
-        rows:3
+        rows: 3
         height: self.minimum_height
-        row_default_height: 60
-        spacing: 50
-        Label:
-            text: 'Gastos com Pessoal'
-            font_size: 0.6*self.height
-            size_hint: .1, .1
-        BoxLayout:
-            padding: 30
-            GridLayout:
-                cols: 3
-                row_default_height: 60
-                height: self.minimum_height
-                Label:
-                    text: ''
-                GridLayout:
-                    rows: 3
-                    height: self.minimum_height
-                    spacing: 25
-                    row_default_height: 30
+        size_hint: 1, 1
+        row_default_height: 120
+        spacing: 0,-70
 
+        Label:
+            text: 'Pessoas'
+            font_size: 0.2*self.height
+            size_hint: 0.1, 0.1
+            padding_y: 150
+            halign: 'center'
+            valign: 'center'
+
+        BoxLayout:
+            height: self.minimum_height
+            padding: 30
+            size_hint: 1,None
+            GridLayout:
+                id: scrl
+                name: "scrl"
+                rows: 3
+                height: self.minimum_height
+                padding: 100
+                spacing: 15
+                row_default_height: 80
+                col_default_width: 100
+                size_hint: 1,None
+                GridLayout:
+                    cols: 3
+                    height: self.minimum_height
+                    spacing: 0
+                    row_default_height: 60
+                    col_default_width: 400
+                    size_hint: 1,None
+                    Label:
+                        text: " "
                     Button:
-                        font_size: 0.2*self.height
+                        font_size: 0.3*self.height
                         size_hint: .1,.1
                         text_size: self.size
                         halign: 'center'
@@ -34,8 +49,19 @@
                         padding_y: 10
                         text: 'GASTOS COM PESSOAL DE PRODUCAO'
                         on_release: app.root.current = 'relpessoaop'
+                    Label:
+                        text: " "
+                GridLayout:
+                    cols: 3
+                    height: self.minimum_height
+                    spacing: 0
+                    row_default_height: 60
+                    col_default_width: 400
+                    size_hint: 1,None
+                    Label:
+                        text: " "
                     Button:
-                        font_size: 0.2*self.height
+                        font_size: 0.3*self.height
                         size_hint: .1,.1
                         text_size: self.size
                         halign: 'center'
@@ -43,8 +69,19 @@
                         padding_y: 10
                         text: 'GASTOS COM PESSOAL ADMINISTRATIVO'
                         on_release: app.root.current = 'relpessoaadm'
+                    Label:
+                        text: " "
+                GridLayout:
+                    cols: 3
+                    height: self.minimum_height
+                    spacing: 0
+                    row_default_height: 60
+                    col_default_width: 400
+                    size_hint: 1,None
+                    Label:
+                        text: " "
                     Button:
-                        font_size: 0.2*self.height
+                        font_size: 0.3*self.height
                         size_hint: .1,.1
                         text_size: self.size
                         halign: 'center'
@@ -52,17 +89,22 @@
                         padding_y: 10
                         text: 'GASTOS COM DIRECAO'
                         on_release: app.root.current = 'relpessoadir'
-                Label:
-                    text: ''
+                    Label:
+                        text: ''
         GridLayout:
             cols: 2
-            height: self.minimum_height
-            padding: 50
-            size_hint: 0.1, 0.1
-            row_default_height: 60
-            col_default_width: 100
-            spacing: 500
+            size_hint: .1, .1
+            row_default_height: 5
+            col_default_width: 120
+            font_size: 0.2 * self.height
+            spacing:
             Label:
-                text: ''
+                text: ""
             Voltar:
+                font_size: 0.3*self.height
+                size_hint: 0.1, None
+                text_size: self.size
+                halign: 'center'
+                valign: 'center'
+                padding_y: 10
                 on_release: app.root.current = "relatorio"

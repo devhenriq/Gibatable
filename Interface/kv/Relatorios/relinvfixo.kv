@@ -5,82 +5,94 @@
     GridLayout:
         rows:3
         height: self.minimum_height
-        row_default_height: 60
-        spacing: 50
+        size_hint: 1, 1
+        row_default_height: 120
+        spacing: 0,-70
         Label:
             text: 'Investimentos Fixos'
-            font_size: 0.6*self.height
-            size_hint: .1, .1
+            font_size: 0.4*self.height
+            size_hint: 0.1, 0.1
+            padding_y: 150
+            halign: 'center'
+            valign: 'center'
         BoxLayout:
             padding: 30
-            GridLayout:
-                cols: 3
-                spacing: 30
-                row_default_height: 60
-                height: self.minimum_height
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    text: 'Moveis e Utensilios'
-                    on_release: app.root.current = 'relmov'
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    text: 'Maquinas e Equipamentos'
-                    on_release: app.root.current = 'relmaq'
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    text: 'Computadores/Equipamentos de Informatica'
-                    on_release: app.root.current = 'relcomp'
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    text: 'Fixos em Veiculos'
-                    on_release: app.root.current = 'relveic'
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    text: 'Imoveis Predios'
-                    on_release: app.root.current = 'relpred'
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    text: 'Imoveis Terrenos'
-                    on_release: app.root.current = 'relterr'
-                Button:
-                    font_size: 0.2*self.height
-                    size_hint: .1,.1
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'center'
-                    padding_y: 10
-                    text: 'Gastos com depreciacoes'
-                    on_release: app.root.current = 'reldeprec'
+            size_hint: 1,1
+            ScrollView:
+                height: root.height * 1.5
+                GridLayout:
+                    id: scrl
+                    name: "scrl"
+                    cols: 3
+                    height: self.minimum_height
+                    padding: 100
+                    spacing: 15
+                    row_default_height: 80
+                    col_default_width:100
+                    size_hint: 1,None
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        text: 'Moveis e Utensilios'
+                        on_release: app.root.current = 'relmov'
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        text: 'Maquinas e Equipamentos'
+                        on_release: app.root.current = 'relmaq'
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        text: 'Computadores/Equipamentos de Informatica'
+                        on_release: app.root.current = 'relcomp'
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        text: 'Fixos em Veiculos'
+                        on_release: app.root.current = 'relveic'
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        text: 'Imoveis Predios'
+                        on_release: app.root.current = 'relpred'
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        text: 'Imoveis Terrenos'
+                        on_release: app.root.current = 'relterr'
+                    Button:
+                        font_size: 0.3*self.height
+                        size_hint: .1,.1
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'center'
+                        padding_y: 10
+                        text: 'Gastos com depreciacoes'
+                        on_release: app.root.current = 'reldeprec'
         GridLayout:
             cols: 2
             height: self.minimum_height

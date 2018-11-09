@@ -120,83 +120,82 @@ Manager:
             height: self.minimum_height
             size_hint: 1, 1
             row_default_height: 120
-            spacing: 0
+            spacing: 0,-50
 
             Label:
                 text: 'Menu'
-                font_size: 0.6*self.height
+                font_size: 0.4*self.height
                 size_hint: 0.1, 0.1
                 padding_y: 150
                 halign: 'center'
                 valign: 'center'
 
             BoxLayout:
+                height: self.minimum_height
                 padding: 30
-                size_hint: 1,1
-                ScrollView:
-                    height: root.height * 1.5
+                size_hint: 1,None
+                GridLayout:
+                    id: scrl
+                    name: "scrl"
+                    rows: 3
+                    height: self.minimum_height
+                    padding: 100
+                    spacing: 15
+                    row_default_height: 60
+                    col_default_width: 100
+                    size_hint: 1,None
                     GridLayout:
-                        id: scrl
-                        name: "scrl"
-                        rows: 3
+                        cols: 3
                         height: self.minimum_height
-                        padding: 100
-                        spacing: 50
-                        row_default_height: 100
-                        col_default_width: 100
+                        spacing: 0
+                        row_default_height: 60
+                        col_default_width: 400
                         size_hint: 1,None
-                        GridLayout:
-                            cols: 3
-                            height: self.minimum_height
-                            spacing: 0
-                            row_default_height: 100
-                            col_default_width: 400
-                            size_hint: 1,None
-                            Label:
-                                text: " "
-                            Button:
-                                font_size: 0.4*self.height
-                                text:'Cadastros'
-                                pos_hint: {'top':8, 'right': 4}
-                                on_release: app.root.current = "cadastro"
-                                size_hint: 2, .8
-                            Label:
-                                text: " "
+                        Label:
+                            text: " "
+                        Button:
+                            font_size: 0.4*self.height
+                            text:'Cadastros'
+                            pos_hint: {'top':8, 'right': 4}
+                            on_release: app.root.current = "cadastro"
+                            size_hint: 2, .8
+                        Label:
+                            text: " "
 
-                        GridLayout:
-                            cols: 3
-                            height: self.minimum_height
-                            spacing: 0
-                            row_default_height: 100
-                            col_default_width: 400
-                            size_hint: 1,None
-                            Label:
-                                text: " "
-                            Button:
-                                font_size: 0.4*self.height
-                                text:'Relatorios'
-                                pos_hint: {'top':8, 'right': 8}
-                                on_release: app.root.current = "relatorioscustos"
-                                size_hint: 2, .8
-                            Label:
-                                text: " "
-                        GridLayout:
-                            cols: 3
-                            height: self.minimum_height
-                            spacing: 0
-                            row_default_height: 100
-                            col_default_width: 400
-                            size_hint: 1,None
-                            Label:
-                                text: " "
-                            Button:
-                                font_size: 0.4*self.height
-                                text:'Alterar'
-                                pos_hint: {'top':7, 'right': 6}
-                                on_release: app.root.current = "alterar"
-                                size_hint: 2, .8
-                            Label:
-                                text: " "
+                    GridLayout:
+                        cols: 3
+                        height: self.minimum_height
+                        spacing: 0
+                        row_default_height: 60
+                        col_default_width: 400
+                        size_hint: 1,None
+                        Label:
+                            text: " "
+                        Button:
+                            font_size: 0.4*self.height
+                            text:'Relatorios'
+                            pos_hint: {'top':8, 'right': 8}
+                            on_release: app.root.current = "relatorioscustos"
+                            size_hint: 2, .8
+                        Label:
+                            text: " "
+                    GridLayout:
+                        cols: 3
+                        height: self.minimum_height
+                        spacing: 0
+                        row_default_height: 60
+                        col_default_width: 400
+                        size_hint: 1,None
+                        Label:
+                            text: " "
+                        Button:
+                            font_size: 0.4*self.height
+                            text:'Alterar'
+                            pos_hint: {'top':7, 'right': 6}
+                            on_release: app.root.current = "alterar"
+                            size_hint: 2, .8
+                        Label:
+                            text: " "
             GridLayout:
                 cols: 2
                 size_hint: .1, .1

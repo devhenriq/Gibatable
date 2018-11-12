@@ -14,6 +14,181 @@
     pos_hint: {'top':1, 'right': 10}
     text:'Voltar'
 
+<Navbar>:
+    pos_hint: {'top':1}
+    ActionView:
+        use_separator: True
+
+        ActionPrevious:
+            title: 'GIBATABLE'
+            with_previous: False
+            allign: 'left'
+        ActionGroup:
+            text: 'Cadastros'
+            mode: 'spinner'
+            dropdown_width: 300
+            ActionButton:
+                text: 'Pessoas'
+                on_release: app.root.current = "pessoa"
+            ActionButton:
+                text: 'Investimentos Fixos'
+                on_release: app.root.current = "investimento"
+            ActionButton:
+                text: 'Materia Prima'
+                on_release: app.root.current = "matprima"
+            ActionButton:
+                text: 'Estimativa de Vendas'
+                on_release: app.root.current = "estimativa"
+            ActionButton:
+                text: 'Custos Fixos Mensais'
+                on_release: app.root.current = "custofixo"
+            ActionButton:
+                text: 'Tributos'
+                on_release: app.root.current = "tributo"
+            ActionButton:
+                text: 'Custo com Vendas'
+                on_release: app.root.current = "custovendas"
+            ActionButton:
+                text: 'Investimento Inicial'
+                on_release: app.root.current = "investimentoinicial"
+            ActionButton:
+                text: 'Custo Financeiro Mensal'
+                on_release: app.root.current = "custofinmen"
+            ActionButton:
+                text: 'Rateio dos Custos Fixos'
+                on_release: app.root.current = "rateiocustosfixos"
+            ActionButton:
+                text: 'Rateio dos Custos Operacionais'
+                on_release: app.root.current = "rateiocustosop"
+            ActionButton:
+                text: 'Preco de Venda'
+                on_release: app.root.current = "precovenda"
+            ActionButton:
+                text: 'Custos Totais'
+                on_release: app.root.current = "finfrete"
+            ActionButton:
+                text: 'Prazos'
+                on_release: app.root.current = "capgiro"
+            ActionButton:
+                text: 'Reservas e Cap Social'
+                on_release: app.root.current = "reservas"
+        ActionGroup:
+            text: 'Custos'
+            mode: 'spinner'
+            dropdown_width: 300
+            ActionButton:
+                text: 'Investimentos Fixos'
+                on_release: app.root.current = "relinvfixo"
+            ActionButton:
+                text: 'Pessoas'
+                on_release: app.root.current = "relpessoa"
+            ActionButton:
+                text: 'Materia Prima'
+                on_release: app.root.current = "relmp"
+            ActionButton:
+                text: 'Estimativa de Vendas'
+                on_release: app.root.current = "relestimativa"
+            ActionButton:
+                text: 'Custos Fixos Mensais'
+                on_release: app.root.current = "relcustofixo"
+            ActionButton:
+                text: 'Investimentos Iniciais'
+                on_release: app.root.current = "relinvini"
+            ActionButton:
+                text: 'Custo Financeiro Mensal'
+                on_release: app.root.current = "relcustofinmen"
+            ActionButton:
+                text: 'Estoque'
+                on_release: app.root.current = "relestoque"
+            ActionButton:
+                text: 'Rateio de Custos Fixos'
+                on_release: app.root.current = "relrateiofixo"
+            ActionButton:
+                text: 'Rateio de Custos Operacionais'
+                on_release: app.root.current = "relrateioop"
+            ActionButton:
+                text: 'Tributos'
+                on_release: app.root.current = "reltrib"
+            ActionButton:
+                text: 'Custo com Vendas'
+                on_release: app.root.current = "relcustovendas"
+            ActionButton:
+                text: 'Ponto de equilibrio em unidade'
+                on_release: app.root.current = "relpontoeq"
+            ActionButton:
+                text: 'Preco de Vendas'
+                on_release: app.root.current = "relprecovenda"
+
+        ActionGroup:
+            text: 'Financeiro'
+            mode: 'spinner'
+            dropdown_width: 600
+            ActionButton:
+                text: 'Preco de venda unitario mensal'
+                on_release: app.root.current = "relpvunmes"
+            ActionButton:
+                text: 'Projecao de vendas p/ produto p/ mes'
+                on_release: app.root.current = "relprojecaovendas"
+            ActionButton:
+                text: 'Faturamento bruto de vendas p/ produto p/ mes'
+                on_release: app.root.current = "relfaturamento"
+            ActionButton:
+                text: 'Planilha de custos totais'
+                on_release: app.root.current = "relctotal"
+            ActionButton:
+                text: 'Demonstrativo de resultados'
+                on_release: app.root.current = "reldemonstrativo"
+            ActionButton:
+                text: 'Indice de margem de contribuicao'
+                on_release: app.root.current = "relmargemcontrib"
+            ActionButton:
+                text: 'Ponto de equilibrio (EM REAIS)'
+                on_release: app.root.current = "relpontoeqfin"
+            ActionButton:
+                text: 'Lucratividade, Rentabilidade e Prazo de Retorno de investimento'
+                on_release: app.root.current = "relrent"
+            ActionButton:
+                text: 'TIR e VPL'
+                on_release: app.root.current = "reltir"
+            ActionButton:
+                text: 'Fluxo de caixa projetado para o primeiro ano'
+                on_release: app.root.current = "relfluxo"
+
+        ActionGroup:
+            text: 'Capital de Giro'
+            mode: 'spinner'
+            dropdown_width: 500
+            ActionButton:
+                text: 'Recebimentos'
+                on_release: app.root.current = "relrecebimentos"
+            ActionButton:
+                text: 'Pagamentos'
+                on_release: app.root.current = "relpagamentos"
+            ActionButton:
+                text: 'Contas a receber e mais'
+                on_release: app.root.current = "relmin"
+            ActionButton:
+                text: 'Capital de giro'
+                on_release: app.root.current = "relcapgiro"
+            ActionButton:
+                text: 'Investimentos pre-operacionais'
+                on_release: app.root.current = "relinvpreop"
+            ActionButton:
+                text: 'Calculo da necessidade de capital de giro em dias'
+                on_release: app.root.current = "relcalc"
+            ActionButton:
+                text: 'Caixa Minimo'
+                on_release: app.root.current = "relcaixamin"
+            ActionButton:
+                text: 'Balanco Inicial'
+                on_release: app.root.current = "relbalancoini"
+            ActionButton:
+                text: 'Balanco Projetado'
+                on_release: app.root.current = "relbalancoproj"
+            ActionButton:
+                text: 'Origem e fonte dos recursos'
+                on_release: app.root.current = "relrecursos"
+
 #<Button>:
   #  size_hint: 0.1, 0.1
    # text_size: self.size

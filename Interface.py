@@ -1,6 +1,7 @@
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.label import Label
+from kivy.uix.actionbar import ActionBar
 from kivy.uix.textinput import TextInput
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -2384,6 +2385,7 @@ class RelCTotalScreen(Screen):
         self.back.clear_widgets()
         self.back.add_widget(Label(text=""))
         self.back.add_widget(RelatorioFinBt())
+        self.scrl.spacing = [10]
         for mes in range(1, 13):
             self.criabotao(mes)
 
@@ -2404,6 +2406,7 @@ class RelCTotalScreen(Screen):
         self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
 
     def desenhaTela(self, mes):
+        self.scrl.spacing = [0, -10]
         fin = Financeiro()
         self.scrl.add_widget(Label(text='CUSTOS C/ PESSOAL ADMINISTRATIVO'))
         adm = fin.calculaTotal(Pessoa, 'total', ' WHERE categoria = "Administrativo"')
@@ -2506,71 +2509,193 @@ class RelDemonstrativoScreen(Screen):
         self.back.clear_widgets()
         self.back.add_widget(Label(text=""))
         self.back.add_widget(RelatorioFinBt())
-        for mes in range(1, 13):
-            self.criabotao(mes)
-        self.scrl.add_widget(Button(text='TOTAL ANUAL', on_release= lambda x: self.preenche(" ")))
-
-    def criabotao(self, mes):
-        bt = Button(text='Mes ' + str(mes))
-        bt.bind(on_release=lambda x: self.preenche(mes))
-        self.scrl.add_widget(bt)
-
-    def preenche(self, mes):
-        self.scrl.clear_widgets()
-        self.back.clear_widgets()
-        gc.collect()
-
-        self.title.text = 'Preco de venda unitario mensal'
-        self.scrl.add_widget(Label(text='DESCRICAO'))
-        self.scrl.add_widget(Label(text='MES ' + str(mes)))
-        self.desenhaTela(mes)
-        self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
-
-    def desenhaTela(self, mes):
         fin = Financeiro()
-        if mes == " ":
-            fat = 0
-            cv = 0
-            cf = 0
-            for m in range(1,13):
-                fat += fin.calculaFaturamento(m)
-                cv += fin.custosVariaveis(m)
-                cf += fin.calculaTotal(CustosFixos, 'total')
-        else:
-            fat = fin.calculaFaturamento(mes)
-            cv = fin.custosVariaveis(mes)
-            cf = fin.calculaTotal(CustosFixos, 'total')
+        lista = ['RECEITA TOTAL', 'CUSTOS VARIÁVEIS', 'MARGEM DE CONTRIB.', 'CUSTOS FIXOS', 'LUCRO OP.' , 'IPR / CONTRIB. SOCIAL', 'RESERVAS ' + str(fin.calculaTotal(Reservas, 'reservas')) + "%", 'LUCRO LÍQUIDO']
 
-        mc = fat - cv
-        lucro = mc - cf
-        ipr = lucro * (fin.calculaTotal(Tributos, 'irpj') / 100)
-        reserv = fin.calculaTotal(Reservas, 'reservas')
-        rv = (lucro * reserv) / 100
-        liquido = lucro - ipr - rv
+        total = [0,0,0,0,0,0,0,0]
+        self.scrl.add_widget(Label(text=''))
+        for mes in range(1, 14):
+            for x in range(0,8):
+                if mes == 1:
+                    self.scrl.add_widget(Label(text=lista[x]))
+            if mes != 13:
+                self.scrl.add_widget(Label(text="Mes  " + str(mes)))
+            else:
+                self.scrl.add_widget(Label(text="TOTAL ANUAL"))
+            if mes != 13:
+                fat = fin.calculaFaturamento(mes)
+                total[0] += fat
 
-        self.scrl.add_widget(Label(text='RECEITA TOTAL'))
-        self.scrl.add_widget(Label(text="%.2f"%(fat)))
+                cv = fin.custosVariaveis(mes)
+                total[1] += cv
 
-        self.scrl.add_widget(Label(text='CUSTOS VARIAVEIS'))
-        self.scrl.add_widget(Label(text="%.2f"%(cv)))
+                mc = fat - cv
+                total[2] += mc
 
-        self.scrl.add_widget(Label(text='MARGEM DE CONTRIBUICAO'))
-        self.scrl.add_widget(Label(text="%.2f"%(mc)))
+                cf = fin.calculaTotal(CustosFixos, 'total')
+                total[3] += cf
 
-        self.scrl.add_widget(Label(text='CUSTOS FIXOS'))
-        self.scrl.add_widget(Label(text="%.2f"%(cf)))
+                lucro = mc - cf
+                total[4] += lucro
 
-        self.scrl.add_widget(Label(text='LUCRO OPERACIONAL'))
-        self.scrl.add_widget(Label(text="%.2f"%(lucro)))
+                ipr = lucro * (fin.calculaTotal(Tributos, 'irpj') / 100)
+                total[5] += ipr
 
-        self.scrl.add_widget(Label(text='IMPOSTO DE RENDA / CONTRIB. SOCIAL'))
-        self.scrl.add_widget(Label(text="%.2f"%(ipr)))
+                reserv = fin.calculaTotal(Reservas, 'reservas')
+                rv = (lucro * reserv) / 100
+                total[6] += rv
 
-        self.scrl.add_widget(Label(text='RESERVAS % ' + str(reserv)))
-        self.scrl.add_widget(Label(text="%.2f"%(rv)))
 
-        self.scrl.add_widget(Label(text='LUCRO LIQUIDO'))
-        self.scrl.add_widget(Label(text="%.2f"%(liquido)))
+                liquido = lucro - ipr - rv
+                total[7] += liquido
+
+                self.scrl.add_widget(Label(text="%.2f" % (fat)))
+                self.scrl.add_widget(Label(text="%.2f" % (cv)))
+                self.scrl.add_widget(Label(text="%.2f" % (mc)))
+                self.scrl.add_widget(Label(text="%.2f" % (cf)))
+                self.scrl.add_widget(Label(text="%.2f" % (lucro)))
+                self.scrl.add_widget(Label(text="%.2f" % (ipr)))
+                self.scrl.add_widget(Label(text="%.2f" % (rv)))
+                self.scrl.add_widget(Label(text="%.2f" % (liquido)))
+
+            if mes == 13:
+                self.scrl.add_widget(Label(text="%.2f" % (total[0])))
+                self.scrl.add_widget(Label(text="%.2f" % (total[1])))
+                self.scrl.add_widget(Label(text="%.2f" % (total[2])))
+                self.scrl.add_widget(Label(text="%.2f" % (total[3])))
+                self.scrl.add_widget(Label(text="%.2f" % (total[4])))
+                self.scrl.add_widget(Label(text="%.2f" % (total[5])))
+                self.scrl.add_widget(Label(text="%.2f" % (total[6])))
+                self.scrl.add_widget(Label(text="%.2f" % (total[7])))
+
+        #         if x == 1:
+        #             self.scrl.add_widget(Label(text="Mes  "+ str(mes)))
+        #         else:
+        #             if x == 2:
+        #                 fat = fin.calculaFaturamento(mes)
+        #                 self.scrl.add_widget(Label(text="%.2f" % (fat)))
+        #             if x == 3:
+        #                 cv = fin.custosVariaveis(mes)
+        #                 self.scrl.add_widget(Label(text="%.2f" % (cv)))
+        #             if x == 4:
+        #                 fat = fin.calculaFaturamento(mes)
+        #                 cv = fin.custosVariaveis(mes)
+        #                 mc = fat - cv
+        #                 self.scrl.add_widget(Label(text="%.2f" % (mc)))
+        #             if x == 5:
+        #                 cf = fin.calculaTotal(CustosFixos, 'total')
+        #                 self.scrl.add_widget(Label(text="%.2f" % (cf)))
+        #             if x == 6:
+        #                 fat = fin.calculaFaturamento(mes)
+        #                 cf = fin.calculaTotal(CustosFixos, 'total')
+        #                 cv = fin.custosVariaveis(mes)
+        #                 mc = fat - cv
+        #                 lucro = mc - cf
+        #                 self.scrl.add_widget(Label(text="%.2f" % (lucro)))
+        #             if x == 7:
+        #                 fat = fin.calculaFaturamento(mes)
+        #                 cf = fin.calculaTotal(CustosFixos, 'total')
+        #                 cv = fin.custosVariaveis(mes)
+        #                 mc = fat - cv
+        #                 lucro = mc - cf
+        #                 ipr = lucro * (fin.calculaTotal(Tributos, 'irpj') / 100)
+        #                 self.scrl.add_widget(Label(text="%.2f" % (ipr)))
+        #             if x == 8:
+        #                 fat = fin.calculaFaturamento(mes)
+        #                 cf = fin.calculaTotal(CustosFixos, 'total')
+        #                 cv = fin.custosVariaveis(mes)
+        #                 mc = fat - cv
+        #                 lucro = mc - cf
+        #                 reserv = fin.calculaTotal(Reservas, 'reservas')
+        #                 rv = (lucro * reserv) / 100
+        #                 self.scrl.add_widget(Label(text="%.2f" % (rv)))
+        #     self.scrl.add_widget(Label(text=lista[x-1][0]))
+        #     self.scrl.add_widget(Label(text=lista[x-1][1]))
+        #
+        # for mes in range(1,13):
+        #     fat = fin.calculaFaturamento(mes)
+        #     cf = fin.calculaTotal(CustosFixos, 'total')
+        #     cv = fin.custosVariaveis(mes)
+        #     mc = fat - cv
+        #     lucro = mc - cf
+        #     ipr = lucro * (fin.calculaTotal(Tributos, 'irpj') / 100)
+        #     reserv = fin.calculaTotal(Reservas, 'reservas')
+        #     rv = (lucro * reserv) / 100
+        #     liquido = lucro - ipr - rv
+        #     self.scrl.add_widget(Label(text="%.2f" % (liquido)))
+        ###############################################################################################################
+    #def on_enter(self):
+    #     self.scrl.clear_widgets()
+    #     gc.collect()
+    #     self.title.text = 'Demonstrativo de resultados'
+    #     self.back.clear_widgets()
+    #     self.back.add_widget(Label(text=""))
+    #     self.back.add_widget(RelatorioFinBt())
+    #     for mes in range(1, 13):
+    #         self.criabotao(mes)
+    #     self.scrl.add_widget(Button(text='TOTAL ANUAL', on_release= lambda x: self.preenche(" ")))
+    #
+    # def criabotao(self, mes):
+    #     bt = Button(text='Mes ' + str(mes))
+    #     bt.bind(on_release=lambda x: self.preenche(mes))
+    #     self.scrl.add_widget(bt)
+    #
+    # def preenche(self, mes):
+    #     self.scrl.clear_widgets()
+    #     self.back.clear_widgets()
+    #     gc.collect()
+    #
+    #     self.title.text = 'Preco de venda unitario mensal'
+    #     self.scrl.add_widget(Label(text='DESCRICAO'))
+    #     self.scrl.add_widget(Label(text='MES ' + str(mes)))
+    #     self.desenhaTela(mes)
+    #     self.back.add_widget(Voltar(on_release=lambda x: self.on_enter()))
+    #
+    # def desenhaTela(self, mes):
+    #     fin = Financeiro()
+    #     if mes == " ":
+    #         fat = 0
+    #         cv = 0
+    #         cf = 0
+    #         for m in range(1,13):
+    #             fat += fin.calculaFaturamento(m)
+    #             cv += fin.custosVariaveis(m)
+    #             cf += fin.calculaTotal(CustosFixos, 'total')
+    #     else:
+    #         fat = fin.calculaFaturamento(mes)
+    #         cv = fin.custosVariaveis(mes)
+    #         cf = fin.calculaTotal(CustosFixos, 'total')
+    #
+    #     mc = fat - cv
+    #     lucro = mc - cf
+    #     ipr = lucro * (fin.calculaTotal(Tributos, 'irpj') / 100)
+    #     reserv = fin.calculaTotal(Reservas, 'reservas')
+    #     rv = (lucro * reserv) / 100
+    #     liquido = lucro - ipr - rv
+    #
+    #     self.scrl.add_widget(Label(text='RECEITA TOTAL'))
+    #     self.scrl.add_widget(Label(text="%.2f"%(fat)))
+    #
+    #     self.scrl.add_widget(Label(text='CUSTOS VARIAVEIS'))
+    #     self.scrl.add_widget(Label(text="%.2f"%(cv)))
+    #
+    #     self.scrl.add_widget(Label(text='MARGEM DE CONTRIBUICAO'))
+    #     self.scrl.add_widget(Label(text="%.2f"%(mc)))
+    #
+    #     self.scrl.add_widget(Label(text='CUSTOS FIXOS'))
+    #     self.scrl.add_widget(Label(text="%.2f"%(cf)))
+    #
+    #     self.scrl.add_widget(Label(text='LUCRO OPERACIONAL'))
+    #     self.scrl.add_widget(Label(text="%.2f"%(lucro)))
+    #
+    #     self.scrl.add_widget(Label(text='IMPOSTO DE RENDA / CONTRIB. SOCIAL'))
+    #     self.scrl.add_widget(Label(text="%.2f"%(ipr)))
+    #
+    #     self.scrl.add_widget(Label(text='RESERVAS % ' + str(reserv)))
+    #     self.scrl.add_widget(Label(text="%.2f"%(rv)))
+    #
+    #     self.scrl.add_widget(Label(text='LUCRO LIQUIDO'))
+    #     self.scrl.add_widget(Label(text="%.2f"%(liquido)))
 
 class RelMargemContribScreen(Screen):
     @mainthread
@@ -3549,6 +3674,9 @@ class CadastroBt(Button):
 class EnviaBt(Button):
     pass
 
+
+class Navbar(ActionBar):
+    pass
 
 kv_path = './Interface/kv/'
 for kv in listdir(kv_path):

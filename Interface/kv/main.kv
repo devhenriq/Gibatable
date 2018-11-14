@@ -73,19 +73,39 @@ Manager:
     ReservasScreen:
 
 <StartScreen>:
-    size_hint: 0.1, 0.1
     name: "start"
+
     Navbar:
-    Label:
-        text: 'GIBATABLE'
-        font_size: 0.6*self.height
-        pos_hint: {'top':7,'right':5.5}
 
-    StartButton:
-        pos_hint: {'top':6,'right':6}
-        size_hint: 2, .8
-        on_release: app.root.current = "menu"
+    GridLayout:
+        rows: 3
+        height: self.minimum_height
+        size_hint: 1, 1
+        row_default_height: 120
+        spacing: 0,-50
 
+        Label:
+            text: 'GIBATABLE'
+            font_size: 0.3*self.height
+            size_hint: 1, 1
+            padding_y: 150
+            halign: 'center'
+            valign: 'center'
+        GridLayout:
+            cols: 3
+            height: self.minimum_height
+            size_hint: 1,None
+            row_default_height: 120
+            col_default_width: 50
+            spacing: 0,-50
+            Label:
+                text: ''
+            StartButton:
+                on_release: app.root.current = "menu"
+            Label:
+                text: ''
+        Label:
+            text: ''
 <MenuScreen>:
     name: "menu"
     BoxLayout:

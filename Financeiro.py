@@ -245,26 +245,31 @@ class Financeiro:
             return self.dec(valn)
 
     def calculaMin(self, ret):
-        receber = self.calculaPagRec(" ", 'Recebimentos','total')
-        pagar = self.calculaPagRec(" ", 'Pagamentos','total')
-        receita = 0
-        for m in range(1,13):
-            receita += self.calculaFaturamento(m)
-        canual = self.calculaTotal(Estoque, 'custototal')
-        if receita != 0:
-            pmrv = (receber / receita) * 360
-        else:
-            pmrv = 0
-        if canual != 0:
-            pmpc = (pagar / canual) * 360
-        else:
-            pmpc = 0
-        pmre = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = 12') / canual * 360
+
         if ret == 'pmrv':
+            receber = self.calculaPagRec(" ", 'Recebimentos', 'total')
+            receita = 0
+            for m in range(1, 13):
+                receita += self.calculaFaturamento(m)
+
+            if receita != 0:
+                pmrv = (receber / receita) * 360
+            else:
+                pmrv = 0
             return self.dec(pmrv)
         if ret == 'pmpc':
+            pagar = self.calculaPagRec(" ", 'Pagamentos', 'total')
+            canual = self.calculaTotal(Estoque, 'custototal')
+
+            if canual != 0:
+                pmpc = (pagar / canual) * 360
+            else:
+                pmpc = 0
+
             return self.dec(pmpc)
         if ret == 'pmre':
+            canual = self.calculaTotal(Estoque, 'custototal')
+            pmre = self.calculaTotal(Estoque, 'custototal', ' WHERE mes = 12') / canual * 360
             return self.dec(pmre)
 
     def calculaInvPreOp(self):
@@ -296,24 +301,34 @@ class Financeiro:
             return self.dec(sub2)
 
     def caixaMin(self, ret):
-        cf = self.calculaTotal(CustosFixos, 'total')
-        cv = self.custosVariaveis(1)
-        ct = cf + cv
-        ctd = ct/30
-        need = self.necessidadeGiro('liq')
-        total = need * ctd
 
         if ret == 'total':
+            cf = self.calculaTotal(CustosFixos, 'total')
+            cv = self.custosVariaveis(1)
+            ct = cf + cv
+            ctd = ct / 30
+            need = self.necessidadeGiro('liq')
+            total = need * ctd
             return self.dec(total)
         if ret == 'cf':
+            cf = self.calculaTotal(CustosFixos, 'total')
             return self.dec(cf)
         if ret == 'cv':
+            cv = self.custosVariaveis(1)
             return self.dec(cv)
         if ret == 'ct':
+            cf = self.calculaTotal(CustosFixos, 'total')
+            cv = self.custosVariaveis(1)
+            ct = cf + cv
             return self.dec(ct)
         if ret == 'ctd':
+            cf = self.calculaTotal(CustosFixos, 'total')
+            cv = self.custosVariaveis(1)
+            ct = cf + cv
+            ctd = ct / 30
             return self.dec(ctd)
         if ret == 'need':
+            need = self.necessidadeGiro('liq')
             return self.dec(need)
 
     def capGiro(self):

@@ -8,6 +8,7 @@ from kivy.core.window import Window
 from kivy.config import Config
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import ScreenManager, Screen
 from os import listdir
 from Reservas import Reservas
@@ -32,6 +33,7 @@ import gc
 from Financeiro import *
 from decimal import Decimal, ROUND_HALF_UP
 from Banco import Banco
+import re
 
 Window.fullscreen = False
 Config.set('graphics', 'resizable', True)
@@ -57,12 +59,22 @@ class CadastroScreen(Screen):
 class PessoaScreen(Screen):
     def envia(self):
         self.salario.text = self.salario.text.replace(",",".")
-        p = Pessoa(self.cargo.text, int(self.quant.text), float(self.salario.text), self.categoria.text)
-        p.relatorio()
-        self.cargo.text = ""
-        self.quant.text = ""
-        self.salario.text = ""
-        self.categoria.text = "-"
+        if self.cargo.text != "" and re.compile("[0-9]+").match(self.quant.text) is not None and re.compile("[0-9]+").match(self.salario.text) is not None and self.categoria.text != "-":
+            p = Pessoa(self.cargo.text, int(self.quant.text), float(self.salario.text), self.categoria.text)
+            p.relatorio()
+            self.cargo.text = ""
+            self.quant.text = ""
+            self.salario.text = ""
+            self.categoria.text = "-"
+        else:
+
+            content = Button(text='Erro, entrada invalida', size_hint=(None,None), size=(500,100))#, text_size=(50,50))
+            err = Popup(title='Entrada invalida', size_hint=(.3, .5))
+            err.add_widget(content)
+            content.bind(on_release=err.dismiss)
+            err.open()
+
+
 
 
 class InvestimentoScreen(Screen):

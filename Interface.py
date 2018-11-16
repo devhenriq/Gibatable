@@ -77,12 +77,16 @@ class PessoaScreen(Screen):
 class InvestimentoScreen(Screen):
     def envia(self):
         self.vunit.text = self.vunit.text.replace(",", ".")
-        i = InvestimentoFixo(self.descr.text, int(self.quant.text), float(self.vunit.text), self.categoria.text)
-        i.relatorio()
-        self.descr.text = ""
-        self.quant.text = ""
-        self.vunit.text = ""
-        self.categoria.text = "-"
+        if self.descr.text != "" and re.compile("[0-9]+").match(self.quant.text) is not None and re.compile("[0-9]+").match(self.vunit.text) is not None and self.categoria.text != "-":
+            i = InvestimentoFixo(self.descr.text, int(self.quant.text), float(self.vunit.text), self.categoria.text)
+            i.relatorio()
+            self.descr.text = ""
+            self.quant.text = ""
+            self.vunit.text = ""
+            self.categoria.text = "-"
+        else:
+            err = ErroPopup()
+            err.open()
 
 
 class MateriaPrimaScreen(Screen):
@@ -96,6 +100,10 @@ class MateriaPrimaScreen(Screen):
         # self.medida.text = ""
         # self.preco.text = ""
         # self.quant.text = ""
+
+        # else:
+        #     err = ErroPopup()
+        #     err.open()
 
 
 class EstimativaScreen(Screen):

@@ -68,10 +68,7 @@ class PessoaScreen(Screen):
             self.categoria.text = "-"
         else:
 
-            content = Button(text='Erro, entrada invalida', size_hint=(None,None), size=(500,100))#, text_size=(50,50))
-            err = Popup(title='Entrada invalida', size_hint=(.3, .5))
-            err.add_widget(content)
-            content.bind(on_release=err.dismiss)
+            err = ErroPopup()
             err.open()
 
 
@@ -3690,6 +3687,9 @@ class EnviaBt(Button):
 
 
 class Navbar(ActionBar):
+    pass
+
+class ErroPopup(Popup):
     pass
 
 kv_path = './Interface/kv/'
